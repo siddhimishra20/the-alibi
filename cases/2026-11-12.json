@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-12",
+  "date": "2026-11-12",
+  "title": "The Upside-Down Gallery Prank",
+  "crime_description": "All 18 paintings in the contemporary wing were turned precisely 180 degrees upside down without tripping alarms.",
+  "setting": "Modern Arts Institute East Wing",
+  "suspect": {
+    "name": "Balthazar McSnazz",
+    "occupation": "Professional Juggler and Fire-Eater",
+    "quirk": "Speaks in rhyming couplets, often with a touch of irony"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows the lights in the contemporary wing flickering between 10:45 PM and 10:50 PM."
+    },
+    {
+      "id": "fact-2",
+      "text": "The janitor on duty, Maria Rodriguez, reports that the east wing's motion sensors were disabled between 10:30 PM and 10:45 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "Forensic analysis reveals that the paint on 'Echoes in the Void' contains a microscopic scratch pattern matching the suspect's signature juggling pins."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Balthazar McSnazz sneaks into the east wing through the ventilation shaft."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Balthazar McSnazz executes the micro-crime using a custom-made, high-precision turning device."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Balthazar McSnazz flees, dropping a juggling pin near the scene of the crime."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was at a private juggling club meeting at the time of the prank. I'm just a humble entertainer, not a vandal.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "The motion sensors were perfectly functional during the entire time.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "juggling community"
+        ],
+        "planned_slip": "Slip statement: 'I'm sure Maria just got her wires crossed.'"
+      },
+      {
+        "id": "wp-2",
+        "claim": "The lights in the contemporary wing were just experiencing a minor power surge.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "art world"
+        ],
+        "planned_slip": "Slip statement: 'It's just a coincidence, I'm sure.'"
+      },
+      {
+        "id": "wp-3",
+        "claim": "I've never seen those juggling pins before in my life.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "fire-eating"
+        ],
+        "planned_slip": "Slip statement: 'Maybe someone else used them for a performance?'"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Balthazar McSnazz claimed the motion sensors were fine which directly conflicts with fact-2.",
+    "Balthazar McSnazz claimed the lights were just experiencing a power surge which directly conflicts with fact-1."
+  ],
+  "seed_id": "crime-26"
+}

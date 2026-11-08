@@ -1,0 +1,80 @@
+{
+  "id": "case-2026-11-18",
+  "date": "2026-11-18",
+  "title": "The Submarine Hatch Padlock",
+  "crime_description": "The naval museum's historic decommissioned submarine had its top hatch padlocked shut with a glittery pink diary lock.",
+  "setting": "Harbor Pier 9 Naval Exhibit",
+  "suspect": {
+    "name": "Brunhilda Pembly Snazzlesworth",
+    "occupation": "Competitive Ferret Agility Trainer",
+    "quirk": "Speaks in 18th-century British naval slang"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Surveillance footage shows a figure in a black hoodie accessing the exhibit at 10:05 PM."
+    },
+    {
+      "id": "fact-2",
+      "text": "The padlock used is a SparkleLock 5000, only available at Harbor City Hardware since September."
+    },
+    {
+      "id": "fact-3",
+      "text": "Museum security guard, Jerry Chen, reported seeing a person with a ferret in a backpack entering the exhibit at 10:40 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Suspect prepares tools and sneaks in."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Suspect executes the micro-crime."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Suspect flees, accidentally dropping evidence."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was at the Harbor City Ferret Agility Club, training me own ferrets.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I was at the Harbor City Ferret Agility Club the whole time.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage",
+          "black hoodie"
+        ],
+        "planned_slip": "I was just... uh... getting some... ferret treats."
+      },
+      {
+        "id": "wp-2",
+        "claim": "The SparkleLock 5000 is available at any hardware store in the city.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "SparkleLock 5000",
+          "Harbor City Hardware"
+        ],
+        "planned_slip": "Oh, I just... borrowed it from a friend..."
+      },
+      {
+        "id": "wp-3",
+        "claim": "Jerry Chen was just... um... admiring the exhibits.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "Jerry Chen",
+          "ferret in backpack"
+        ],
+        "planned_slip": "I'm sure he would never... ferret-sit for a thief"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claimed to be at the Harbor City Ferret Agility Club which directly conflicts with fact-1.",
+    "Suspect claimed the SparkleLock 5000 is available at any hardware store which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-23"
+}

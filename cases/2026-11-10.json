@@ -1,0 +1,91 @@
+{
+  "id": "case-2026-11-10",
+  "date": "2026-11-10",
+  "title": "The Cuckoo Clock Mutiny",
+  "crime_description": "The master gears in the astronomical town clock were reprogrammed so the cuckoo shrieks like an enraged rooster.",
+  "setting": "The Municipal Clocktower Belfry",
+  "suspect": {
+    "name": "Ignatius 'Cogs' Geary",
+    "occupation": "Clockmaker & Competitive Pigeon Racer",
+    "quirk": "Intersperses his speech with ticking noises ('tick-tick', 'tock') and mechanical timekeeping metaphors."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "A brass 14-tooth escapement gear stamped with serial number IG-99 was left on the belfry gear rack."
+    },
+    {
+      "id": "fact-2",
+      "text": "The tower keeper found muddy size-9 workboot prints ascending the external maintenance ladder at 10:00 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "An audio recording cassette labeled 'Enraged Farm Cockerel 1994' was found missing from Ignatius's workshop."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "9:30 PM",
+      "event": "Ignatius grabs his size-9 boots and rooster audio tape from his workshop."
+    },
+    {
+      "time": "10:00 PM",
+      "event": "Ignatius scales the belfry external maintenance ladder in muddy boots."
+    },
+    {
+      "time": "10:30 PM",
+      "event": "Ignatius drops his custom stamped gear IG-99 while swapping the chiming bellows."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Ignatius insists he never fabricates numbered brass escapements, has severe vertigo preventing him from climbing ladders, and only collects recordings of gentle Swiss songbirds.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "Tick-tock, I never engrave custom serial numbers or initials on my clockwork cogs.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "gear",
+          "escapement",
+          "serial",
+          "IG-99",
+          "brass"
+        ],
+        "planned_slip": "Tick-tick! My pendulum swings true! I have never stamped 'IG-99' onto any 14-tooth brass escapement gear in my entire precision career!"
+      },
+      {
+        "id": "wp-2",
+        "claim": "I suffer from debilitating altitude sickness and would never scale any external tower ladder.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "ladder",
+          "climbing",
+          "boots",
+          "footprints",
+          "belfry",
+          "10:00"
+        ],
+        "planned_slip": "Tock! My balance wheel spins out at heights! I never put on heavy size-9 boots or climbed up the exterior belfry ladder at ten o'clock!"
+      },
+      {
+        "id": "wp-3",
+        "claim": "My audio library consists strictly of tranquil alpine nightingales, never barnyard fowl.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "tape",
+          "cassette",
+          "rooster",
+          "audio",
+          "cockerel",
+          "sound"
+        ],
+        "planned_slip": "Tick! Scurrilous vibrations! I harbor no farmyard rooster recordings whatsoever; my acoustic cassettes feature only soothing Swiss doves!"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claims he never stamped 'IG-99' on a gear, contradicting Fact 1 (gear IG-99 found at scene).",
+    "Suspect claims he never climbed the ladder or wore size-9 boots, contradicting Fact 2 (size-9 bootprints on ladder at 10 PM).",
+    "Suspect claims he has no rooster recordings, contradicting Fact 3 (Enraged Cockerel cassette missing from his shop)."
+  ]
+}

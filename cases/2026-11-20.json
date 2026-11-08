@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-20",
+  "date": "2026-11-20",
+  "title": "The Botanical Garden Cactus Hat Scandal",
+  "crime_description": "The rare hundred-year Saguaro cactus was crowned with a sombrero and glued-on googly eyes.",
+  "setting": "The Conservatory Desert Greenhouse",
+  "suspect": {
+    "name": "Bartholomew P. Fiddledeedee",
+    "occupation": "Competitive Extreme Knitting Champion",
+    "quirk": "Speaks in 17th-century pirate metaphors"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows the suspect's face at 10:15 PM, 10 feet away from the cactus."
+    },
+    {
+      "id": "fact-2",
+      "text": "The cactus's base was found with a faint smudge of blue paint, matching the suspect's favorite dye."
+    },
+    {
+      "id": "fact-3",
+      "text": "Witnesses report seeing the suspect's knitting needles being hastily stashed in a nearby planter at 11:15 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Suspect prepares tools and sneaks in."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Suspect executes the micro-crime."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Suspect flees, accidentally dropping evidence."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was just, uh, conducting a nocturnal botanical survey, and the cactus was already decorated. I swear, I'm innocent!",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "The cactus was decorated by a mischievous gang of desert rodents.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage"
+        ],
+        "planned_slip": "Aye, I were just tryin' to distract the varmints with me knitting, savvy?"
+      },
+      {
+        "id": "wp-2",
+        "claim": "The blue paint smudge was just a, uh, art installation I was working on.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "art"
+        ],
+        "planned_slip": "I be a artiste, matey! Me paint be me passion!"
+      },
+      {
+        "id": "wp-3",
+        "claim": "The witnesses must've seen me stashing me knitting needles for... uh, a charity event.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "charity"
+        ],
+        "planned_slip": "I be a good Samaritan, matey! Me needles be for the good of the community!"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claimed the cactus was already decorated, which directly conflicts with fact-1.",
+    "Suspect claimed the blue paint smudge was an art installation, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-15"
+}

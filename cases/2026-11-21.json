@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-21",
+  "date": "2026-11-21",
+  "title": "The Flaming Flamingo Flap",
+  "crime_description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+  "setting": "The Pristine Suburban Lawns of Whisper Pines",
+  "suspect": {
+    "name": "Zephyrine LaFleur 'The Fiber Fool'",
+    "occupation": "Professional Fiber Artist",
+    "quirk": "Speaks in whimsical French pastry metaphors"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security camera footage shows a figure in a black hoodie entering Maple Street at 10:15 PM wearing gloves."
+    },
+    {
+      "id": "fact-2",
+      "text": "The hand-knitted turtleneck sweaters have a distinctive blue thread that matches the exact shade used in local craft store 'Yarns-R-Us'."
+    },
+    {
+      "id": "fact-3",
+      "text": "Eyewitness, Whisper Pines resident Agatha Pocket, reported hearing strange whirring noises coming from her kitchen window at 10:45 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Zephyrine LaFleur sneaks onto Maple Street, using her fiber art expertise to quickly knit sweaters."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Zephyrine rapidly dresses the flamingos in the hand-knitted sweaters."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Zephyrine flees, dropping a discarded ball of blue yarn near the scene."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was at home, preparing for a fiber art exhibition at the local museum.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I was actually working on my own fiber art installation, and it was the blue yarn that was accidentally dropped.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security camera footage"
+        ],
+        "planned_slip": "Slip: 'Oh, I was probably just, uh, dropping off a sample yarn... for the museum.'"
+      },
+      {
+        "id": "wp-2",
+        "claim": "The blue thread is actually from my own stash, I must have accidentally brought it to the scene.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "yarn color"
+        ],
+        "planned_slip": "Slip: 'Well, I could have sworn I used a different thread... maybe I mixed it up with my own supplies?'"
+      },
+      {
+        "id": "wp-3",
+        "claim": "The whirring noises were just my own machine, I was working on a new project.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "whirring noises"
+        ],
+        "planned_slip": "Slip: 'Oh, I'm sure it was just my own machine... I mean, I'm a professional, I know my equipment.'"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Zephyrine claimed she was working on her own fiber art installation, which directly conflicts with fact-1.",
+    "Zephyrine claimed the blue thread was from her own stash, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-03"
+}

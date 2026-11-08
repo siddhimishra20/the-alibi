@@ -1,0 +1,214 @@
+{
+  "schedule": {
+    "2026-11-10": {
+      "id": "case-2026-11-10",
+      "date": "2026-11-10",
+      "title": "The Cuckoo Clock Mutiny",
+      "suspect_name": "Ignatius 'Cogs' Geary",
+      "setting": "The Municipal Clocktower Belfry",
+      "crime_description": "The master gears in the astronomical town clock were reprogrammed so the cuckoo shrieks like an enraged rooster.",
+      "seed_id": null,
+      "registered_at": "2026-11-08T14:42:24.969330"
+    },
+    "2026-11-11": {
+      "id": "case-2026-11-11",
+      "date": "2026-11-11",
+      "title": "The Stolen Chess Queen",
+      "suspect_name": "Boris 'Gambit' Vronsky",
+      "setting": "St. Jude Chess Club Tournament Hall",
+      "crime_description": "The grandmaster tournament's carved ivory queen piece was substituted with a salt shaker wrapped in tinfoil.",
+      "seed_id": null,
+      "registered_at": "2026-11-08T14:42:24.969790"
+    },
+    "2026-11-07": {
+      "id": "case-2026-11-07",
+      "date": "2026-11-07",
+      "title": "The Golden Spoon Heist",
+      "suspect_name": "Barnaby 'Fingers' Finch",
+      "setting": "The Gilded Antiquities Wing of the Metropolitan Museum",
+      "crime_description": "The museum's ancient Roman solid golden spoon was replaced with a cheap neon yellow plastic spork.",
+      "seed_id": null,
+      "registered_at": "2026-11-08T14:42:24.970219"
+    },
+    "2026-11-08": {
+      "id": "case-2026-11-08",
+      "date": "2026-11-08",
+      "title": "The Decaf Conspiracy",
+      "suspect_name": "Penelope 'Pip' Vane",
+      "setting": "The Mayor's Private Executive Breakroom",
+      "crime_description": "The city hall espresso machine's dark roast beans were swapped with pulverized chicory and decaf crystals.",
+      "seed_id": null,
+      "registered_at": "2026-11-08T14:42:24.970657"
+    },
+    "2026-11-09": {
+      "id": "case-2026-11-09",
+      "date": "2026-11-09",
+      "title": "The Flamingo Flap",
+      "suspect_name": "Arthur Pendelton",
+      "setting": "The Pristine Suburban Lawns of Whisper Pines",
+      "crime_description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+      "seed_id": null,
+      "registered_at": "2026-11-08T14:42:24.971167"
+    },
+    "2026-11-12": {
+      "id": "case-2026-11-12",
+      "date": "2026-11-12",
+      "title": "The Upside-Down Gallery Prank",
+      "suspect_name": "Balthazar McSnazz",
+      "setting": "Modern Arts Institute East Wing",
+      "crime_description": "All 18 paintings in the contemporary wing were turned precisely 180 degrees upside down without tripping alarms.",
+      "seed_id": "crime-26",
+      "registered_at": "2026-11-08T14:54:41.273985"
+    },
+    "2026-11-13": {
+      "id": "case-2026-11-13",
+      "date": "2026-11-13",
+      "title": "The Disappearing Diamond Stylus",
+      "suspect_name": "Prof. Zephyrine P. Fizzypop",
+      "setting": "Vinyl & Velvet Listening Lounge",
+      "crime_description": "The audiophile lounge's $5,000 turntable diamond needle was swapped with a sharpened safety pin.",
+      "seed_id": "crime-31",
+      "registered_at": "2026-11-08T14:55:16.595247"
+    },
+    "2026-11-14": {
+      "id": "case-2026-11-14",
+      "date": "2026-11-14",
+      "title": "The Great Kazoo Symphony Sabotage",
+      "suspect_name": "Bruno Zingpocket",
+      "setting": "Civic Auditorium Orchestra Pit",
+      "crime_description": "Every flutist's instrument case in the orchestra pit was replaced with a plastic metallic kazoo.",
+      "seed_id": "crime-38",
+      "registered_at": "2026-11-08T14:55:53.033360"
+    },
+    "2026-11-15": {
+      "id": "case-2026-11-15",
+      "date": "2026-11-15",
+      "title": "The Helium Philharmonic",
+      "suspect_name": "Camille 'Cacophony' Cartwright",
+      "setting": "The Royal Grand Opera Stage",
+      "crime_description": "The opera house pipe organ was pumped full of helium gas right before the opening crescendo of Don Giovanni.",
+      "seed_id": "crime-04",
+      "registered_at": "2026-11-08T16:09:39.482943"
+    },
+    "2026-11-16": {
+      "id": "case-2026-11-16",
+      "date": "2026-11-16",
+      "title": "The Midnight Marquee Muddle",
+      "suspect_name": "Clementine P. Fothergill",
+      "setting": "The Rialto Cinema Grand Facade",
+      "crime_description": "The vintage cinema marquee letters were rearranged to read 'FREE WEASELS IN THE BASEMENT TONIGHT'.",
+      "seed_id": "crime-40",
+      "registered_at": "2026-11-08T16:10:30.037110"
+    },
+    "2026-11-17": {
+      "id": "case-2026-11-17",
+      "date": "2026-11-17",
+      "title": "The Midnight Polka Broadcast",
+      "suspect_name": "Brunhilda Pocketwatch Purveyor",
+      "setting": "Civil Defense Radio Transmission Bunker",
+      "crime_description": "The city emergency alert broadcast system was hijacked to loop Bavarian accordion polka for twenty minutes.",
+      "seed_id": "crime-08",
+      "registered_at": "2026-11-08T16:11:18.024215"
+    },
+    "2026-11-18": {
+      "id": "case-2026-11-18",
+      "date": "2026-11-18",
+      "title": "The Submarine Hatch Padlock",
+      "suspect_name": "Brunhilda Pembly Snazzlesworth",
+      "setting": "Harbor Pier 9 Naval Exhibit",
+      "crime_description": "The naval museum's historic decommissioned submarine had its top hatch padlocked shut with a glittery pink diary lock.",
+      "seed_id": "crime-23",
+      "registered_at": "2026-11-08T16:12:03.217255"
+    },
+    "2026-11-19": {
+      "id": "case-2026-11-19",
+      "date": "2026-11-19",
+      "title": "The Midnight Squeaky Floorboard Polish",
+      "suspect_name": "Bartholomew Wimplebottom III",
+      "setting": "Cloistered Abbey of Perpetual Quiet",
+      "crime_description": "The floor of the silent monastery was coated in high-gloss silicone buff, turning it into a treacherous ice rink.",
+      "seed_id": "crime-21",
+      "registered_at": "2026-11-08T16:13:02.185228"
+    },
+    "2026-11-20": {
+      "id": "case-2026-11-20",
+      "date": "2026-11-20",
+      "title": "The Botanical Garden Cactus Hat Scandal",
+      "suspect_name": "Bartholomew P. Fiddledeedee",
+      "setting": "The Conservatory Desert Greenhouse",
+      "crime_description": "The rare hundred-year Saguaro cactus was crowned with a sombrero and glued-on googly eyes.",
+      "seed_id": "crime-15",
+      "registered_at": "2026-11-08T16:13:49.341135"
+    },
+    "2026-11-21": {
+      "id": "case-2026-11-21",
+      "date": "2026-11-21",
+      "title": "The Flaming Flamingo Flap",
+      "suspect_name": "Zephyrine LaFleur 'The Fiber Fool'",
+      "setting": "The Pristine Suburban Lawns of Whisper Pines",
+      "crime_description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+      "seed_id": "crime-03",
+      "registered_at": "2026-11-08T16:14:38.758044"
+    },
+    "2026-11-22": {
+      "id": "case-2026-11-22",
+      "date": "2026-11-22",
+      "title": "The Trophy Case Bowling Ball Swap",
+      "suspect_name": "Bertrand P. Fritterstein, Esq.",
+      "setting": "Kingpin Lanes Hall of Fame",
+      "crime_description": "The championship gold bowling trophy was replaced with a frozen honey-glazed ham.",
+      "seed_id": "crime-14",
+      "registered_at": "2026-11-09T00:00:45.170094"
+    }
+  },
+  "used_seed_ids": [
+    "crime-26",
+    "crime-31",
+    "crime-38",
+    "crime-04",
+    "crime-40",
+    "crime-08",
+    "crime-23",
+    "crime-21",
+    "crime-15",
+    "crime-03",
+    "crime-14"
+  ],
+  "used_titles": [
+    "The Cuckoo Clock Mutiny",
+    "The Decaf Conspiracy",
+    "The Flamingo Flap",
+    "The Golden Spoon Heist",
+    "The Stolen Chess Queen",
+    "The Upside-Down Gallery Prank",
+    "The Disappearing Diamond Stylus",
+    "The Great Kazoo Symphony Sabotage",
+    "The Helium Philharmonic",
+    "The Midnight Marquee Muddle",
+    "The Midnight Polka Broadcast",
+    "The Submarine Hatch Padlock",
+    "The Midnight Squeaky Floorboard Polish",
+    "The Botanical Garden Cactus Hat Scandal",
+    "The Flaming Flamingo Flap",
+    "The Trophy Case Bowling Ball Swap"
+  ],
+  "used_suspects": [
+    "Arthur Pendelton",
+    "Barnaby 'Fingers' Finch",
+    "Boris 'Gambit' Vronsky",
+    "Ignatius 'Cogs' Geary",
+    "Penelope 'Pip' Vane",
+    "Balthazar McSnazz",
+    "Prof. Zephyrine P. Fizzypop",
+    "Bruno Zingpocket",
+    "Camille 'Cacophony' Cartwright",
+    "Clementine P. Fothergill",
+    "Brunhilda Pocketwatch Purveyor",
+    "Brunhilda Pembly Snazzlesworth",
+    "Bartholomew Wimplebottom III",
+    "Bartholomew P. Fiddledeedee",
+    "Zephyrine LaFleur 'The Fiber Fool'",
+    "Bertrand P. Fritterstein, Esq."
+  ],
+  "last_generated_date": "2026-11-22"
+}

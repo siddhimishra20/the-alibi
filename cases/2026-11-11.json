@@ -1,0 +1,91 @@
+{
+  "id": "case-2026-11-11",
+  "date": "2026-11-11",
+  "title": "The Stolen Chess Queen",
+  "crime_description": "The grandmaster tournament's carved ivory queen piece was substituted with a salt shaker wrapped in tinfoil.",
+  "setting": "St. Jude Chess Club Tournament Hall",
+  "suspect": {
+    "name": "Boris 'Gambit' Vronsky",
+    "occupation": "Former Chess Grandmaster turned Pretzel Vendor",
+    "quirk": "Analyzes every life situation as a chess opening or endgame blunder."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "A smear of coarse sea salt and sesame pretzel glaze was found on the championship board square d1."
+    },
+    {
+      "id": "fact-2",
+      "text": "Boris's motorized pretzel cart was photographed parked illegally outside the club back door at 7:45 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "The roll of heavy-duty aluminum foil used to wrap the shaker was purchased with Boris's loyalty card at 7:15 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "7:15 PM",
+      "event": "Boris buys aluminum foil at the corner market with his store loyalty card."
+    },
+    {
+      "time": "7:45 PM",
+      "event": "Boris parks his pretzel cart by the tournament hall fire escape."
+    },
+    {
+      "time": "8:00 PM",
+      "event": "Boris sneaks to board 1 with pretzel glaze on his fingers, swiping the ivory queen."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Boris claims he was three miles away selling gluten-free churros without sesame or salt, never drove his cart near St. Jude, and never bought tinfoil in his life.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "My confectionery inventory uses only powdered sugar; I never touch coarse rock salt or pretzel glaze.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "salt",
+          "pretzel",
+          "glaze",
+          "square",
+          "board",
+          "d1"
+        ],
+        "planned_slip": "A tactical blunder by the prosecution! My fingertips are coated solely in sweet powdered sugar; I have handled no coarse sea salt nor sesame pretzel syrup today!"
+      },
+      {
+        "id": "wp-2",
+        "claim": "My pretzel vehicle remained parked in the East District depot all evening.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "cart",
+          "parking",
+          "back door",
+          "7:45",
+          "photo"
+        ],
+        "planned_slip": "Checkmate, inspector! My mobile cart never visited the alley of St. Jude at 7:45 PM; it was securely stationed miles away!"
+      },
+      {
+        "id": "wp-3",
+        "claim": "I have no grocery loyalty account and have never purchased aluminum kitchen foil.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "foil",
+          "tinfoil",
+          "loyalty card",
+          "market",
+          "7:15",
+          "receipt"
+        ],
+        "planned_slip": "An illegal move! I hold no loyalty club memberships and purchased zero aluminum foil rolls at 7:15 PM or ever!"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claims he never handles sea salt or pretzel glaze, contradicting Fact 1 (salt and pretzel glaze found on square d1).",
+    "Suspect claims his cart was parked miles away, contradicting Fact 2 (cart photographed outside club at 7:45 PM).",
+    "Suspect claims he has no loyalty card and bought no foil, contradicting Fact 3 (foil purchased on his loyalty card at 7:15 PM)."
+  ]
+}

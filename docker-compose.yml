@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  the-alibi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: the-alibi-game
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - ALIBI_MODEL=llama3.1:latest
+      - ALIBI_EMBED_MODEL=nomic-embed-text:latest
+    volumes:
+      - ./data:/app/data
+      - ./cases:/app/cases
+      - ./saves:/app/saves
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+

@@ -1,0 +1,92 @@
+{
+  "id": "case-2026-11-09",
+  "date": "2026-11-09",
+  "title": "The Flamingo Flap",
+  "crime_description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+  "setting": "The Pristine Suburban Lawns of Whisper Pines",
+  "suspect": {
+    "name": "Arthur Pendelton",
+    "occupation": "Retired Haberdasher & Yarn Guild President",
+    "quirk": "Speaks exclusively in theatrical Shakespearean soliloquies."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Strands of rare emerald-green Shetland angora wool were snagged on the beak of flamingo #14."
+    },
+    {
+      "id": "fact-2",
+      "text": "The local hardware store clerk sold Arthur a pair of heavy aluminum wire-snippers at 6:30 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "Weather logs confirm a torrential rainstorm drenched Maple Street from midnight until 3:00 AM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "6:30 PM",
+      "event": "Arthur buys wire-snippers to cut the flamingo lawn stakes."
+    },
+    {
+      "time": "11:00 PM",
+      "event": "Arthur slips out with a basket of green Shetland wool sweaters."
+    },
+    {
+      "time": "1:00 AM",
+      "event": "Arthur clothes all 37 flamingos in the driving rain, getting thoroughly soaked."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Arthur claims he slumbered undisturbed beneath his eiderdown quilt through a crisp, dry, starry evening, that he works only with synthetic acrylic yarns, and hasn't bought hardware tools in forty winters.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I weave solely with modern synthetic polyester; coarse animal wool hath never touched mine artistic needles.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "wool",
+          "yarn",
+          "angora",
+          "knitting",
+          "material",
+          "green"
+        ],
+        "planned_slip": "Hark, vile slander! Mine immaculate hands touch only modest acrylic polymers; not a single strand of emerald Shetland wool exists in my demesne!"
+      },
+      {
+        "id": "wp-2",
+        "claim": "I have not entered a commercial ironmonger's shop nor touched metal shears in an epoch.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "tools",
+          "shears",
+          "snippers",
+          "hardware",
+          "store",
+          "6:30"
+        ],
+        "planned_slip": "Upon mine honor, I bought no rude iron clippers or wire shears at eventide! Such crude instruments are foreign to my poet soul!"
+      },
+      {
+        "id": "wp-3",
+        "claim": "The nocturnal firmament was as dry as parchment, with constellations glittering without a drop of rain.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "rain",
+          "storm",
+          "weather",
+          "wet",
+          "midnight",
+          "drenched"
+        ],
+        "planned_slip": "By the heavens, 'twas a night as arid as bone! The skies bore no deluge or rainstorm between midnight and dawn while I slumbered!"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claims he never uses emerald Shetland wool, contradicting Fact 1 (emerald Shetland wool on flamingo).",
+    "Suspect claims he bought no tools or wire cutters, contradicting Fact 2 (wire-snippers purchased at 6:30 PM).",
+    "Suspect claims the night was bone-dry and star-lit, contradicting Fact 3 (torrential rainstorm midnight to 3 AM)."
+  ]
+}

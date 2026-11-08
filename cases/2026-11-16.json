@@ -1,0 +1,79 @@
+{
+  "id": "case-2026-11-16",
+  "date": "2026-11-16",
+  "title": "The Midnight Marquee Muddle",
+  "crime_description": "The vintage cinema marquee letters were rearranged to read 'FREE WEASELS IN THE BASEMENT TONIGHT'.",
+  "setting": "The Rialto Cinema Grand Facade",
+  "suspect": {
+    "name": "Clementine P. Fothergill",
+    "occupation": "Competitive Taxidermy Specialist",
+    "quirk": "Speaks in a perpetual, high-pitched, whispered stream-of-consciousness, as if describing a particularly intricate taxidermy piece."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows the suspect entering the cinema at 10:15 PM through a ventilation shaft, wearing a black jumpsuit."
+    },
+    {
+      "id": "fact-2",
+      "text": "CCTV captures the suspect using a red Sharpie to change the marquee letters at 10:45 PM, leaving a faint red streak on the letters."
+    },
+    {
+      "id": "fact-3",
+      "text": "Eyewitness, cinema janitor, Albert Jenkins, reports seeing the suspect slipping into the cinema at 10:45 PM, wearing a black hoodie."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Clementine P. Fothergill prepares tools and sneaks in."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Clementine P. Fothergill executes the micro-crime."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Clementine P. Fothergill flees, accidentally dropping evidence."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Clementine P. Fothergill claims to have been attending a nearby art installation, 'Weaseling the City', and stumbled upon the altered marquee by chance.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "Clementine P. Fothergill claims to have been in the ventilation shaft to retrieve a taxidermied owl for the art installation.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "taxidermy",
+          "art installation"
+        ],
+        "planned_slip": "Oh, I must have gotten my taxidermy owl mixed up with the weasels, yes, exactly..."
+      },
+      {
+        "id": "wp-2",
+        "claim": "Clementine P. Fothergill claims to have used a blue marker to draw a mural on the marquee, which got accidentally erased by the rain.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "art supply"
+        ],
+        "planned_slip": "Wait, was it blue or red? Ah, doesn't matter, the point is, I meant to draw a beautiful weasel mural, of course..."
+      },
+      {
+        "id": "wp-3",
+        "claim": "Clementine P. Fothergill claims to have been wearing a bright pink hoodie to the art installation, and Albert Jenkins must have mistaken it for black.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "fashion"
+        ],
+        "planned_slip": "Oh, I'm quite certain I wore pink, yes, pink, with white polka dots, no, wait, it was a striped hoodie, yes, exactly..."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Clementine P. Fothergill claimed to have been in the ventilation shaft to retrieve a taxidermied owl, which directly conflicts with fact-1.",
+    "Clementine P. Fothergill claimed to have used a blue marker, which directly conflicts with fact-2.",
+    "Clementine P. Fothergill claimed to have been wearing a bright pink hoodie, which directly conflicts with fact-3."
+  ],
+  "seed_id": "crime-40"
+}

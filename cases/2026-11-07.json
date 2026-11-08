@@ -1,0 +1,95 @@
+{
+  "id": "case-2026-11-07",
+  "date": "2026-11-07",
+  "title": "The Golden Spoon Heist",
+  "crime_description": "The museum's ancient Roman solid golden spoon was replaced with a cheap neon yellow plastic spork.",
+  "setting": "The Gilded Antiquities Wing of the Metropolitan Museum",
+  "suspect": {
+    "name": "Barnaby 'Fingers' Finch",
+    "occupation": "Assistant Night Janitor & Origami Enthusiast",
+    "quirk": "Speaks compulsively in elaborate nautical metaphors and sea shanties."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security cameras recorded a shadowy figure wearing bright canary-yellow boots fleeing the exhibit hall."
+    },
+    {
+      "id": "fact-2",
+      "text": "The antiquities gallery main power and backup generator were abruptly severed at precisely 11:15 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "A receipt from 'Spork Emporium' dated 10:45 PM that evening was recovered from the custodial break room bin."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:30 PM",
+      "event": "Barnaby arrives at the museum carrying a yellow backpack containing yellow rubber wading boots."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Barnaby runs across the street to Spork Emporium to purchase a neon yellow spork."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Barnaby cuts the main power breaker in the basement, plunging the hall into darkness."
+    },
+    {
+      "time": "11:18 PM",
+      "event": "Barnaby opens the display case, swaps the Roman golden spoon with the spork, and flees down the hall in yellow boots."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Barnaby claims he was peacefully reading 'Moby Dick' in the 3rd floor lounge under bright fluorescent chandelier lighting the entire night without interruption, wearing ordinary sensible brown leather dress brogues.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I was wearing my finest polished brown leather brogues, fit for an admiral's deck.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "shoes",
+          "boots",
+          "footwear",
+          "feet",
+          "what were you wearing"
+        ],
+        "planned_slip": "Me deck shoes were strictly regulation brown leather oxfords, matey! I wouldn't be caught dead roaming the gangways in glaring canary-yellow sea boots!"
+      },
+      {
+        "id": "wp-2",
+        "claim": "The chandeliers blazed like harbor lighthouses with uninterrupted electric splendor all night long.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "power",
+          "lights",
+          "darkness",
+          "electricity",
+          "11:15",
+          "blackout"
+        ],
+        "planned_slip": "The electric lamps never flickered once, cap'n! The great chandelier burned bright as high noon from dusk till dawn without a single second of blackout."
+      },
+      {
+        "id": "wp-3",
+        "claim": "I stayed firmly anchored on the 3rd floor and never ventured down to any shops or break rooms.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "spork",
+          "receipt",
+          "break room",
+          "store",
+          "purchase",
+          "10:45"
+        ],
+        "planned_slip": "I never dropped anchor at any terrestrial cutlery shop! I haven't set foot in any Spork Emporium nor tossed any receipts into the mess hall bin."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claims he wore brown leather oxfords and denies yellow boots, contradicting Fact 1 (figure in canary-yellow boots).",
+    "Suspect claims the lights never went out all night, contradicting Fact 2 (power cut at 11:15 PM).",
+    "Suspect claims he never left the 3rd floor or bought cutlery, contradicting Fact 3 (Spork Emporium receipt at 10:45 PM)."
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-22",
+  "date": "2026-11-22",
+  "title": "The Trophy Case Bowling Ball Swap",
+  "crime_description": "The championship gold bowling trophy was replaced with a frozen honey-glazed ham.",
+  "setting": "Kingpin Lanes Hall of Fame",
+  "suspect": {
+    "name": "Bertrand P. Fritterstein, Esq.",
+    "occupation": "Professional Extreme Ironing Competitor",
+    "quirk": "Speaks in over-the-top, thespian-like monologues, often incorporating made-up etymology"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows a figure in a bright pink jumpsuit entering the trophy case at 10:40 PM."
+    },
+    {
+      "id": "fact-2",
+      "text": "An inspection of the trophy case reveals a smudge of golden polish on the handle, matching the color of the stolen trophy."
+    },
+    {
+      "id": "fact-3",
+      "text": "Eyewitnesses report seeing a man matching the suspect's description near the trophy case around 10:45 PM, muttering something about 'the art of subversion.'"
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Suspect prepares tools and sneaks in."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Suspect executes the micro-crime."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Suspect flees, accidentally dropping evidence."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was at a charity gala for extreme ironing enthusiasts at the time of the crime.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I didn't enter the trophy case, I was merely admiring the decorations.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage"
+        ],
+        "planned_slip": "Oh, I mean, I was admiring the, uh, the...the trophy itself."
+      },
+      {
+        "id": "wp-2",
+        "claim": "The golden polish smudge must have been left by the previous night's janitorial staff.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "polish color"
+        ],
+        "planned_slip": "Yes, yes, I'm sure it's just a coincidence."
+      },
+      {
+        "id": "wp-3",
+        "claim": "Those eyewitnesses must have mistaken me for someone else, I was actually at the...the...uh, the snack bar.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "muttering about subversion"
+        ],
+        "planned_slip": "What? No, no, I was just, uh, discussing the finer points of...of...of subversive snacking."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claimed not to have entered the trophy case, which directly conflicts with fact-1.",
+    "Suspect attempted to shift blame to janitorial staff regarding the golden polish, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-14"
+}

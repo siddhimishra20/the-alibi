@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-19",
+  "date": "2026-11-19",
+  "title": "The Midnight Squeaky Floorboard Polish",
+  "crime_description": "The floor of the silent monastery was coated in high-gloss silicone buff, turning it into a treacherous ice rink.",
+  "setting": "Cloistered Abbey of Perpetual Quiet",
+  "suspect": {
+    "name": "Bartholomew Wimplebottom III",
+    "occupation": "Professional Extreme Ironing Competitor",
+    "quirk": "Speaks in over-the-top, hyperbolic comparisons to various cheeses"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows a figure in a bright orange jumpsuit entering the abbey at 10:10 PM."
+    },
+    {
+      "id": "fact-2",
+      "text": "The monastery's maintenance log shows no record of silicone buff being ordered or stored on the premises."
+    },
+    {
+      "id": "fact-3",
+      "text": "Monk eyewitnesses report seeing Bartholomew Wimplebottom III sneaking around the abbey in his Extreme Ironing Competitor uniform at 10:45 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Bartholomew Wimplebottom III prepares tools and sneaks in, comparing his stealth to the 'gouda silence of a Swiss dairy farm'."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Bartholomew Wimplebottom III executes the micro-crime, declaring the newly-coated floor 'as slick as a brie-wrapped wheel of cheddar'."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Bartholomew Wimplebottom III flees, accidentally dropping evidence, much like a 'tangy feta crumbles underfoot'."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Bartholomew Wimplebottom III claims to be on a top-secret Extreme Ironing mission to 'soothe the savage beast of wrinkles' in the abbey's ancient tapestries.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I was in the abbey's library, researching the 'gouda science of ironing' and didn't even know about the silicone buff.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage"
+        ],
+        "planned_slip": "I'm shocked, SHOCKED, to hear that someone was seen entering the abbey in a bright orange jumpsuit."
+      },
+      {
+        "id": "wp-2",
+        "claim": "The monastery's maintenance log is clearly a 'feta-stuffed lie' and I have no idea how the silicone buff got there.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "maintenance log"
+        ],
+        "planned_slip": "I'm not aware of any records of silicone buff being ordered or stored on the premises, but that doesn't mean it didn't happen."
+      },
+      {
+        "id": "wp-3",
+        "claim": "I was just... um... helping the monks with their 'brie-ific' laundry, and I'm afraid I must have left my Extreme Ironing Competitor uniform behind.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "monk eyewitnesses"
+        ],
+        "planned_slip": "I'm not sure what the monks are talking about, but I do know that I was there to help with the laundry... somehow."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claimed he was in the library researching ironing, which directly conflicts with fact-1.",
+    "Suspect claimed the maintenance log was a lie, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-21"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "case-2026-11-08",
+  "date": "2026-11-08",
+  "title": "The Decaf Conspiracy",
+  "crime_description": "The city hall espresso machine's dark roast beans were swapped with pulverized chicory and decaf crystals.",
+  "setting": "The Mayor's Private Executive Breakroom",
+  "suspect": {
+    "name": "Penelope 'Pip' Vane",
+    "occupation": "Chief Administrative Stenographer",
+    "quirk": "Uses hyper-formal legalistic Latin phrasing and cites fictitious municipal penal codes."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "The executive suite electronic badge reader logged Penelope's keycard scanning into the kitchen at 8:12 AM."
+    },
+    {
+      "id": "fact-2",
+      "text": "A lavender scent of artisanal French lavender hand cream was discovered smeared on the espresso hopper lid."
+    },
+    {
+      "id": "fact-3",
+      "text": "A half-empty pouch of 'Maison Chicory Decaf Blends' was discovered inside Penelope's desk drawer."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "7:55 AM",
+      "event": "Penelope applies Provence lavender moisturizer to her hands at her desk."
+    },
+    {
+      "time": "8:12 AM",
+      "event": "Penelope swipes into the executive kitchen with her personal keycard."
+    },
+    {
+      "time": "8:15 AM",
+      "event": "Penelope unscrews the grinder hopper, leaves lavender residue, dumps the decaf chicory in, and hides the pouch in her desk."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Penelope insists prima facie that she never arrived at City Hall until 9:00 AM sharp, suffers from a deadly allergy to all lavender botanicals, and drinks exclusively pure black Colombian dark roast.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I did not set foot within municipal premises prior to 9:00 AM.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "arrival",
+          "time",
+          "keycard",
+          "badge",
+          "8:12",
+          "morning"
+        ],
+        "planned_slip": "Pursuant to statutory truth, I was miles away in transit and never swiped any access credential into the executive kitchen at 8:12 AM!"
+      },
+      {
+        "id": "wp-2",
+        "claim": "I am afflicted with severe respiratory anaphylaxis to lavender and only use unscented petroleum jelly.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "lavender",
+          "scent",
+          "smell",
+          "cream",
+          "hands",
+          "hopper"
+        ],
+        "planned_slip": "Res ipsa loquitur, officer! I despise all floral aromas and have never possessed nor applied French lavender hand ointment in my entire existence!"
+      },
+      {
+        "id": "wp-3",
+        "claim": "My desk contains strictly court transcripts and certified unadulterated high-caffeine roasts.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "drawer",
+          "chicory",
+          "decaf",
+          "desk",
+          "pouch"
+        ],
+        "planned_slip": "Ex post facto, my filing chambers harbor nothing resembling chicory decaf grains; such foul herbal substitutes are completely alien to my desk!"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Suspect claims she arrived at 9:00 AM and never swiped in, contradicting Fact 1 (badge scan at 8:12 AM).",
+    "Suspect claims total allergic aversion to lavender, contradicting Fact 2 (lavender cream on the coffee hopper).",
+    "Suspect claims no chicory was ever in her possession or desk, contradicting Fact 3 (decaf chicory found in her drawer)."
+  ]
+}

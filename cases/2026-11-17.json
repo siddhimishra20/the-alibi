@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-17",
+  "date": "2026-11-17",
+  "title": "The Midnight Polka Broadcast",
+  "crime_description": "The city emergency alert broadcast system was hijacked to loop Bavarian accordion polka for twenty minutes.",
+  "setting": "Civil Defense Radio Transmission Bunker",
+  "suspect": {
+    "name": "Brunhilda Pocketwatch Purveyor",
+    "occupation": "Competitive Synchronized Swimmer",
+    "quirk": "Speaks in phrases of exact timing, using words like 'precisely' and 'simultaneously'"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows a figure with a distinctive pink scarf entering the bunker at 10:14 PM."
+    },
+    {
+      "id": "fact-2",
+      "text": "The hijacked broadcast system's access logs reveal a login attempt from a device with the IP address 192.168.1.42 at 10:46 PM."
+    },
+    {
+      "id": "fact-3",
+      "text": "A maintenance worker reports hearing suspicious accordion music coming from the bunker's east wing at 11:16 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Brunhilda prepares tools and sneaks in, precisely timing her entry to avoid security cameras."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Brunhilda executes the micro-crime, simultaneously hijacking the broadcast system and playing the polka."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Brunhilda flees, accidentally dropping a torn piece of her pink scarf near the access console."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Brunhilda claims she was at a synchronized swimming competition at the time of the hijacking, and was simply 'simultaneously' watching the broadcast on her phone.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "Brunhilda claims she was not wearing a pink scarf at the time of the hijacking.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage"
+        ],
+        "planned_slip": "Brunhilda 'accidentally' mentions her pink scarf when discussing her swimming uniform."
+      },
+      {
+        "id": "wp-2",
+        "claim": "Brunhilda claims the device used to hijack the broadcast system was not her own, but rather a 'borrowed' device from the maintenance team.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "access logs"
+        ],
+        "planned_slip": "Brunhilda 'remembers' that she lent her device to the maintenance team for a 'project'."
+      },
+      {
+        "id": "wp-3",
+        "claim": "Brunhilda claims she was in the west wing of the bunker at 11:16 PM, and did not hear any music.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "maintenance worker testimony"
+        ],
+        "planned_slip": "Brunhilda 'misremembers' the layout of the bunker, and claims she was in the west wing 'at the time'."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Brunhilda claimed she was at a synchronized swimming competition, which directly conflicts with fact-1.",
+    "Brunhilda claimed the device used to hijack the broadcast system was not her own, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-08"
+}

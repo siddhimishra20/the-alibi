@@ -1,0 +1,242 @@
+[
+  {
+    "id": "crime-01",
+    "title": "The Golden Spoon Heist",
+    "description": "The museum's ancient Roman solid golden spoon was replaced with a cheap neon yellow plastic spork.",
+    "setting": "The Gilded Antiquities Wing of the Metropolitan Museum"
+  },
+  {
+    "id": "crime-02",
+    "title": "The Decaf Conspiracy",
+    "description": "The city hall espresso machine's dark roast beans were swapped with pulverized chicory and decaf crystals.",
+    "setting": "The Mayor's Private Breakroom"
+  },
+  {
+    "id": "crime-03",
+    "title": "The Flaming Flamingo Flap",
+    "description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+    "setting": "The Pristine Suburban Lawns of Whisper Pines"
+  },
+  {
+    "id": "crime-04",
+    "title": "The Helium Philharmonic",
+    "description": "The opera house pipe organ was pumped full of helium gas right before the opening crescendo of Don Giovanni.",
+    "setting": "The Royal Grand Opera Stage"
+  },
+  {
+    "id": "crime-05",
+    "title": "The Cuckoo Clock Mutiny",
+    "description": "The master gears in the astronomical town clock were reprogrammed so the cuckoo shrieks like an enraged rooster.",
+    "setting": "The Municipal Clocktower Belfry"
+  },
+  {
+    "id": "crime-06",
+    "title": "The Stolen Secret Sourdough",
+    "description": "A 140-year-old sourdough starter named 'Mother Bready' vanished from the locked bakery cellar.",
+    "setting": "Crust & Crumb Artisanal Bakery Cellar"
+  },
+  {
+    "id": "crime-07",
+    "title": "The Velvet Toupee Switcheroo",
+    "description": "Chief Magistrate Sterling's ceremonial horsehair wig was swapped with an orange sherpa fleece beanie.",
+    "setting": "The High Court Judicial Robing Chamber"
+  },
+  {
+    "id": "crime-08",
+    "title": "The Midnight Polka Broadcast",
+    "description": "The city emergency alert broadcast system was hijacked to loop Bavarian accordion polka for twenty minutes.",
+    "setting": "Civil Defense Radio Transmission Bunker"
+  },
+  {
+    "id": "crime-09",
+    "title": "The Mayoral Wax Doppelganger",
+    "description": "The wax museum's likeness of the mayor was found seated behind the real mayor's mahogany desk holding a donut.",
+    "setting": "City Hall Oval Office"
+  },
+  {
+    "id": "crime-10",
+    "title": "The Missing Blue Ribbon Squash",
+    "description": "Farmer Jed's 400-pound record-setting winter squash was painted with green stripes and rolled into the pond.",
+    "setting": "The County Fairgrounds Agriculture Pavilion"
+  },
+  {
+    "id": "crime-11",
+    "title": "The Great Library Dewey Scramble",
+    "description": "Every single book on quantum mechanics was interfiled under 641.5 (Hearty Crockpot Recipes).",
+    "setting": "Central Reference Library, 3rd Floor"
+  },
+  {
+    "id": "crime-12",
+    "title": "The Aquarium Bubble Bath Incident",
+    "description": "Ten gallons of strawberry bubble bath were poured into the main penguin waterfall habitat.",
+    "setting": "Oceanic Kingdom Aquarium Penguin Cove"
+  },
+  {
+    "id": "crime-13",
+    "title": "The Velvet Rope Vanishing",
+    "description": "The ultra-exclusive VIP club's crimson velvet stanchion ropes were replaced with braided licorice twists.",
+    "setting": "Club Nocturne Velvet Entrance"
+  },
+  {
+    "id": "crime-14",
+    "title": "The Trophy Case Bowling Ball Swap",
+    "description": "The championship gold bowling trophy was replaced with a frozen honey-glazed ham.",
+    "setting": "Kingpin Lanes Hall of Fame"
+  },
+  {
+    "id": "crime-15",
+    "title": "The Botanical Garden Cactus Hat Scandal",
+    "description": "The rare hundred-year Saguaro cactus was crowned with a sombrero and glued-on googly eyes.",
+    "setting": "The Conservatory Desert Greenhouse"
+  },
+  {
+    "id": "crime-16",
+    "title": "The Mona Lisa Bubblegum Tragedy",
+    "description": "A single piece of pink bubblegum was stuck precisely onto the glass frame enclosing the Mona Lisa replica.",
+    "setting": "The Art Academy Atrium Gallery"
+  },
+  {
+    "id": "crime-17",
+    "title": "The Great Tapioca Spill of Tram #4",
+    "description": "Forty pounds of cooked boba pearls were dumped down the funicular track cable housing.",
+    "setting": "The Mountain Funicular Lower Station"
+  },
+  {
+    "id": "crime-18",
+    "title": "The Stolen Chess Queen of St. Jude's",
+    "description": "The grandmaster tournament's carved ivory queen piece was substituted with a salt shaker wrapped in tinfoil.",
+    "setting": "St. Jude Chess Club Tournament Hall"
+  },
+  {
+    "id": "crime-19",
+    "title": "The Hot Sauce Fire Extinguisher",
+    "description": "The diner's emergency wall fire extinguisher was emptied and refilled with habanero buffalo sauce.",
+    "setting": "Mel's 24-Hour Neon Diner"
+  },
+  {
+    "id": "crime-20",
+    "title": "The Pigeon Tuxedo Conspiracy",
+    "description": "Twelve town square pigeons were spotted wearing miniature tailored Velcro bowties and cummerbunds.",
+    "setting": "Piazza San Marco Fountain Plaza"
+  },
+  {
+    "id": "crime-21",
+    "title": "The Midnight Squeaky Floorboard Polish",
+    "description": "The floor of the silent monastery was coated in high-gloss silicone buff, turning it into a treacherous ice rink.",
+    "setting": "Cloistered Abbey of Perpetual Quiet"
+  },
+  {
+    "id": "crime-22",
+    "title": "The Missing Diamond Collar of Sir Paws",
+    "description": "The rhinestone-encrusted silk collar was lifted from the sleeping Persian cat during the grand cat show.",
+    "setting": "Convention Hall Best-in-Show Grooming Lounge"
+  },
+  {
+    "id": "crime-23",
+    "title": "The Submarine Hatch Padlock",
+    "description": "The naval museum's historic decommissioned submarine had its top hatch padlocked shut with a glittery pink diary lock.",
+    "setting": "Harbor Pier 9 Naval Exhibit"
+  },
+  {
+    "id": "crime-24",
+    "title": "The Stolen Master Key of the Grand Hotel",
+    "description": "The golden master skeleton key was removed from the concierge safe and replaced with a forged cardboard cut-out.",
+    "setting": "The Grand Carlton Concierge Desk"
+  },
+  {
+    "id": "crime-25",
+    "title": "The Disappearing Fondue Fountain",
+    "description": "The centerpiece four-tier Swiss chocolate fountain was swapped with a recirculating cheese fondue pump.",
+    "setting": "Bellevue Gala Ballroom"
+  },
+  {
+    "id": "crime-26",
+    "title": "The Upside-Down Gallery Prank",
+    "description": "All 18 paintings in the contemporary wing were turned precisely 180 degrees upside down without tripping alarms.",
+    "setting": "Modern Arts Institute East Wing"
+  },
+  {
+    "id": "crime-27",
+    "title": "The Perfumery Vinegar Tampering",
+    "description": "The tester bottle of $900-an-ounce 'Midnight Orchid' perfume was refilled with cloudy apple cider vinegar.",
+    "setting": "Boutique Rue de Fleur Vanity Bar"
+  },
+  {
+    "id": "crime-28",
+    "title": "The Stolen Golden Horseshoe",
+    "description": "The historic lucky horseshoe nailed over the stable archway was plucked down and replaced with a horseshoe crab shell.",
+    "setting": "Meadowbrook Championship Equestrian Stables"
+  },
+  {
+    "id": "crime-29",
+    "title": "The Symphony Score Doodle Incident",
+    "description": "The maestro's first-edition Beethoven 5th score had stick-figure mustaches inked onto every musical rest.",
+    "setting": "Concert Hall Conductor's Dressing Suite"
+  },
+  {
+    "id": "crime-30",
+    "title": "The Vanished Vintage Port Cask",
+    "description": "A 1928 port barrel was drained in the wine cellar and refilled with store-bought grape soda.",
+    "setting": "Château Du Val Vintage Cellars"
+  },
+  {
+    "id": "crime-31",
+    "title": "The Disappearing Diamond Stylus",
+    "description": "The audiophile lounge's $5,000 turntable diamond needle was swapped with a sharpened safety pin.",
+    "setting": "Vinyl & Velvet Listening Lounge"
+  },
+  {
+    "id": "crime-32",
+    "title": "The High Roller Dice Switch",
+    "description": "The craps table's precision acrylic dice were swapped with weighted foam novelty dice that always roll snake eyes.",
+    "setting": "The Velvet Mirage Casino High Limit Room"
+  },
+  {
+    "id": "crime-33",
+    "title": "The Clockwork Canary Theft",
+    "description": "The antique jeweler's mechanical singing gold canary was snatched from its gilded Victorian cage.",
+    "setting": "Oppenheim & Co. Horology Showroom"
+  },
+  {
+    "id": "crime-34",
+    "title": "The Great Wasabi Macaron Switch",
+    "description": "A tray of mint-flavored French macarons was spiked with pure grated Japanese wasabi root paste.",
+    "setting": "Pâtisserie Royale Kitchen"
+  },
+  {
+    "id": "crime-35",
+    "title": "The Midnight Fog Machine Siege",
+    "description": "The city council chamber ventilation system was rigged with theatrical strawberry-scented dry ice smoke.",
+    "setting": "City Hall Council Chamber"
+  },
+  {
+    "id": "crime-36",
+    "title": "The Stolen Telescope Eyepiece",
+    "description": "The university observatory's ultra-wide planetary lens was replaced with a kaleidoscopic party lens.",
+    "setting": "Stargazer Ridge Observatory Dome"
+  },
+  {
+    "id": "crime-37",
+    "title": "The Goldfish Bowl Champagne Toast",
+    "description": "The crystal punchbowl at the governor's banquet was populated with seven live, swimming orange goldfish.",
+    "setting": "State Capitol Executive Reception Hall"
+  },
+  {
+    "id": "crime-38",
+    "title": "The Great Kazoo Symphony Sabotage",
+    "description": "Every flutist's instrument case in the orchestra pit was replaced with a plastic metallic kazoo.",
+    "setting": "Civic Auditorium Orchestra Pit"
+  },
+  {
+    "id": "crime-39",
+    "title": "The Stolen Sovereign Mint Stamp",
+    "description": "The commemorative bicentennial coin die stamp was purloined and replaced with a cookie cutter shape.",
+    "setting": "Old Royal Mint Vault Room"
+  },
+  {
+    "id": "crime-40",
+    "title": "The Midnight Marquee Muddle",
+    "description": "The vintage cinema marquee letters were rearranged to read 'FREE WEASELS IN THE BASEMENT TONIGHT'.",
+    "setting": "The Rialto Cinema Grand Facade"
+  }
+]

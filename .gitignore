@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+tests/test_cases/
+cases/test_*
+data/test_*
+
+# Save Files & User Progress
+saves/*.json
+!saves/.gitkeep
+
+# Large Vector Database & Test Chroma
+data/chroma_db/
+data/test_chroma/
+
+# Environment Variables & Secrets
+.env
+
+# Logs
+logs/*.log
+logs/*.jsonl
+!logs/.gitkeep
+
+# Operating System & IDE Artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/

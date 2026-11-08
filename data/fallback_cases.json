@@ -1,0 +1,361 @@
+[
+  {
+    "id": "case-fallback-01",
+    "date": "2026-11-04",
+    "title": "The Golden Spoon Heist",
+    "crime_description": "The museum's ancient Roman solid golden spoon was replaced with a cheap neon yellow plastic spork.",
+    "setting": "The Gilded Antiquities Wing of the Metropolitan Museum",
+    "suspect": {
+      "name": "Barnaby 'Fingers' Finch",
+      "occupation": "Assistant Night Janitor & Origami Enthusiast",
+      "quirk": "Speaks compulsively in elaborate nautical metaphors and sea shanties."
+    },
+    "dossier": [
+      {
+        "id": "fact-1",
+        "text": "Security cameras recorded a shadowy figure wearing bright canary-yellow boots fleeing the exhibit hall."
+      },
+      {
+        "id": "fact-2",
+        "text": "The antiquities gallery main power and backup generator were abruptly severed at precisely 11:15 PM."
+      },
+      {
+        "id": "fact-3",
+        "text": "A receipt from 'Spork Emporium' dated 10:45 PM that evening was recovered from the custodial break room bin."
+      }
+    ],
+    "truth_timeline": [
+      {
+        "time": "10:30 PM",
+        "event": "Barnaby arrives at the museum carrying a yellow backpack containing yellow rubber wading boots."
+      },
+      {
+        "time": "10:45 PM",
+        "event": "Barnaby runs across the street to Spork Emporium to purchase a neon yellow spork."
+      },
+      {
+        "time": "11:15 PM",
+        "event": "Barnaby cuts the main power breaker in the basement, plunging the hall into darkness."
+      },
+      {
+        "time": "11:18 PM",
+        "event": "Barnaby opens the display case, swaps the Roman golden spoon with the spork, and flees down the hall in yellow boots."
+      }
+    ],
+    "lie_plan": {
+      "cover_story": "Barnaby claims he was peacefully reading 'Moby Dick' in the 3rd floor lounge under bright fluorescent chandelier lighting the entire night without interruption, wearing ordinary sensible brown leather dress brogues.",
+      "weak_points": [
+        {
+          "id": "wp-1",
+          "claim": "I was wearing my finest polished brown leather brogues, fit for an admiral's deck.",
+          "conflicts_with": "fact-1",
+          "trigger_topics": ["shoes", "boots", "footwear", "feet", "what were you wearing"],
+          "planned_slip": "Me deck shoes were strictly regulation brown leather oxfords, matey! I wouldn't be caught dead roaming the gangways in glaring canary-yellow sea boots!"
+        },
+        {
+          "id": "wp-2",
+          "claim": "The chandeliers blazed like harbor lighthouses with uninterrupted electric splendor all night long.",
+          "conflicts_with": "fact-2",
+          "trigger_topics": ["power", "lights", "darkness", "electricity", "11:15", "blackout"],
+          "planned_slip": "The electric lamps never flickered once, cap'n! The great chandelier burned bright as high noon from dusk till dawn without a single second of blackout."
+        },
+        {
+          "id": "wp-3",
+          "claim": "I stayed firmly anchored on the 3rd floor and never ventured down to any shops or break rooms.",
+          "conflicts_with": "fact-3",
+          "trigger_topics": ["spork", "receipt", "break room", "store", "purchase", "10:45"],
+          "planned_slip": "I never dropped anchor at any terrestrial cutlery shop! I haven't set foot in any Spork Emporium nor tossed any receipts into the mess hall bin."
+        }
+      ]
+    },
+    "solution_contradictions": [
+      "Suspect claims he wore brown leather oxfords and denies yellow boots, contradicting Fact 1 (figure in canary-yellow boots).",
+      "Suspect claims the lights never went out all night, contradicting Fact 2 (power cut at 11:15 PM).",
+      "Suspect claims he never left the 3rd floor or bought cutlery, contradicting Fact 3 (Spork Emporium receipt at 10:45 PM)."
+    ]
+  },
+  {
+    "id": "case-fallback-02",
+    "date": "2026-11-05",
+    "title": "The Decaf Conspiracy",
+    "crime_description": "The city hall espresso machine's dark roast beans were swapped with pulverized chicory and decaf crystals.",
+    "setting": "The Mayor's Private Executive Breakroom",
+    "suspect": {
+      "name": "Penelope 'Pip' Vane",
+      "occupation": "Chief Administrative Stenographer",
+      "quirk": "Uses hyper-formal legalistic Latin phrasing and cites fictitious municipal penal codes."
+    },
+    "dossier": [
+      {
+        "id": "fact-1",
+        "text": "The executive suite electronic badge reader logged Penelope's keycard scanning into the kitchen at 8:12 AM."
+      },
+      {
+        "id": "fact-2",
+        "text": "A lavender scent of artisanal French lavender hand cream was discovered smeared on the espresso hopper lid."
+      },
+      {
+        "id": "fact-3",
+        "text": "A half-empty pouch of 'Maison Chicory Decaf Blends' was discovered inside Penelope's desk drawer."
+      }
+    ],
+    "truth_timeline": [
+      {
+        "time": "7:55 AM",
+        "event": "Penelope applies Provence lavender moisturizer to her hands at her desk."
+      },
+      {
+        "time": "8:12 AM",
+        "event": "Penelope swipes into the executive kitchen with her personal keycard."
+      },
+      {
+        "time": "8:15 AM",
+        "event": "Penelope unscrews the grinder hopper, leaves lavender residue, dumps the decaf chicory in, and hides the pouch in her desk."
+      }
+    ],
+    "lie_plan": {
+      "cover_story": "Penelope insists prima facie that she never arrived at City Hall until 9:00 AM sharp, suffers from a deadly allergy to all lavender botanicals, and drinks exclusively pure black Colombian dark roast.",
+      "weak_points": [
+        {
+          "id": "wp-1",
+          "claim": "I did not set foot within municipal premises prior to 9:00 AM.",
+          "conflicts_with": "fact-1",
+          "trigger_topics": ["arrival", "time", "keycard", "badge", "8:12", "morning"],
+          "planned_slip": "Pursuant to statutory truth, I was miles away in transit and never swiped any access credential into the executive kitchen at 8:12 AM!"
+        },
+        {
+          "id": "wp-2",
+          "claim": "I am afflicted with severe respiratory anaphylaxis to lavender and only use unscented petroleum jelly.",
+          "conflicts_with": "fact-2",
+          "trigger_topics": ["lavender", "scent", "smell", "cream", "hands", "hopper"],
+          "planned_slip": "Res ipsa loquitur, officer! I despise all floral aromas and have never possessed nor applied French lavender hand ointment in my entire existence!"
+        },
+        {
+          "id": "wp-3",
+          "claim": "My desk contains strictly court transcripts and certified unadulterated high-caffeine roasts.",
+          "conflicts_with": "fact-3",
+          "trigger_topics": ["drawer", "chicory", "decaf", "desk", "pouch"],
+          "planned_slip": "Ex post facto, my filing chambers harbor nothing resembling chicory decaf grains; such foul herbal substitutes are completely alien to my desk!"
+        }
+      ]
+    },
+    "solution_contradictions": [
+      "Suspect claims she arrived at 9:00 AM and never swiped in, contradicting Fact 1 (badge scan at 8:12 AM).",
+      "Suspect claims total allergic aversion to lavender, contradicting Fact 2 (lavender cream on the coffee hopper).",
+      "Suspect claims no chicory was ever in her possession or desk, contradicting Fact 3 (decaf chicory found in her drawer)."
+    ]
+  },
+  {
+    "id": "case-fallback-03",
+    "date": "2026-11-06",
+    "title": "The Flamingo Flap",
+    "crime_description": "All 37 plastic lawn flamingos along Maple Street were dressed in hand-knitted turtleneck sweaters overnight.",
+    "setting": "The Pristine Suburban Lawns of Whisper Pines",
+    "suspect": {
+      "name": "Arthur Pendelton",
+      "occupation": "Retired Haberdasher & Yarn Guild President",
+      "quirk": "Speaks exclusively in theatrical Shakespearean soliloquies."
+    },
+    "dossier": [
+      {
+        "id": "fact-1",
+        "text": "Strands of rare emerald-green Shetland angora wool were snagged on the beak of flamingo #14."
+      },
+      {
+        "id": "fact-2",
+        "text": "The local hardware store clerk sold Arthur a pair of heavy aluminum wire-snippers at 6:30 PM."
+      },
+      {
+        "id": "fact-3",
+        "text": "Weather logs confirm a torrential rainstorm drenched Maple Street from midnight until 3:00 AM."
+      }
+    ],
+    "truth_timeline": [
+      {
+        "time": "6:30 PM",
+        "event": "Arthur buys wire-snippers to cut the flamingo lawn stakes."
+      },
+      {
+        "time": "11:00 PM",
+        "event": "Arthur slips out with a basket of green Shetland wool sweaters."
+      },
+      {
+        "time": "1:00 AM",
+        "event": "Arthur clothes all 37 flamingos in the driving rain, getting thoroughly soaked."
+      }
+    ],
+    "lie_plan": {
+      "cover_story": "Arthur claims he slumbered undisturbed beneath his eiderdown quilt through a crisp, dry, starry evening, that he works only with synthetic acrylic yarns, and hasn't bought hardware tools in forty winters.",
+      "weak_points": [
+        {
+          "id": "wp-1",
+          "claim": "I weave solely with modern synthetic polyester; coarse animal wool hath never touched mine artistic needles.",
+          "conflicts_with": "fact-1",
+          "trigger_topics": ["wool", "yarn", "angora", "knitting", "material", "green"],
+          "planned_slip": "Hark, vile slander! Mine immaculate hands touch only modest acrylic polymers; not a single strand of emerald Shetland wool exists in my demesne!"
+        },
+        {
+          "id": "wp-2",
+          "claim": "I have not entered a commercial ironmonger's shop nor touched metal shears in an epoch.",
+          "conflicts_with": "fact-2",
+          "trigger_topics": ["tools", "shears", "snippers", "hardware", "store", "6:30"],
+          "planned_slip": "Upon mine honor, I bought no rude iron clippers or wire shears at eventide! Such crude instruments are foreign to my poet soul!"
+        },
+        {
+          "id": "wp-3",
+          "claim": "The nocturnal firmament was as dry as parchment, with constellations glittering without a drop of rain.",
+          "conflicts_with": "fact-3",
+          "trigger_topics": ["rain", "storm", "weather", "wet", "midnight", "drenched"],
+          "planned_slip": "By the heavens, 'twas a night as arid as bone! The skies bore no deluge or rainstorm between midnight and dawn while I slumbered!"
+        }
+      ]
+    },
+    "solution_contradictions": [
+      "Suspect claims he never uses emerald Shetland wool, contradicting Fact 1 (emerald Shetland wool on flamingo).",
+      "Suspect claims he bought no tools or wire cutters, contradicting Fact 2 (wire-snippers purchased at 6:30 PM).",
+      "Suspect claims the night was bone-dry and star-lit, contradicting Fact 3 (torrential rainstorm midnight to 3 AM)."
+    ]
+  },
+  {
+    "id": "case-fallback-04",
+    "date": "2026-11-07",
+    "title": "The Cuckoo Clock Mutiny",
+    "crime_description": "The master gears in the astronomical town clock were reprogrammed so the cuckoo shrieks like an enraged rooster.",
+    "setting": "The Municipal Clocktower Belfry",
+    "suspect": {
+      "name": "Ignatius 'Cogs' Geary",
+      "occupation": "Clockmaker & Competitive Pigeon Racer",
+      "quirk": "Intersperses his speech with ticking noises ('tick-tick', 'tock') and mechanical timekeeping metaphors."
+    },
+    "dossier": [
+      {
+        "id": "fact-1",
+        "text": "A brass 14-tooth escapement gear stamped with serial number IG-99 was left on the belfry gear rack."
+      },
+      {
+        "id": "fact-2",
+        "text": "The tower keeper found muddy size-9 workboot prints ascending the external maintenance ladder at 10:00 PM."
+      },
+      {
+        "id": "fact-3",
+        "text": "An audio recording cassette labeled 'Enraged Farm Cockerel 1994' was found missing from Ignatius's workshop."
+      }
+    ],
+    "truth_timeline": [
+      {
+        "time": "9:30 PM",
+        "event": "Ignatius grabs his size-9 boots and rooster audio tape from his workshop."
+      },
+      {
+        "time": "10:00 PM",
+        "event": "Ignatius scales the belfry external maintenance ladder in muddy boots."
+      },
+      {
+        "time": "10:30 PM",
+        "event": "Ignatius drops his custom stamped gear IG-99 while swapping the chiming bellows."
+      }
+    ],
+    "lie_plan": {
+      "cover_story": "Ignatius insists he never fabricates numbered brass escapements, has severe vertigo preventing him from climbing ladders, and only collects recordings of gentle Swiss songbirds.",
+      "weak_points": [
+        {
+          "id": "wp-1",
+          "claim": "Tick-tock, I never engrave custom serial numbers or initials on my clockwork cogs.",
+          "conflicts_with": "fact-1",
+          "trigger_topics": ["gear", "escapement", "serial", "IG-99", "brass"],
+          "planned_slip": "Tick-tick! My pendulum swings true! I have never stamped 'IG-99' onto any 14-tooth brass escapement gear in my entire precision career!"
+        },
+        {
+          "id": "wp-2",
+          "claim": "I suffer from debilitating altitude sickness and would never scale any external tower ladder.",
+          "conflicts_with": "fact-2",
+          "trigger_topics": ["ladder", "climbing", "boots", "footprints", "belfry", "10:00"],
+          "planned_slip": "Tock! My balance wheel spins out at heights! I never put on heavy size-9 boots or climbed up the exterior belfry ladder at ten o'clock!"
+        },
+        {
+          "id": "wp-3",
+          "claim": "My audio library consists strictly of tranquil alpine nightingales, never barnyard fowl.",
+          "conflicts_with": "fact-3",
+          "trigger_topics": ["tape", "cassette", "rooster", "audio", "cockerel", "sound"],
+          "planned_slip": "Tick! Scurrilous vibrations! I harbor no farmyard rooster recordings whatsoever; my acoustic cassettes feature only soothing Swiss doves!"
+        }
+      ]
+    },
+    "solution_contradictions": [
+      "Suspect claims he never stamped 'IG-99' on a gear, contradicting Fact 1 (gear IG-99 found at scene).",
+      "Suspect claims he never climbed the ladder or wore size-9 boots, contradicting Fact 2 (size-9 bootprints on ladder at 10 PM).",
+      "Suspect claims he has no rooster recordings, contradicting Fact 3 (Enraged Cockerel cassette missing from his shop)."
+    ]
+  },
+  {
+    "id": "case-fallback-05",
+    "date": "2026-11-08",
+    "title": "The Stolen Chess Queen",
+    "crime_description": "The grandmaster tournament's carved ivory queen piece was substituted with a salt shaker wrapped in tinfoil.",
+    "setting": "St. Jude Chess Club Tournament Hall",
+    "suspect": {
+      "name": "Boris 'Gambit' Vronsky",
+      "occupation": "Former Chess Grandmaster turned Pretzel Vendor",
+      "quirk": "Analyzes every life situation as a chess opening or endgame blunder."
+    },
+    "dossier": [
+      {
+        "id": "fact-1",
+        "text": "A smear of coarse sea salt and sesame pretzel glaze was found on the championship board square d1."
+      },
+      {
+        "id": "fact-2",
+        "text": "Boris's motorized pretzel cart was photographed parked illegally outside the club back door at 7:45 PM."
+      },
+      {
+        "id": "fact-3",
+        "text": "The roll of heavy-duty aluminum foil used to wrap the shaker was purchased with Boris's loyalty card at 7:15 PM."
+      }
+    ],
+    "truth_timeline": [
+      {
+        "time": "7:15 PM",
+        "event": "Boris buys aluminum foil at the corner market with his store loyalty card."
+      },
+      {
+        "time": "7:45 PM",
+        "event": "Boris parks his pretzel cart by the tournament hall fire escape."
+      },
+      {
+        "time": "8:00 PM",
+        "event": "Boris sneaks to board 1 with pretzel glaze on his fingers, swiping the ivory queen."
+      }
+    ],
+    "lie_plan": {
+      "cover_story": "Boris claims he was three miles away selling gluten-free churros without sesame or salt, never drove his cart near St. Jude, and never bought tinfoil in his life.",
+      "weak_points": [
+        {
+          "id": "wp-1",
+          "claim": "My confectionery inventory uses only powdered sugar; I never touch coarse rock salt or pretzel glaze.",
+          "conflicts_with": "fact-1",
+          "trigger_topics": ["salt", "pretzel", "glaze", "square", "board", "d1"],
+          "planned_slip": "A tactical blunder by the prosecution! My fingertips are coated solely in sweet powdered sugar; I have handled no coarse sea salt nor sesame pretzel syrup today!"
+        },
+        {
+          "id": "wp-2",
+          "claim": "My pretzel vehicle remained parked in the East District depot all evening.",
+          "conflicts_with": "fact-2",
+          "trigger_topics": ["cart", "parking", "back door", "7:45", "photo"],
+          "planned_slip": "Checkmate, inspector! My mobile cart never visited the alley of St. Jude at 7:45 PM; it was securely stationed miles away!"
+        },
+        {
+          "id": "wp-3",
+          "claim": "I have no grocery loyalty account and have never purchased aluminum kitchen foil.",
+          "conflicts_with": "fact-3",
+          "trigger_topics": ["foil", "tinfoil", "loyalty card", "market", "7:15", "receipt"],
+          "planned_slip": "An illegal move! I hold no loyalty club memberships and purchased zero aluminum foil rolls at 7:15 PM or ever!"
+        }
+      ]
+    },
+    "solution_contradictions": [
+      "Suspect claims he never handles sea salt or pretzel glaze, contradicting Fact 1 (salt and pretzel glaze found on square d1).",
+      "Suspect claims his cart was parked miles away, contradicting Fact 2 (cart photographed outside club at 7:45 PM).",
+      "Suspect claims he has no loyalty card and bought no foil, contradicting Fact 3 (foil purchased on his loyalty card at 7:15 PM)."
+    ]
+  }
+]

@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-15",
+  "date": "2026-11-15",
+  "title": "The Helium Philharmonic",
+  "crime_description": "The opera house pipe organ was pumped full of helium gas right before the opening crescendo of Don Giovanni.",
+  "setting": "The Royal Grand Opera Stage",
+  "suspect": {
+    "name": "Camille 'Cacophony' Cartwright",
+    "occupation": "Discordant Harmonium Tuner",
+    "quirk": "Speaks in over-the-top musical metaphors, using opera terms to describe everyday situations."
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows a figure entering the organ room at 10:15 PM, wearing a black cloak with a silver pin in the shape of a treble clef."
+    },
+    {
+      "id": "fact-2",
+      "text": "The pipe organ's gas tank was filled with helium between 10:30 PM and 10:45 PM, as recorded by the opera house's maintenance log."
+    },
+    {
+      "id": "fact-3",
+      "text": "Witnesses report seeing a person matching Cartwright's description fleeing the scene, dropping a torn piece of fabric caught on a nearby music stand at 11:15 PM."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Cartwright sneaks into the organ room, wearing the black cloak and treble clef pin."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Cartwright executes the micro-crime, pumping the helium into the pipe organ."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Cartwright flees, accidentally dropping the torn fabric."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was merely there to adjust the harmonium's resonance, but I must have gotten my cloak caught on something. I swear I didn't do anything to the pipe organ.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I didn't enter the organ room until after 11:00 PM, to fix a minor tuning issue.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "Cartwright's alibi"
+        ],
+        "planned_slip": "Oh, I'm sure the staff would remember if I was already there, what with the late-night harmonium adjustments and all."
+      },
+      {
+        "id": "wp-2",
+        "claim": "The gas tank was already filled with helium when I arrived, I must have thought it was just air.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "gas tank contents"
+        ],
+        "planned_slip": "I could have sworn it said 'helium' on the tank, but it must have been just a fancy label."
+      },
+      {
+        "id": "wp-3",
+        "claim": "I wasn't fleeing, I was just taking a shortcut to the dressing rooms to change into my street clothes.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "fleeing suspect"
+        ],
+        "planned_slip": "I'm sure the witnesses just saw me in a hurry, not making a mad dash for it."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Cartwright claimed to have entered the organ room after 11:00 PM, directly conflicting with fact-1's timestamp.",
+    "Cartwright claimed the gas tank was already filled with helium, which contradicts fact-2's maintenance log record."
+  ],
+  "seed_id": "crime-04"
+}

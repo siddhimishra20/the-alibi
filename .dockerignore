@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.git/
+.gitignore
+.DS_Store
+*.log
+saves/progress.json
+

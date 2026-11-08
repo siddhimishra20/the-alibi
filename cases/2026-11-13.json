@@ -1,0 +1,77 @@
+{
+  "id": "case-2026-11-13",
+  "date": "2026-11-13",
+  "title": "The Disappearing Diamond Stylus",
+  "crime_description": "The audiophile lounge's $5,000 turntable diamond needle was swapped with a sharpened safety pin.",
+  "setting": "Vinyl & Velvet Listening Lounge",
+  "suspect": {
+    "name": "Prof. Zephyrine P. Fizzypop",
+    "occupation": "Professional Pinball Technician",
+    "quirk": "Speaks in 19th-century British naval slang"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage at 10:45 PM shows the suspect's hands replacing the diamond needle with a safety pin."
+    },
+    {
+      "id": "fact-2",
+      "text": "A security camera captures a glimpse of the suspect's pocket watch, which reads 10:45 PM, at the crime scene."
+    },
+    {
+      "id": "fact-3",
+      "text": "A patron reported seeing the suspect examining the turntable's tonearm at 10:30 PM, about 15 minutes before the crime."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Prof. Fizzypop prepares a set of lockpicks and a spare safety pin."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Prof. Fizzypop swaps the diamond needle with a safety pin."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Prof. Fizzypop flees the scene, accidentally dropping a set of lockpicks."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "I was in the back room, fixing a wonky pinball machine, and didn't notice anything suspicious.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "I've never been to the Vinyl & Velvet in my life.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "previous patrons"
+        ],
+        "planned_slip": "Slip statement: 'Actually, I've been there three times already this month.'"
+      },
+      {
+        "id": "wp-2",
+        "claim": "The pocket watch I'm seen wearing is a family heirloom, and it's not actually a working timepiece.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "timekeeping"
+        ],
+        "planned_slip": "Slip statement: 'Oh, this old thing? It's just a fancy paperweight.'"
+      },
+      {
+        "id": "wp-3",
+        "claim": "The patron who reported seeing me examining the turntable's tonearm must have mistaken me for someone else.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "patron eyewitness"
+        ],
+        "planned_slip": "Slip statement: 'What patron? I don't know anyone who works here.'"
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Prof. Fizzypop claimed to have never been to the Vinyl & Velvet, which directly conflicts with fact-1.",
+    "Prof. Fizzypop claimed the pocket watch he's seen wearing is a family heirloom and not a working timepiece, which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-31"
+}

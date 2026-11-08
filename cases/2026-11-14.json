@@ -1,0 +1,80 @@
+{
+  "id": "case-2026-11-14",
+  "date": "2026-11-14",
+  "title": "The Great Kazoo Symphony Sabotage",
+  "crime_description": "Every flutist's instrument case in the orchestra pit was replaced with a plastic metallic kazoo.",
+  "setting": "Civic Auditorium Orchestra Pit",
+  "suspect": {
+    "name": "Bruno Zingpocket",
+    "occupation": "Professional Harmonica Tuner",
+    "quirk": "Speaks only in rhyming couplets"
+  },
+  "dossier": [
+    {
+      "id": "fact-1",
+      "text": "Security footage shows Bruno entering the Civic Auditorium at 9:45 PM wearing a black cloak."
+    },
+    {
+      "id": "fact-2",
+      "text": "Eyewitness reports a suspicious figure seen near the orchestra pit at 10:50 PM with a toolbox marked 'Property of Civic Auditorium Maintenance'."
+    },
+    {
+      "id": "fact-3",
+      "text": "Forensic analysis reveals a dropped screwdriver near the orchestra pit with Bruno's fingerprints on it."
+    }
+  ],
+  "truth_timeline": [
+    {
+      "time": "10:15 PM",
+      "event": "Bruno prepares tools and sneaks in."
+    },
+    {
+      "time": "10:45 PM",
+      "event": "Bruno executes the micro-crime."
+    },
+    {
+      "time": "11:15 PM",
+      "event": "Bruno flees, accidentally dropping evidence."
+    }
+  ],
+  "lie_plan": {
+    "cover_story": "Bruno claims to be a maintenance worker assigned to replace old instrument cases with new ones.",
+    "weak_points": [
+      {
+        "id": "wp-1",
+        "claim": "Bruno claims he was in the Civic Auditorium library researching a book on harmonica history at 9:45 PM.",
+        "conflicts_with": "fact-1",
+        "trigger_topics": [
+          "security footage",
+          "library access"
+        ],
+        "planned_slip": "Bruno will claim he was 'just browsing the shelves' when asked about the security footage."
+      },
+      {
+        "id": "wp-2",
+        "claim": "Bruno claims the toolbox was left there by a maintenance worker who forgot to pick it up.",
+        "conflicts_with": "fact-2",
+        "trigger_topics": [
+          "toolbox",
+          "maintenance"
+        ],
+        "planned_slip": "Bruno will claim he 'must have borrowed it from someone' when asked about the toolbox."
+      },
+      {
+        "id": "wp-3",
+        "claim": "Bruno claims the screwdriver was planted by a rival harmonica tuner as a prank.",
+        "conflicts_with": "fact-3",
+        "trigger_topics": [
+          "rival harmonica tuner",
+          "prank"
+        ],
+        "planned_slip": "Bruno will claim he 'must have just seen it lying there' when asked about the screwdriver."
+      }
+    ]
+  },
+  "solution_contradictions": [
+    "Bruno claimed he was in the library which directly conflicts with fact-1.",
+    "Bruno claimed the toolbox was left there by a maintenance worker which directly conflicts with fact-2."
+  ],
+  "seed_id": "crime-38"
+}
