@@ -423,20 +423,12 @@ async function submitQuestion(questionText) {
         }
         document.getElementById("room-suspect-face").innerText = getFaceForEmotion(mood);
 
-        // Append Suspect Reply
+        // Append Suspect Reply (Clean noir dialogue without internal claim tag clutter)
         const sMsg = document.createElement("div");
         sMsg.className = "transcript-msg suspect-msg";
-        let claimsHtml = "";
-        if (data.extracted_claims && data.extracted_claims.length > 0) {
-            claimsHtml = `<div class="suspect-claim-tags">` + data.extracted_claims.map(c => 
-                `<span class="claim-tag">[CLAIM: ${escapeHtml(c.subject)} ${escapeHtml(c.predicate)} ${escapeHtml(c.object_value)}]</span>`
-            ).join("") + `</div>`;
-        }
-
         sMsg.innerHTML = `
             <span class="msg-sender">[${escapeHtml(currentCase.suspect.name.toUpperCase())}]:</span>
             <span class="msg-text">"${escapeHtml(data.answer)}"</span>
-            ${claimsHtml}
         `;
         transcript.appendChild(sMsg);
         transcript.scrollTop = transcript.scrollHeight;
