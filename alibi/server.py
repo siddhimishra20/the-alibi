@@ -1,7 +1,7 @@
 import os
 import time
 from typing import Optional, Dict, Any, List
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, HTMLResponse, Response
@@ -88,11 +88,13 @@ def sanitize_case_for_client(case_obj) -> Dict[str, Any]:
         ]
     }
 
-@app.api_route("/api/character/{seed}.png", methods=["GET", "HEAD"])
-def get_character_portrait(seed: str, scale: int = 6, crt: bool = True):
+@app.get("/api/character/{seed}.png")
+def get_character_portrait(request: Request, seed: str, scale: int = 6, crt: bool = True):
     """Serve procedurally-generated pixel-art suspect portrait as PNG."""
     try:
         png_bytes = get_suspect_png_bytes(seed, scale=scale, crt=crt)
+        if request.method == "HEAD":
+            return Response(content=b"", media_type="image/png", headers={"Content-Length": str(len(png_bytes))})
         return Response(content=png_bytes, media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate character: {e}")

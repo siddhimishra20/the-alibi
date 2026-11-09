@@ -1,5 +1,5 @@
-from typing import List, Optional, Literal
-from pydantic import BaseModel, Field
+from typing import List, Optional, Literal, Any
+from pydantic import BaseModel, Field, model_validator
 
 class VerifiedFact(BaseModel):
     id: str = Field(description="Unique identifier for the fact, e.g. fact-1")
@@ -98,8 +98,44 @@ class CaseValidationResult(BaseModel):
     reason: str
 
 class JudgeEvaluation(BaseModel):
-    claim_a_neutral: str = Field(description="Neutral restatement of the highlighted suspect quote")
-    claim_b_neutral: str = Field(description="Neutral restatement of the target dossier fact or earlier statement")
-    logical_incompatibility: str = Field(description="Step-by-step reasoning on whether claim A and claim B cannot both be true simultaneously")
-    verdict: Literal["VALID", "INVALID"] = Field(description="VALID if logically incompatible, INVALID otherwise")
-    narration: str = Field(description="One dry noir narrator sentence explaining the ruling")
+    claim_a_neutral: str = Field(default="", description="Neutral restatement of the highlighted suspect quote")
+    claim_b_neutral: str = Field(default="", description="Neutral restatement of the target dossier fact or earlier statement")
+    logical_incompatibility: str = Field(default="", description="Step-by-step reasoning on whether claim A and claim B cannot both be true simultaneously")
+    verdict: Literal["VALID", "INVALID"] = Field(default="INVALID", description="VALID if logically incompatible, INVALID otherwise")
+    narration: str = Field(default="", description="One dry noir narrator sentence explaining the ruling")
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_fields(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+        normalized = {}
+        for k, v in data.items():
+            clean_k = str(k).lower().replace(" ", "_").replace("-", "_")
+            normalized[clean_k] = v
+
+        res = {}
+        # verdict extraction with strict case-insensitivity
+        v_val = normalized.get("verdict") or normalized.get("verdict_value") or "INVALID"
+        res["verdict"] = "VALID" if str(v_val).strip().upper() == "VALID" else "INVALID"
+
+        # narration / explanation
+        res["narration"] = str(
+            normalized.get("narration") or normalized.get("explanation") or normalized.get("reasoning") or normalized.get("reason") or ""
+        )
+
+        # claim a
+        res["claim_a_neutral"] = str(
+            normalized.get("claim_a_neutral") or normalized.get("claim_a") or normalized.get("claima") or normalized.get("suspect_claim") or ""
+        )
+
+        # claim b
+        res["claim_b_neutral"] = str(
+            normalized.get("claim_b_neutral") or normalized.get("claim_b") or normalized.get("claimb") or normalized.get("target_fact") or ""
+        )
+
+        # logical incompatibility
+        res["logical_incompatibility"] = str(
+            normalized.get("logical_incompatibility") or normalized.get("mutual_exclusivity") or normalized.get("incompatibility") or normalized.get("incompatible") or ""
+        )
+        return res
