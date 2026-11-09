@@ -48,6 +48,11 @@ class AccuseRequest(BaseModel):
 class HintRequest(BaseModel):
     session_id: str
 
+class LLMConfigRequest(BaseModel):
+    provider: str = "groq"  # "ollama" or "groq"
+    groq_api_key: Optional[str] = None
+    groq_model: Optional[str] = "llama-3.1-8b-instant"
+
 def sanitize_case_for_client(case_obj) -> Dict[str, Any]:
     """Sanitize case object so spoilers (truth timeline, weak points) are hidden from players."""
     s_name = case_obj.suspect.name
@@ -79,6 +84,7 @@ def get_status():
 
     return {
         "status": "online",
+        "provider": client.provider,
         "models_verified": verified,
         "installed_models": installed,
         "today": today_str,
@@ -87,6 +93,36 @@ def get_status():
         "games_won": game_manager.progress_data.get("games_won", 0),
         "current_streak": game_manager.progress_data.get("current_streak", 0),
         "max_streak": game_manager.progress_data.get("max_streak", 0)
+    }
+
+@app.get("/api/config/llm")
+def get_llm_config():
+    verified, msg = client.verify_models()
+    return {
+        "provider": client.provider,
+        "has_groq_key": bool(client.groq_api_key),
+        "groq_model": getattr(client, "groq_model", "llama-3.1-8b-instant"),
+        "ollama_model": getattr(client, "model", "llama3.1:latest"),
+        "models_verified": verified,
+        "status_message": msg
+    }
+
+@app.post("/api/config/llm")
+def set_llm_config(req: LLMConfigRequest):
+    if req.groq_api_key:
+        client.groq_api_key = req.groq_api_key.strip()
+        os.environ["GROQ_API_KEY"] = client.groq_api_key
+    if req.groq_model:
+        client.groq_model = req.groq_model.strip()
+    client.provider = req.provider.lower()
+    os.environ["LLM_PROVIDER"] = client.provider
+
+    verified, msg = client.verify_models()
+    return {
+        "success": True,
+        "provider": client.provider,
+        "verified": verified,
+        "message": msg
     }
 
 @app.get("/api/case/today")

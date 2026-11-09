@@ -21,11 +21,21 @@
                 <span class="sub-brand">TERMINAL MICRO-CRIME INTERROGATION ENGINE</span>
             </div>
             <div class="nav-metrics">
+                <button id="btn-engine-config" class="metric-badge btn-clickable" title="Configure AI Inference Engine">⚡ ENGINE: <span id="engine-badge-text">CHECKING...</span></button>
                 <span id="countdown-badge" class="metric-badge">NEXT CASE: --:--:--</span>
                 <span id="streak-badge" class="metric-badge">STREAK: 0 ★</span>
                 <button id="btn-sound-toggle" class="btn-icon" title="Toggle Sound">🔊</button>
             </div>
         </header>
+
+        <!-- CRT POLYGRAPH VOICE-STRESS MONITOR -->
+        <section class="polygraph-monitor cyber-panel">
+            <div class="polygraph-header">
+                <span class="panel-tag">// FORENSIC SIGNAL ANALYZER &amp; AUDIO CIPHER</span>
+                <span class="polygraph-status"><span class="blink-dot">●</span> SIGNAL LOCKED [0x47E0]</span>
+            </div>
+            <pre id="polygraph-display" class="polygraph-canvas">INITIALIZING FORENSIC AUDIO REGISTERS...</pre>
+        </section>
 
         <!-- MAIN MENU / ACTION BAR -->
         <div class="action-bar">
@@ -211,6 +221,45 @@
                         <!-- Loaded dynamically -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- LLM / ENGINE CONFIG MODAL -->
+    <div id="engine-modal" class="modal-overlay hidden">
+        <div class="modal-box cyber-panel">
+            <div class="modal-header">
+                <h2>⚡ AI INFERENCE ENGINE SETTINGS</h2>
+                <button id="btn-close-engine-modal" class="btn-icon">✖</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Switch between <strong>Free Local Ollama</strong> (on your hardware) and <strong>Groq Cloud</strong> (Free, ultra-fast 500 tok/sec).</p>
+                
+                <div class="config-group">
+                    <label class="config-label">ACTIVE ENGINE:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="engine-choice" value="groq" id="radio-groq">
+                            <span>⚡ Groq Cloud (Free, Instant ~500 tok/s)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="engine-choice" value="ollama" id="radio-ollama">
+                            <span>🖥️ Local Ollama (llama3.1:latest)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="groq-inputs-section" class="config-group">
+                    <label for="input-groq-key" class="config-label">GROQ API KEY (<a href="https://console.groq.com" target="_blank" class="glow-link">Get Free Key</a>):</label>
+                    <input type="password" id="input-groq-key" class="cyber-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx">
+                    <p class="input-subtext">Free tier: 14,400 requests/day. No credit card required.</p>
+                </div>
+
+                <div id="engine-status-alert" class="engine-alert hidden"></div>
+
+                <div class="modal-footer-btns">
+                    <button id="btn-save-engine" class="btn btn-primary btn-block">CONNECT ENGINE</button>
+                </div>
             </div>
         </div>
     </div>

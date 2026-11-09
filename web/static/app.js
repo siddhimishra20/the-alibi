@@ -513,4 +513,150 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Auto-load today's case briefing on startup
     fetch("/api/case/today").then(r => r.json()).then(c => renderCase(c)).catch(() => {});
+
+    // Engine Config Modal Handling
+    const engineModal = document.getElementById("engine-modal");
+    const btnEngineConfig = document.getElementById("btn-engine-config");
+    const btnCloseEngineModal = document.getElementById("btn-close-engine-modal");
+    const btnSaveEngine = document.getElementById("btn-save-engine");
+    const inputGroqKey = document.getElementById("input-groq-key");
+    const alertBox = document.getElementById("engine-status-alert");
+
+    function openEngineModal() {
+        if (engineModal) {
+            alertBox.classList.add("hidden");
+            engineModal.classList.remove("hidden");
+        }
+    }
+
+    function closeEngineModal() {
+        if (engineModal) engineModal.classList.add("hidden");
+    }
+
+    if (btnEngineConfig) btnEngineConfig.addEventListener("click", openEngineModal);
+    if (btnCloseEngineModal) btnCloseEngineModal.addEventListener("click", closeEngineModal);
+
+    if (btnSaveEngine) {
+        btnSaveEngine.addEventListener("click", async () => {
+            const isGroq = document.getElementById("radio-groq")?.checked;
+            const provider = isGroq ? "groq" : "ollama";
+            const apiKey = inputGroqKey.value.trim();
+
+            btnSaveEngine.innerText = "CONNECTING...";
+            btnSaveEngine.disabled = true;
+
+            try {
+                const resp = await fetch("/api/config/llm", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        provider: provider,
+                        groq_api_key: apiKey || undefined
+                    })
+                });
+                const data = await resp.json();
+                alertBox.classList.remove("hidden");
+                if (data.verified) {
+                    alertBox.className = "engine-alert success";
+                    alertBox.innerText = `CONNECTED: ${data.message}`;
+                    playSound("win");
+                    loadEngineStatus();
+                    setTimeout(closeEngineModal, 1200);
+                } else {
+                    alertBox.className = "engine-alert error";
+                    alertBox.innerText = `ERROR: ${data.message}`;
+                    playSound("lose");
+                }
+            } catch (err) {
+                alertBox.classList.remove("hidden");
+                alertBox.className = "engine-alert error";
+                alertBox.innerText = "Failed to connect to backend engine.";
+            } finally {
+                btnSaveEngine.innerText = "CONNECT ENGINE";
+                btnSaveEngine.disabled = false;
+            }
+        });
+    }
+
+    loadEngineStatus();
 });
+
+// Procedural CRT Polygraph Voice-Stress Engine
+const EQUALIZER_CHARS = [" ", " ", "▂", "▃", "▄", "▅", "▆", "▇", "█"];
+let polygraphFrame = 0;
+
+function updatePolygraphAnimation() {
+    const el = document.getElementById("polygraph-display");
+    if (!el) return;
+
+    polygraphFrame++;
+    const t = polygraphFrame * 0.35;
+    
+    // Wave 1 (30 chars)
+    let wave1 = "";
+    for (let col = 0; col < 30; col++) {
+        const val = Math.sin(col * 0.28 + t) * Math.cos(col * 0.12 - t * 0.5);
+        const norm = (val + 1) / 2;
+        const charIdx = Math.min(EQUALIZER_CHARS.length - 1, Math.floor(norm * EQUALIZER_CHARS.length));
+        wave1 += EQUALIZER_CHARS[charIdx];
+    }
+
+    // Wave 2 (30 chars)
+    let wave2 = "";
+    for (let col = 0; col < 30; col++) {
+        const val = Math.cos(col * 0.22 - t * 0.8) * Math.sin(col * 0.35 + t * 0.4);
+        const norm = (val + 1) / 2;
+        const charIdx = Math.min(EQUALIZER_CHARS.length - 1, Math.floor(norm * EQUALIZER_CHARS.length));
+        wave2 += EQUALIZER_CHARS[charIdx];
+    }
+
+    // Dynamic metrics
+    const stress = Math.min(99, Math.max(10, Math.floor(35 + 50 * ((Math.sin(t * 0.6) + 1) / 2))));
+    const bpm = Math.min(99, Math.max(60, Math.floor(68 + 26 * ((Math.cos(t * 0.4) + 1) / 2))));
+    const truth = Math.min(99, Math.max(10, Math.floor(15 + 75 * ((Math.sin(t * 0.5 + 1.2) + 1) / 2))));
+
+    // Rolling cipher digits (24 digits grouped in 4)
+    let digits = "";
+    for (let i = 0; i < 6; i++) {
+        const grp = Math.floor(1000 + Math.random() * 9000);
+        digits += (i > 0 ? " " : "") + grp;
+    }
+
+    const reg = (0x47E0 + (polygraphFrame % 16)).toString(16).toUpperCase();
+
+    const line0 = `VOICE STRESS : [${wave1}]  STRESS: ${stress}%  BPM: ${bpm}`;
+    const line1 = `FREQ RESPONSE: [${wave2}]  TRUTH : ${truth}%  REG: 0x${reg}`;
+    const line2 = `CIPHER TRACK : [ ${digits} ]`;
+
+    el.innerText = `${line0}\n${line1}\n${line2}`;
+}
+
+setInterval(updatePolygraphAnimation, 120);
+
+async function loadEngineStatus() {
+    try {
+        const resp = await fetch("/api/config/llm");
+        if (resp.ok) {
+            const data = await resp.json();
+            const badge = document.getElementById("engine-badge-text");
+            if (badge) {
+                if (data.provider === "groq") {
+                    badge.innerText = "⚡ GROQ CLOUD";
+                    badge.style.color = "var(--accent-green)";
+                } else {
+                    badge.innerText = "🖥️ LOCAL OLLAMA";
+                    badge.style.color = "var(--accent-cyan)";
+                }
+            }
+            if (data.provider === "groq") {
+                const rGroq = document.getElementById("radio-groq");
+                if (rGroq) rGroq.checked = true;
+            } else {
+                const rOllama = document.getElementById("radio-ollama");
+                if (rOllama) rOllama.checked = true;
+            }
+        }
+    } catch (e) {
+        console.warn("Could not load LLM engine status", e);
+    }
+}
