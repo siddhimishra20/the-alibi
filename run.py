@@ -22,6 +22,13 @@ def startup_model_check() -> OllamaClient:
     embed_model = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text:latest")
 
     client = OllamaClient(base_url=host, model=model or "llama3.1:latest", embed_model=embed_model)
+    if client.provider == "groq" and client.groq_api_key:
+        print("\n--- [ THE ALIBI: CLOUD LLM INITIALIZATION ] ---")
+        print(f"[+] Provider: Groq Cloud (API Key Detected)")
+        print(f"[+] Chat Model: {client.groq_model}")
+        print(f"[+] Cloud inference active for zero-cost deployment.\n")
+        return client
+
     installed = client.get_installed_models()
 
     if not installed:
@@ -89,8 +96,9 @@ def main():
     parser = argparse.ArgumentParser(description="THE ALIBI: A Daily Micro-Crime Interrogation Game")
     parser.add_argument("--practice", action="store_true", help="Launch directly in practice mode with an uncompleted randomized case")
     parser.add_argument("--cli", action="store_true", help="Launch in simple line-based CLI mode instead of full-screen Textual TUI")
-    parser.add_argument("--web", action="store_true", help="Launch the Web Application (FastAPI + Retro Noir UI) on http://127.0.0.1:8000")
-    parser.add_argument("--port", type=int, default=8000, help="Port to bind the web server (default: 8000)")
+    parser.add_argument("--web", action="store_true", help="Launch the Web Application (FastAPI + Retro Noir UI)")
+    parser.add_argument("--host", type=str, default=os.getenv("HOST", "0.0.0.0" if os.getenv("RENDER") or os.getenv("PORT") else "127.0.0.1"), help="Host to bind the web server (default: 127.0.0.1 or 0.0.0.0 on cloud)")
+    parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8000")), help="Port to bind the web server (default: 8000 or $PORT)")
     parser.add_argument("--pre-generate", type=int, metavar="DAYS", help="Pre-generate the next N days of unique daily cases ahead of time")
     parser.add_argument("--install-cron", action="store_true", help="Install weekly Monday 00:00 cron job for automated pre-generation")
     parser.add_argument("--uninstall-cron", action="store_true", help="Uninstall the weekly cron job")
@@ -128,8 +136,8 @@ def main():
     if args.web:
         import uvicorn
         from alibi.server import app as fastapi_app
-        print(f"\n[+] Starting THE ALIBI Web Application on http://127.0.0.1:{args.port} ...\n")
-        uvicorn.run(fastapi_app, host="127.0.0.1", port=args.port)
+        print(f"\n[+] Starting THE ALIBI Web Application on http://{args.host}:{args.port} ...\n")
+        uvicorn.run(fastapi_app, host=args.host, port=args.port)
         return
 
     if args.pre_generate:

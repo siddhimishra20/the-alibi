@@ -25,8 +25,19 @@ class OllamaClient:
         os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
         self.last_trace: List[Dict[str, Any]] = []
 
+        # Cloud API Support (Groq, OpenAI-compatible)
+        self.groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
+        self.provider = os.getenv("LLM_PROVIDER", "").lower()
+        if not self.provider:
+            self.provider = "groq" if self.groq_api_key else "ollama"
+        self.groq_model = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+        self.groq_base_url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1").rstrip("/")
+
     def get_installed_models(self) -> List[str]:
-        """Fetch list of installed models from Ollama /api/tags."""
+        """Fetch list of installed models from Ollama /api/tags or cloud provider."""
+        if self.provider == "groq" and self.groq_api_key:
+            return [self.groq_model]
+
         try:
             resp = httpx.get(f"{self.base_url}/api/tags", timeout=5.0)
             if resp.status_code == 200:
@@ -38,6 +49,11 @@ class OllamaClient:
 
     def verify_models(self) -> Tuple[bool, str]:
         """Verify chat model and embedding model are installed and available."""
+        if self.provider == "groq":
+            if not self.groq_api_key:
+                return False, "LLM_PROVIDER is set to 'groq', but GROQ_API_KEY environment variable is missing."
+            return True, f"Groq Cloud active (model: {self.groq_model})"
+
         installed = self.get_installed_models()
         if not installed:
             return False, f"Could not connect to Ollama at {self.base_url}. Is Ollama running?"
@@ -122,6 +138,102 @@ class OllamaClient:
         text = re.sub(r',\s*([\]}])', r'\1', text)
         return text
 
+    def _generate_groq(
+        self,
+        prompt: str,
+        system: Optional[str],
+        temperature: float,
+        format_json: bool,
+        agent_name: str,
+        num_predict: Optional[int],
+        start: float
+    ) -> str:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        payload: Dict[str, Any] = {
+            "model": self.groq_model,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        if num_predict is not None:
+            payload["max_tokens"] = num_predict
+        if format_json:
+            payload["response_format"] = {"type": "json_object"}
+
+        headers = {
+            "Authorization": f"Bearer {self.groq_api_key}",
+            "Content-Type": "application/json"
+        }
+
+        try:
+            resp = httpx.post(f"{self.groq_base_url}/chat/completions", json=payload, headers=headers, timeout=60.0)
+            resp.raise_for_status()
+            data = resp.json()
+            raw_text = data["choices"][0]["message"]["content"]
+            duration = time.time() - start
+            self.log_call(agent_name, prompt, raw_text, duration, self.groq_model, {"provider": "groq", "system": system})
+            return raw_text
+        except Exception as e:
+            duration = time.time() - start
+            err_msg = f"Error calling Groq API: {e}"
+            self.log_call(agent_name, prompt, err_msg, duration, self.groq_model, {"error": str(e)})
+            raise
+
+    def _generate_stream_groq(
+        self,
+        prompt: str,
+        system: Optional[str],
+        temperature: float,
+        format_json: bool,
+        agent_name: str,
+        start: float
+    ) -> Generator[str, None, str]:
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+
+        payload: Dict[str, Any] = {
+            "model": self.groq_model,
+            "messages": messages,
+            "temperature": temperature,
+            "stream": True
+        }
+        if format_json:
+            payload["response_format"] = {"type": "json_object"}
+
+        headers = {
+            "Authorization": f"Bearer {self.groq_api_key}",
+            "Content-Type": "application/json"
+        }
+
+        accumulated = []
+        with httpx.stream("POST", f"{self.groq_base_url}/chat/completions", json=payload, headers=headers, timeout=60.0) as r:
+            for line in r.iter_lines():
+                if not line:
+                    continue
+                if line.startswith("data: "):
+                    data_str = line[6:].strip()
+                    if data_str == "[DONE]":
+                        break
+                    try:
+                        chunk = json.loads(data_str)
+                        delta = chunk.get("choices", [{}])[0].get("delta", {})
+                        token = delta.get("content", "")
+                        if token:
+                            accumulated.append(token)
+                            yield token
+                    except Exception:
+                        continue
+
+        full_response = "".join(accumulated)
+        duration = time.time() - start
+        self.log_call(agent_name, prompt, full_response, duration, self.groq_model, {"provider": "groq", "stream": True})
+        return full_response
+
     def generate(
         self,
         prompt: str,
@@ -133,6 +245,8 @@ class OllamaClient:
     ) -> str:
         """Generate a complete completion synchronously."""
         start = time.time()
+        if self.provider == "groq" and self.groq_api_key:
+            return self._generate_groq(prompt, system, temperature, format_json, agent_name, num_predict, start)
         options = {
             "temperature": temperature,
             "num_ctx": 2048
@@ -173,8 +287,10 @@ class OllamaClient:
         format_json: bool = False,
         agent_name: str = "LLM"
     ) -> Generator[str, None, str]:
-        """Stream response tokens from Ollama."""
+        """Stream response tokens from Ollama or Groq."""
         start = time.time()
+        if self.provider == "groq" and self.groq_api_key:
+            return self._generate_stream_groq(prompt, system, temperature, format_json, agent_name, start)
         payload = {
             "model": self.model,
             "prompt": prompt,
