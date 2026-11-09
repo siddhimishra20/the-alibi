@@ -1,598 +1,88 @@
-// THE ALIBI - Frontend Client
+// ==========================================================================
+// THE ALIBI: RETRO CRT NOIR TERMINAL JAVASCRIPT
+// Multi-Screen Architecture • Authentic Sound Effects • Zero Emojis
+// ==========================================================================
+
 let currentSession = null;
 let currentCase = null;
-let transcriptHistory = [];
+let currentDifficulty = "classic";
 let soundEnabled = true;
+let audioContextUnlocked = false;
+let audioCache = {};
 
-// Web Audio API Synthesizer
-let audioCtx = null;
-function getAudioContext() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// --------------------------------------------------------------------------
+// 1. AUDIO ENGINE (WAV Asset Loader & Web Audio Unlocking)
+// --------------------------------------------------------------------------
+const AUDIO_FILES = {
+    key: "/audio/key_click.wav",
+    token: "/audio/token_spent.wav",
+    accuse: "/audio/accuse_stamp.wav",
+    nervous: "/audio/suspect_nervous.wav",
+    win: "/audio/win.wav",
+    lose: "/audio/lose.wav"
+};
+
+function unlockAudio() {
+    if (audioContextUnlocked) return;
+    audioContextUnlocked = true;
+    // Preload audio elements
+    for (const [key, path] of Object.entries(AUDIO_FILES)) {
+        try {
+            const a = new Audio(path);
+            a.volume = 0.45;
+            audioCache[key] = a;
+        } catch (e) {
+            console.warn("Audio load error for", key, e);
+        }
     }
-    return audioCtx;
 }
 
-function playSound(type) {
+function playSound(name) {
     if (!soundEnabled) return;
+    unlockAudio();
     try {
-        const ctx = getAudioContext();
-        if (ctx.state === 'suspended') {
-            ctx.resume();
-        }
-        const now = ctx.currentTime;
-
-        if (type === 'key') {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600 + Math.random() * 200, now);
-            gain.gain.setValueAtTime(0.04, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.05);
-        } else if (type === 'accuse') {
-            // Dramatic heavy thud
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(140, now);
-            osc.frequency.exponentialRampToValueAtTime(35, now + 0.35);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.35);
-        } else if (type === 'win') {
-            // Victorious ascending chord
-            [330, 440, 554.37, 659.25].forEach((freq, idx) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, now + idx * 0.1);
-                gain.gain.setValueAtTime(0.15, now + idx * 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.4);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(now + idx * 0.1);
-                osc.stop(now + idx * 0.1 + 0.4);
-            });
-        } else if (type === 'lose') {
-            // Low buzzer
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(95, now);
-            osc.frequency.setValueAtTime(80, now + 0.2);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.5);
+        const audio = audioCache[name];
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        } else if (AUDIO_FILES[name]) {
+            const temp = new Audio(AUDIO_FILES[name]);
+            temp.volume = 0.45;
+            temp.play().catch(() => {});
         }
     } catch (e) {
-        console.warn("AudioContext error:", e);
+        console.warn("Audio play error", name, e);
     }
 }
 
-// Retro 4-Dot Square Loading Animation
-const SQUARE_DOT_FRAMES = ["┌ ● · ┐", "┌ · ● ┐", "└ · ● ┘", "└ ● · ┘"];
-let spinnerInterval = null;
+// --------------------------------------------------------------------------
+// 2. SCREEN NAVIGATION (True Multi-Screen Flow)
+// --------------------------------------------------------------------------
+function navigateTo(screenId) {
+    const screens = document.querySelectorAll(".game-screen");
+    screens.forEach(s => s.classList.remove("active-screen"));
 
-function startSpinner(text = "SUSPECT IS THINKING...") {
-    const el = document.getElementById("loading-spinner");
-    const icon = document.getElementById("spinner-art");
-    const label = document.getElementById("spinner-text");
-    el.classList.remove("hidden");
-    label.innerText = text;
-    let idx = 0;
-    spinnerInterval = setInterval(() => {
-        icon.innerText = SQUARE_DOT_FRAMES[idx % SQUARE_DOT_FRAMES.length];
-        idx++;
-    }, 250);
-}
-
-function stopSpinner() {
-    if (spinnerInterval) {
-        clearInterval(spinnerInterval);
-        spinnerInterval = null;
-    }
-    document.getElementById("loading-spinner").classList.add("hidden");
-}
-
-// Live Countdown Timer
-function startCountdown() {
-    function update() {
-        const now = new Date();
-        const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-        const diff = Math.max(0, tomorrow - now);
-        const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, "0");
-        const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
-        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
-        document.getElementById("countdown-badge").innerText = `NEXT CASE: ${hours}:${minutes}:${seconds}`;
-    }
-    update();
-    setInterval(update, 1000);
-}
-
-// Fetch Global Status
-async function loadStatus() {
-    try {
-        const res = await fetch("/api/status");
-        if (res.ok) {
-            const data = await res.json();
-            document.getElementById("streak-badge").innerText = `STREAK: ${data.current_streak} ★`;
-        }
-    } catch (e) {
-        console.warn("Failed to fetch status:", e);
+    const target = document.getElementById(screenId);
+    if (target) {
+        target.classList.add("active-screen");
+        window.scrollTo(0, 0);
     }
 }
 
-// Start Game Session
-async function startSession(date = null, practice = false) {
-    const diff = document.getElementById("select-difficulty").value;
-    startSpinner("INITIALIZING CRIME DOSSIER...");
-
-    try {
-        const res = await fetch("/api/session/start", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ date: date, practice: practice, difficulty: diff })
-        });
-        const data = await res.json();
-        stopSpinner();
-
-        currentSession = data;
-        currentCase = data.case;
-        transcriptHistory = [];
-
-        renderCase(currentCase);
-        renderTokens(data.remaining_tokens, data.max_tokens);
-        clearTranscript();
-
-        // Enable inputs
-        document.getElementById("question-input").disabled = false;
-        document.getElementById("btn-submit-question").disabled = false;
-        document.getElementById("btn-open-accuse").disabled = false;
-        document.getElementById("btn-use-hint").disabled = (diff === "hardboiled");
-        document.getElementById("interrogation-status").innerText = "ACTIVE TRIAL";
-        document.getElementById("question-input").focus();
-
-        appendTranscript("system", `[DISPATCH] Investigation opened for case '${currentCase.title}'. You have ${data.remaining_tokens} tokens. Question the suspect or type 'A' to accuse.`);
-    } catch (e) {
-        stopSpinner();
-        alert("Failed to start game session: " + e.message);
-    }
-}
-
-// Render Case UI
-function renderCase(c) {
-    document.getElementById("case-title").innerText = c.title;
-    document.getElementById("case-date-badge").innerText = c.date;
-    document.getElementById("crime-description").innerText = c.crime_description;
-    document.getElementById("crime-setting").innerText = c.setting;
-
-    // Suspect
-    document.getElementById("suspect-name").innerText = c.suspect.name;
-    document.getElementById("suspect-occupation").innerText = c.suspect.occupation;
-    document.getElementById("suspect-quirk").innerText = `"${c.suspect.quirk}"`;
-    if (c.suspect.ascii_face) {
-        document.getElementById("suspect-face").innerText = c.suspect.ascii_face;
-    }
-
-    // Dossier Facts
-    const container = document.getElementById("dossier-facts-list");
-    container.innerHTML = "";
-    const factSelect = document.getElementById("accuse-fact-select");
-    factSelect.innerHTML = '<option value="">-- Choose conflicting dossier fact --</option>';
-
-    c.dossier.forEach((fact, idx) => {
-        const div = document.createElement("div");
-        div.className = "fact-card";
-        div.innerHTML = `<span class="fact-id">[FACT ${idx + 1}] (${fact.id})</span>${fact.text}`;
-        container.appendChild(div);
-
-        const opt = document.createElement("option");
-        opt.value = fact.text;
-        opt.innerText = `[FACT ${idx + 1}] ${fact.text.substring(0, 50)}...`;
-        factSelect.appendChild(opt);
-    });
-}
-
-// Render Tokens HUD
-function renderTokens(remaining, max) {
-    const filled = "● ".repeat(remaining);
-    const empty = "○ ".repeat(Math.max(0, max - remaining));
-    document.getElementById("tokens-display").innerText = (filled + empty).trim();
-    document.getElementById("tokens-count-text").innerText = `(${remaining} / ${max} REMAINING)`;
-}
-
-function clearTranscript() {
-    const feed = document.getElementById("chat-stream");
-    feed.innerHTML = "";
-}
-
-function appendTranscript(role, text, emotion = null) {
-    const feed = document.getElementById("chat-stream");
-    const bubble = document.createElement("div");
-    bubble.className = `chat-bubble ${role}`;
-
-    if (role === "detective") {
-        bubble.innerHTML = `<span class="speaker-tag" style="color: #00ffcc;">YOU (DETECTIVE):</span>"${text}"`;
-    } else if (role === "suspect") {
-        const emoBadge = emotion ? `<span class="emotion-tag" style="border-color: #ff8800; color: #ffaa33;">${emotion.toUpperCase()}</span>` : "";
-        bubble.innerHTML = `<span class="speaker-tag" style="color: #ff8800; font-weight: 700;">${currentCase.suspect.name}: ${emoBadge}</span>"${text}"`;
-        // Allow clicking on suspect quote to directly populate accuse modal
-        bubble.title = "Click to select this statement for accusation";
-        bubble.addEventListener("click", () => {
-            openAccuseModal(text);
-        });
-    } else {
-        bubble.innerText = text;
-    }
-
-    feed.appendChild(bubble);
-    feed.scrollTop = feed.scrollHeight;
-}
-
-// Send Question
-async function submitQuestion(question) {
-    if (!currentSession || !question.trim()) return;
-
-    appendTranscript("detective", question);
-    document.getElementById("question-input").value = "";
-    document.getElementById("question-input").disabled = true;
-    document.getElementById("btn-submit-question").disabled = true;
-
-    playSound("key");
-    startSpinner("SUSPECT IS THINKING & WEAVING LIES...");
-
-    try {
-        const res = await fetch("/api/session/interrogate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ session_id: currentSession.session_id, question: question })
-        });
-        const data = await res.json();
-        stopSpinner();
-
-        if (data.success) {
-            appendTranscript("suspect", data.answer, data.emotion);
-            transcriptHistory.push(data.answer);
-            renderTokens(data.remaining_tokens, data.max_tokens);
-
-            if (data.game_over) {
-                endGame(false, "You ran out of question tokens without uncovering the contradiction!");
-            } else {
-                document.getElementById("question-input").disabled = false;
-                document.getElementById("btn-submit-question").disabled = false;
-                document.getElementById("question-input").focus();
-            }
-        } else {
-            appendTranscript("system", `[ERROR] ${data.error}`);
-            document.getElementById("question-input").disabled = false;
-            document.getElementById("btn-submit-question").disabled = false;
-        }
-    } catch (e) {
-        stopSpinner();
-        appendTranscript("system", `[NETWORK ERROR] Could not reach server: ${e.message}`);
-        document.getElementById("question-input").disabled = false;
-        document.getElementById("btn-submit-question").disabled = false;
-    }
-}
-
-// Hint Request
-async function useHint() {
-    if (!currentSession) return;
-    startSpinner("CALLING NOIR NARRATOR...");
-    try {
-        const res = await fetch("/api/session/hint", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ session_id: currentSession.session_id })
-        });
-        const data = await res.json();
-        stopSpinner();
-        if (data.success) {
-            appendTranscript("system", `[NOIR NARRATOR HINT]: "${data.hint}"`);
-            renderTokens(data.remaining_tokens, currentSession.max_tokens);
-            document.getElementById("btn-use-hint").disabled = true;
-        } else {
-            alert(data.hint);
-        }
-    } catch (e) {
-        stopSpinner();
-        alert("Failed to get hint: " + e.message);
-    }
-}
-
-// Accusation Flow
-function openAccuseModal(preselectedQuote = null) {
-    if (!currentSession) return;
-    const select = document.getElementById("accuse-quote-select");
-    select.innerHTML = '<option value="">-- Choose statement from transcript --</option>';
-
-    transcriptHistory.forEach((q, idx) => {
-        const opt = document.createElement("option");
-        opt.value = q;
-        opt.innerText = `Turn #${idx + 1}: "${q.substring(0, 60)}..."`;
-        if (preselectedQuote && q === preselectedQuote) {
-            opt.selected = true;
-        }
-        select.appendChild(opt);
-    });
-
-    document.getElementById("accuse-modal").classList.remove("hidden");
-}
-
-async function submitAccusation() {
-    const quote = document.getElementById("accuse-quote-select").value;
-    const fact = document.getElementById("accuse-fact-select").value;
-
-    if (!quote || !fact) {
-        alert("You must select both a suspect quote and the conflicting dossier fact!");
-        return;
-    }
-
-    document.getElementById("accuse-modal").classList.add("hidden");
-    playSound("accuse");
-    startSpinner("JUDGE IS EVALUATING CONTRADICTION...");
-
-    try {
-        const res = await fetch("/api/session/accuse", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                session_id: currentSession.session_id,
-                quote: quote,
-                target_text: fact,
-                is_dossier_fact: true
-            })
-        });
-        const data = await res.json();
-        stopSpinner();
-
-        renderTokens(data.remaining_tokens, currentSession.max_tokens);
-
-        if (data.valid) {
-            playSound("win");
-            endGame(true, data.explanation, data.breakdown_confession, data.share_grid);
-        } else {
-            playSound("lose");
-            appendTranscript("system", `[ACCUSATION REJECTED]: ${data.explanation} (Penalty incurred!)`);
-            if (data.game_over) {
-                endGame(false, "You lost your last token on a flawed accusation. The suspect walks free!");
-            }
-        }
-    } catch (e) {
-        stopSpinner();
-        alert("Accusation error: " + e.message);
-    }
-}
-
-function endGame(won, explanation, confession = "", shareGrid = "") {
-    document.getElementById("question-input").disabled = true;
-    document.getElementById("btn-submit-question").disabled = true;
-    document.getElementById("btn-open-accuse").disabled = true;
-    document.getElementById("interrogation-status").innerText = won ? "CASE SOLVED" : "SUSPECT DISMISSED";
-
-    const title = document.getElementById("result-title");
-    title.innerText = won ? "⚖ GUILTY AS CHARGED! ⚖" : "✖ CASE COLD ✖";
-    title.style.color = won ? "var(--accent-green)" : "var(--accent-red)";
-
-    const badge = document.getElementById("result-badge");
-    badge.innerText = won ? "★ ★ ★   CASE CLOSED: SUSPECT CONVICTED & JAILED!   ★ ★ ★" : "✖ ✖ ✖   CASE COLD: OUT OF EVIDENCE // SUSPECT WALKED FREE   ✖ ✖ ✖";
-    badge.style.color = won ? "var(--accent-green)" : "var(--accent-red)";
-
-    document.getElementById("result-explanation").innerText = explanation;
-
-    if (confession) {
-        document.getElementById("result-confession-box").classList.remove("hidden");
-        document.getElementById("result-confession").innerText = confession;
-    } else {
-        document.getElementById("result-confession-box").classList.add("hidden");
-    }
-
-    document.getElementById("result-share-grid").innerText = shareGrid;
-    document.getElementById("result-modal").classList.remove("hidden");
-
-    loadStatus(); // refresh streak
-}
-
-// Archive Flow
-async function openArchiveModal() {
-    startSpinner("LOADING ARCHIVE RECORDS...");
-    try {
-        const res = await fetch("/api/archive");
-        const list = await res.json();
-        stopSpinner();
-
-        const tbody = document.getElementById("archive-table-body");
-        tbody.innerHTML = "";
-
-        list.forEach(c => {
-            const tr = document.createElement("tr");
-            let badgeStyle = "color: var(--accent-cyan);";
-            if (c.status === "SOLVED") badgeStyle = "color: var(--accent-green); font-weight: 700;";
-            if (c.status === "FAILED") badgeStyle = "color: var(--accent-red);";
-            if (c.status === "TODAY") badgeStyle = "color: var(--accent-amber); font-weight: 700;";
-
-            tr.innerHTML = `
-                <td>${c.date}</td>
-                <td style="${badgeStyle}">${c.status}</td>
-                <td><strong>${c.title}</strong></td>
-                <td>${c.suspect_name}</td>
-                <td>${c.setting}</td>
-                <td><button class="btn btn-secondary btn-sm" onclick="startSession('${c.date}', false)">PLAY</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById("archive-modal").classList.remove("hidden");
-    } catch (e) {
-        stopSpinner();
-        alert("Failed to load archive: " + e.message);
-    }
-}
-
-// DOM Event Listeners
-document.addEventListener("DOMContentLoaded", () => {
-    startCountdown();
-    loadStatus();
-
-    // Buttons
-    document.getElementById("btn-today-case").addEventListener("click", () => startSession(null, false));
-    document.getElementById("btn-practice-case").addEventListener("click", () => startSession(null, true));
-    document.getElementById("btn-open-archive").addEventListener("click", openArchiveModal);
-    document.getElementById("btn-close-archive").addEventListener("click", () => {
-        document.getElementById("archive-modal").classList.add("hidden");
-    });
-
-    document.getElementById("btn-rules").addEventListener("click", () => {
-        alert("THE ALIBI RULES:\n\n1. You are given 3 100% verified forensic facts.\n2. You have question tokens to interrogate the suspect.\n3. The suspect has a cover story with hidden weak points that contradict the facts.\n4. Type 'A' or click ACCUSE to highlight the lie and match it with the broken fact!");
-    });
-
-    document.getElementById("btn-use-hint").addEventListener("click", useHint);
-    document.getElementById("btn-open-accuse").addEventListener("click", () => openAccuseModal());
-    document.getElementById("btn-close-accuse").addEventListener("click", () => {
-        document.getElementById("accuse-modal").classList.add("hidden");
-    });
-    document.getElementById("btn-cancel-accuse").addEventListener("click", () => {
-        document.getElementById("accuse-modal").classList.add("hidden");
-    });
-    document.getElementById("btn-submit-accuse").addEventListener("click", submitAccusation);
-
-    document.getElementById("btn-close-result").addEventListener("click", () => {
-        document.getElementById("result-modal").classList.add("hidden");
-    });
-    document.getElementById("btn-result-new-game").addEventListener("click", () => {
-        document.getElementById("result-modal").classList.add("hidden");
-        startSession(null, true);
-    });
-
-    document.getElementById("btn-copy-share").addEventListener("click", () => {
-        const grid = document.getElementById("result-share-grid").innerText;
-        navigator.clipboard.writeText(grid).then(() => {
-            alert("Share grid copied to clipboard!");
-        });
-    });
-
-    document.getElementById("btn-sound-toggle").addEventListener("click", (e) => {
-        soundEnabled = !soundEnabled;
-        e.target.innerText = soundEnabled ? "🔊" : "🔇";
-    });
-
-    // Form
-    document.getElementById("question-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const input = document.getElementById("question-input");
-        const val = input.value.trim();
-        if (val.toLowerCase() === "a" || val.toLowerCase() === "/accuse") {
-            openAccuseModal();
-            input.value = "";
-        } else if (val.toLowerCase() === "h" || val.toLowerCase() === "/hint") {
-            useHint();
-            input.value = "";
-        } else if (val) {
-            submitQuestion(val);
-        }
-    });
-
-    // Keyboard Shortcuts
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            document.getElementById("accuse-modal").classList.add("hidden");
-            document.getElementById("result-modal").classList.add("hidden");
-            document.getElementById("archive-modal").classList.add("hidden");
-        }
-    });
-
-    // Auto-load today's case briefing on startup
-    fetch("/api/case/today").then(r => r.json()).then(c => renderCase(c)).catch(() => {});
-
-    // Engine Config Modal Handling
-    const engineModal = document.getElementById("engine-modal");
-    const btnEngineConfig = document.getElementById("btn-engine-config");
-    const btnCloseEngineModal = document.getElementById("btn-close-engine-modal");
-    const btnSaveEngine = document.getElementById("btn-save-engine");
-    const inputGroqKey = document.getElementById("input-groq-key");
-    const alertBox = document.getElementById("engine-status-alert");
-
-    function openEngineModal() {
-        if (engineModal) {
-            alertBox.classList.add("hidden");
-            engineModal.classList.remove("hidden");
-        }
-    }
-
-    function closeEngineModal() {
-        if (engineModal) engineModal.classList.add("hidden");
-    }
-
-    if (btnEngineConfig) btnEngineConfig.addEventListener("click", openEngineModal);
-    if (btnCloseEngineModal) btnCloseEngineModal.addEventListener("click", closeEngineModal);
-
-    if (btnSaveEngine) {
-        btnSaveEngine.addEventListener("click", async () => {
-            const isGroq = document.getElementById("radio-groq")?.checked;
-            const provider = isGroq ? "groq" : "ollama";
-            const apiKey = inputGroqKey.value.trim();
-
-            btnSaveEngine.innerText = "CONNECTING...";
-            btnSaveEngine.disabled = true;
-
-            try {
-                const resp = await fetch("/api/config/llm", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        provider: provider,
-                        groq_api_key: apiKey || undefined
-                    })
-                });
-                const data = await resp.json();
-                alertBox.classList.remove("hidden");
-                if (data.verified) {
-                    alertBox.className = "engine-alert success";
-                    alertBox.innerText = `CONNECTED: ${data.message}`;
-                    playSound("win");
-                    loadEngineStatus();
-                    setTimeout(closeEngineModal, 1200);
-                } else {
-                    alertBox.className = "engine-alert error";
-                    alertBox.innerText = `ERROR: ${data.message}`;
-                    playSound("lose");
-                }
-            } catch (err) {
-                alertBox.classList.remove("hidden");
-                alertBox.className = "engine-alert error";
-                alertBox.innerText = "Failed to connect to backend engine.";
-            } finally {
-                btnSaveEngine.innerText = "CONNECT ENGINE";
-                btnSaveEngine.disabled = false;
-            }
-        });
-    }
-
-    loadEngineStatus();
-});
-
-// Procedural CRT Polygraph Voice-Stress Engine
+// --------------------------------------------------------------------------
+// 3. PROCEDURAL CRT VOICE-STRESS POLYGRAPH & AUDIO CIPHER
+// --------------------------------------------------------------------------
 const EQUALIZER_CHARS = [" ", " ", "▂", "▃", "▄", "▅", "▆", "▇", "█"];
 let polygraphFrame = 0;
 
-function updatePolygraphAnimation() {
+function updatePolygraphStream() {
     const el = document.getElementById("polygraph-display");
     if (!el) return;
 
     polygraphFrame++;
     const t = polygraphFrame * 0.35;
-    
-    // Wave 1 (30 chars)
+
+    // Sine wave 1 (30 characters)
     let wave1 = "";
     for (let col = 0; col < 30; col++) {
         const val = Math.sin(col * 0.28 + t) * Math.cos(col * 0.12 - t * 0.5);
@@ -601,7 +91,7 @@ function updatePolygraphAnimation() {
         wave1 += EQUALIZER_CHARS[charIdx];
     }
 
-    // Wave 2 (30 chars)
+    // Sine wave 2 (30 characters)
     let wave2 = "";
     for (let col = 0; col < 30; col++) {
         const val = Math.cos(col * 0.22 - t * 0.8) * Math.sin(col * 0.35 + t * 0.4);
@@ -610,12 +100,12 @@ function updatePolygraphAnimation() {
         wave2 += EQUALIZER_CHARS[charIdx];
     }
 
-    // Dynamic metrics
+    // Live metrics
     const stress = Math.min(99, Math.max(10, Math.floor(35 + 50 * ((Math.sin(t * 0.6) + 1) / 2))));
     const bpm = Math.min(99, Math.max(60, Math.floor(68 + 26 * ((Math.cos(t * 0.4) + 1) / 2))));
     const truth = Math.min(99, Math.max(10, Math.floor(15 + 75 * ((Math.sin(t * 0.5 + 1.2) + 1) / 2))));
 
-    // Rolling cipher digits (24 digits grouped in 4)
+    // Rolling 24 random digits in blocks of 4
     let digits = "";
     for (let i = 0; i < 6; i++) {
         const grp = Math.floor(1000 + Math.random() * 9000);
@@ -631,32 +121,763 @@ function updatePolygraphAnimation() {
     el.innerText = `${line0}\n${line1}\n${line2}`;
 }
 
-setInterval(updatePolygraphAnimation, 120);
+setInterval(updatePolygraphStream, 110);
 
-async function loadEngineStatus() {
+// --------------------------------------------------------------------------
+// 4. SUSPECT ASCII ART EXPRESSIONS
+// --------------------------------------------------------------------------
+const ASCII_FACES = {
+    calm: "   _____  \n  /     \\ \n | () () |\n  \\  ^  / \n   |||||  ",
+    smug: "   _____  \n  /     \\ \n | ¬) ¬) |\n  \\  -  / \n   \\___/  ",
+    nervous: "   _____  \n  / o o \\ \n |  ---  |\n  \\  ~  / \n   ;;;;;  ",
+    rattled: "  \\\\\\\\\\// \n  | X X | \n  |  O  | \n  /  ~  \\ \n  ;;;;;;; "
+};
+
+function getFaceForEmotion(emotion = "calm") {
+    const e = emotion.toLowerCase();
+    if (e.includes("nervous") || e.includes("sweat")) return ASCII_FACES.nervous;
+    if (e.includes("smug") || e.includes("arrogant")) return ASCII_FACES.smug;
+    if (e.includes("angry") || e.includes("rattled") || e.includes("cornered")) return ASCII_FACES.rattled;
+    return ASCII_FACES.calm;
+}
+
+// --------------------------------------------------------------------------
+// 5. GAME INITIALIZATION & SESSION MANAGEMENT
+// --------------------------------------------------------------------------
+async function startCaseFlow(isPractice = false, targetDate = null) {
+    unlockAudio();
+    playSound("key");
+
+    // Read selected difficulty
+    const checkedDiff = document.querySelector('input[name="difficulty-select"]:checked');
+    currentDifficulty = checkedDiff ? checkedDiff.value : "classic";
+
     try {
-        const resp = await fetch("/api/config/llm");
+        const resp = await fetch("/api/session/start", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                date: targetDate,
+                practice: isPractice,
+                difficulty: currentDifficulty
+            })
+        });
+
+        if (!resp.ok) {
+            alert("Could not initialize game session. Please check connection.");
+            return;
+        }
+
+        const data = await resp.json();
+        currentSession = {
+            id: data.session_id,
+            remainingTokens: data.remaining_tokens,
+            maxTokens: data.max_tokens,
+            difficulty: data.difficulty,
+            turn: 0,
+            statements: []
+        };
+        currentCase = data.case;
+
+        // Populate Briefing Screen
+        renderBriefingScreen(currentCase);
+        navigateTo("screen-briefing");
+    } catch (err) {
+        console.error("Session start error", err);
+        alert("Failed to start session.");
+    }
+}
+
+function renderBriefingScreen(caseObj) {
+    document.getElementById("briefing-title").innerText = caseObj.title.toUpperCase();
+    document.getElementById("briefing-date-badge").innerText = `DATE: ${caseObj.date}`;
+    document.getElementById("briefing-description").innerText = caseObj.crime_description;
+    document.getElementById("briefing-setting").innerText = caseObj.setting.toUpperCase();
+
+    // Suspect
+    document.getElementById("briefing-suspect-name").innerText = caseObj.suspect.name.toUpperCase();
+    document.getElementById("briefing-suspect-occupation").innerText = `OCCUPATION: ${caseObj.suspect.occupation.toUpperCase()}`;
+    document.getElementById("briefing-suspect-quirk").innerText = `"${caseObj.suspect.quirk}"`;
+    document.getElementById("briefing-suspect-mugshot").innerText = caseObj.suspect.ascii_face || ASCII_FACES.calm;
+
+    // Dossier Facts Preview
+    const factsContainer = document.getElementById("briefing-dossier-list");
+    factsContainer.innerHTML = "";
+    caseObj.dossier.forEach((fact, idx) => {
+        const card = document.createElement("div");
+        card.className = "preview-fact-card";
+        card.innerHTML = `
+            <span class="preview-fact-tag">[ FACT #${idx + 1} — VERIFIED EVIDENCE ]</span>
+            <p class="preview-fact-text">${escapeHtml(fact.text)}</p>
+        `;
+        factsContainer.appendChild(card);
+    });
+}
+
+function enterInterrogationRoom() {
+    if (!currentCase || !currentSession) return;
+    playSound("key");
+
+    // Populate HUD
+    document.getElementById("room-case-title").innerText = currentCase.title.toUpperCase();
+    document.getElementById("room-suspect-name").innerText = currentCase.suspect.name.toUpperCase();
+    document.getElementById("room-sidebar-quirk").innerText = `"${currentCase.suspect.quirk}"`;
+    document.getElementById("room-suspect-face").innerText = currentCase.suspect.ascii_face || ASCII_FACES.calm;
+    document.getElementById("room-suspect-mood").innerText = "[MOOD: CALM]";
+    document.getElementById("room-suspect-mood").className = "mood-badge mood-calm";
+
+    // Populate Dossier
+    const dossierList = document.getElementById("room-dossier-facts");
+    dossierList.innerHTML = "";
+    currentCase.dossier.forEach((fact, idx) => {
+        const c = document.createElement("div");
+        c.className = "side-fact-card";
+        c.innerHTML = `
+            <span class="side-fact-tag">[ FACT #${idx + 1} ]</span>
+            <p class="side-fact-text">${escapeHtml(fact.text)}</p>
+        `;
+        dossierList.appendChild(c);
+    });
+
+    // Populate Tokens HUD
+    updateTokensUI();
+
+    // Reset Transcript
+    const transcript = document.getElementById("interrogation-transcript");
+    transcript.innerHTML = `
+        <div class="transcript-msg system-msg">
+            <span class="msg-sender">[DISPATCH]:</span>
+            <span class="msg-text">Interrogation room audio wire opened. Suspect ${escapeHtml(currentCase.suspect.name)} is seated across the table. You hold ${currentSession.remainingTokens} tokens. Make every question count.</span>
+        </div>
+    `;
+
+    document.getElementById("console-turn-counter").innerText = "TURN #0";
+    document.getElementById("input-interrogate-question").value = "";
+
+    navigateTo("screen-interrogation");
+    setTimeout(() => {
+        document.getElementById("input-interrogate-question").focus();
+    }, 200);
+}
+
+function updateTokensUI() {
+    const pipsContainer = document.getElementById("room-tokens-pips");
+    const label = document.getElementById("room-tokens-count");
+    if (!currentSession) return;
+
+    pipsContainer.innerHTML = "";
+    for (let i = 0; i < currentSession.maxTokens; i++) {
+        const span = document.createElement("span");
+        if (i < currentSession.remainingTokens) {
+            span.className = "token-pip active" + (currentSession.remainingTokens <= 2 ? " critical" : "");
+            span.innerText = "[O]";
+        } else {
+            span.className = "token-pip";
+            span.innerText = "[X]";
+        }
+        pipsContainer.appendChild(span);
+    }
+
+    label.innerText = `(${currentSession.remainingTokens} / ${currentSession.maxTokens})`;
+}
+
+// --------------------------------------------------------------------------
+// 6. QUESTION TRANSMISSION & INTERROGATION LOG
+// --------------------------------------------------------------------------
+async function submitQuestion(questionText) {
+    if (!currentSession || !questionText.trim()) return;
+    const text = questionText.trim();
+
+    playSound("token");
+    const transcript = document.getElementById("interrogation-transcript");
+    const input = document.getElementById("input-interrogate-question");
+    input.value = "";
+    input.disabled = true;
+
+    // Append Detective Question
+    const qMsg = document.createElement("div");
+    qMsg.className = "transcript-msg detective-msg";
+    qMsg.innerHTML = `
+        <span class="msg-sender">[DETECTIVE]:</span>
+        <span class="msg-text">"${escapeHtml(text)}"</span>
+    `;
+    transcript.appendChild(qMsg);
+    transcript.scrollTop = transcript.scrollHeight;
+
+    // Show Thinking Spinner
+    const spinner = document.getElementById("transcript-spinner");
+    spinner.classList.remove("hidden");
+
+    try {
+        const resp = await fetch("/api/session/interrogate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                session_id: currentSession.id,
+                question: text
+            })
+        });
+
+        spinner.classList.add("hidden");
+        input.disabled = false;
+        input.focus();
+
+        if (!resp.ok) {
+            alert("Error communicating with interrogation room.");
+            return;
+        }
+
+        const data = await resp.json();
+        currentSession.remainingTokens = data.remaining_tokens;
+        currentSession.turn = data.turn_number;
+        updateTokensUI();
+        document.getElementById("console-turn-counter").innerText = `TURN #${data.turn_number}`;
+
+        if (!data.success) {
+            // Out of tokens or error
+            const errDiv = document.createElement("div");
+            errDiv.className = "transcript-msg alert-msg";
+            errDiv.innerHTML = `<span class="msg-sender">[ALERT]:</span> <span class="msg-text">${escapeHtml(data.error || "Turn rejected.")}</span>`;
+            transcript.appendChild(errDiv);
+            if (data.game_over) {
+                handleGameOver(false, "You ran out of Question Tokens without extracting a formal contradiction.");
+            }
+            return;
+        }
+
+        // Suspect Response
+        currentSession.statements.push({
+            turn: data.turn_number,
+            question: text,
+            answer: data.answer,
+            claims: data.extracted_claims || []
+        });
+
+        // Update Mood & Art
+        const mood = data.emotion || "calm";
+        const moodBadge = document.getElementById("room-suspect-mood");
+        moodBadge.innerText = `[MOOD: ${mood.toUpperCase()}]`;
+        if (mood.toLowerCase().includes("nervous") || mood.toLowerCase().includes("sweat")) {
+            moodBadge.className = "mood-badge mood-nervous";
+            playSound("nervous");
+        } else if (mood.toLowerCase().includes("rattled") || mood.toLowerCase().includes("cornered")) {
+            moodBadge.className = "mood-badge mood-rattled";
+            playSound("nervous");
+        } else {
+            moodBadge.className = "mood-badge mood-calm";
+        }
+        document.getElementById("room-suspect-face").innerText = getFaceForEmotion(mood);
+
+        // Append Suspect Reply
+        const sMsg = document.createElement("div");
+        sMsg.className = "transcript-msg suspect-msg";
+        let claimsHtml = "";
+        if (data.extracted_claims && data.extracted_claims.length > 0) {
+            claimsHtml = `<div class="suspect-claim-tags">` + data.extracted_claims.map(c => 
+                `<span class="claim-tag">[CLAIM: ${escapeHtml(c.subject)} ${escapeHtml(c.predicate)} ${escapeHtml(c.object_value)}]</span>`
+            ).join("") + `</div>`;
+        }
+
+        sMsg.innerHTML = `
+            <span class="msg-sender">[${escapeHtml(currentCase.suspect.name.toUpperCase())}]:</span>
+            <span class="msg-text">"${escapeHtml(data.answer)}"</span>
+            ${claimsHtml}
+        `;
+        transcript.appendChild(sMsg);
+        transcript.scrollTop = transcript.scrollHeight;
+
+        // Check if out of tokens
+        if (data.game_over && !data.won) {
+            handleGameOver(false, "You exhausted your final question token without lodging an indictment.");
+        }
+
+    } catch (e) {
+        spinner.classList.add("hidden");
+        input.disabled = false;
+        console.error("Interrogation error", e);
+    }
+}
+
+// --------------------------------------------------------------------------
+// 7. NOIR NARRATOR HINT
+// --------------------------------------------------------------------------
+async function requestHint() {
+    if (!currentSession) return;
+    playSound("key");
+
+    try {
+        const resp = await fetch("/api/session/hint", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ session_id: currentSession.id })
+        });
+
+        const data = await resp.json();
+        const transcript = document.getElementById("interrogation-transcript");
+
+        if (data.success) {
+            currentSession.remainingTokens = data.remaining_tokens;
+            updateTokensUI();
+
+            const hMsg = document.createElement("div");
+            hMsg.className = "transcript-msg hint-msg";
+            hMsg.innerHTML = `
+                <span class="msg-sender">[NOIR NARRATOR]:</span>
+                <span class="msg-text">${escapeHtml(data.hint)}</span>
+            `;
+            transcript.appendChild(hMsg);
+            transcript.scrollTop = transcript.scrollHeight;
+        } else {
+            const hMsg = document.createElement("div");
+            hMsg.className = "transcript-msg alert-msg";
+            hMsg.innerHTML = `<span class="msg-sender">[ALERT]:</span> <span class="msg-text">${escapeHtml(data.hint || "No hints available.")}</span>`;
+            transcript.appendChild(hMsg);
+        }
+    } catch (e) {
+        console.error("Hint error", e);
+    }
+}
+
+// --------------------------------------------------------------------------
+// 8. FORMAL ACCUSATION INDICTMENT FLOW
+// --------------------------------------------------------------------------
+function openAccuseModal() {
+    if (!currentSession || !currentCase) return;
+    playSound("key");
+
+    if (currentSession.statements.length === 0) {
+        alert("You have not questioned the suspect yet. Inquire first before indicting.");
+        return;
+    }
+
+    const quotesList = document.getElementById("accuse-quotes-list");
+    const factsList = document.getElementById("accuse-facts-list");
+    quotesList.innerHTML = "";
+    factsList.innerHTML = "";
+
+    // 1. Populate Suspect Statements
+    currentSession.statements.forEach((st, idx) => {
+        const div = document.createElement("label");
+        div.className = "accuse-option-card";
+        div.innerHTML = `
+            <input type="radio" name="accuse-quote-pick" value="${escapeHtml(st.answer)}" ${idx === currentSession.statements.length - 1 ? "checked" : ""}>
+            <span class="option-quote-text">"${escapeHtml(st.answer)}"</span>
+        `;
+        div.addEventListener("click", () => {
+            document.querySelectorAll("#accuse-quotes-list .accuse-option-card").forEach(c => c.classList.remove("selected"));
+            div.classList.add("selected");
+        });
+        if (idx === currentSession.statements.length - 1) div.classList.add("selected");
+        quotesList.appendChild(div);
+    });
+
+    // 2. Populate Dossier Facts
+    currentCase.dossier.forEach((fact, idx) => {
+        const div = document.createElement("label");
+        div.className = "accuse-option-card";
+        div.innerHTML = `
+            <input type="radio" name="accuse-fact-pick" value="${escapeHtml(fact.text)}" ${idx === 0 ? "checked" : ""}>
+            <span class="option-quote-text">[FACT #${idx + 1}]: ${escapeHtml(fact.text)}</span>
+        `;
+        div.addEventListener("click", () => {
+            document.querySelectorAll("#accuse-facts-list .accuse-option-card").forEach(c => c.classList.remove("selected"));
+            div.classList.add("selected");
+        });
+        if (idx === 0) div.classList.add("selected");
+        factsList.appendChild(div);
+    });
+
+    document.getElementById("accuse-judging-spinner").classList.add("hidden");
+    document.getElementById("btn-submit-indictment").disabled = false;
+    document.getElementById("btn-submit-indictment").innerText = "[ DELIVER INDICTMENT TO JUDGE ]";
+
+    document.getElementById("modal-accuse").classList.remove("hidden");
+}
+
+function closeAccuseModal() {
+    document.getElementById("modal-accuse").classList.add("hidden");
+}
+
+async function submitIndictment() {
+    if (!currentSession) return;
+
+    const pickedQuoteRadio = document.querySelector('input[name="accuse-quote-pick"]:checked');
+    const pickedFactRadio = document.querySelector('input[name="accuse-fact-pick"]:checked');
+
+    if (!pickedQuoteRadio || !pickedFactRadio) {
+        alert("Please select both a suspect quote and a contradictory dossier fact.");
+        return;
+    }
+
+    const quote = pickedQuoteRadio.value;
+    const factText = pickedFactRadio.value;
+
+    playSound("accuse");
+    const spinner = document.getElementById("accuse-judging-spinner");
+    const btn = document.getElementById("btn-submit-indictment");
+    spinner.classList.remove("hidden");
+    btn.disabled = true;
+    btn.innerText = "JUDGE DELIBERATING...";
+
+    try {
+        const resp = await fetch("/api/session/accuse", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                session_id: currentSession.id,
+                quote: quote,
+                target_text: factText,
+                is_dossier_fact: true
+            })
+        });
+
+        spinner.classList.add("hidden");
+        closeAccuseModal();
+
+        if (!resp.ok) {
+            alert("Error delivering accusation to judge.");
+            return;
+        }
+
+        const data = await resp.json();
+        currentSession.remainingTokens = data.remaining_tokens;
+        updateTokensUI();
+
+        if (data.valid) {
+            // CONVICTED!
+            playSound("win");
+            handleGameOver(true, data.explanation, data.breakdown_confession, data.share_grid);
+        } else {
+            // Failed accusation
+            playSound("nervous");
+            const transcript = document.getElementById("interrogation-transcript");
+            const alertDiv = document.createElement("div");
+            alertDiv.className = "transcript-msg alert-msg";
+            alertDiv.innerHTML = `
+                <span class="msg-sender">[CONTRADICTION JUDGE]:</span>
+                <span class="msg-text">INSUFFICIENT CONTRADICTION! ${escapeHtml(data.explanation || "The statement does not directly refute this fact.")} Penalty applied. Remaining tokens: ${data.remaining_tokens}.</span>
+            `;
+            transcript.appendChild(alertDiv);
+            transcript.scrollTop = transcript.scrollHeight;
+
+            if (data.game_over) {
+                handleGameOver(false, "Your accusation failed and exhausted all remaining interrogation tokens.");
+            }
+        }
+
+    } catch (e) {
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+        btn.innerText = "[ DELIVER INDICTMENT TO JUDGE ]";
+        console.error("Accusation error", e);
+    }
+}
+
+// --------------------------------------------------------------------------
+// 9. GAME OVER & RESULT SCREEN
+// --------------------------------------------------------------------------
+function handleGameOver(won, explanation, confession = "", shareGrid = "") {
+    const banner = document.getElementById("result-status-banner");
+    const heading = document.getElementById("result-main-heading");
+    const explBox = document.getElementById("result-explanation-text");
+    const confessionSec = document.getElementById("result-confession-section");
+    const confessionQuote = document.getElementById("result-confession-quote");
+    const gridPre = document.getElementById("result-share-grid-text");
+
+    if (won) {
+        banner.className = "result-banner banner-win";
+        heading.innerText = "★★★★★ CASE CLOSED: SUSPECT CONVICTED! ★★★★★";
+        explBox.innerText = explanation || "Airtight contradiction established. Suspect broke down under interrogation.";
+        
+        if (confession) {
+            confessionSec.classList.remove("hidden");
+            confessionQuote.innerText = `"${confession}"`;
+        } else {
+            confessionSec.classList.add("hidden");
+        }
+    } else {
+        playSound("lose");
+        banner.className = "result-banner banner-lose";
+        heading.innerText = "✖✖✖✖✖ CASE DISMISSED: SUSPECT WALKED FREE ✖✖✖✖✖";
+        explBox.innerText = explanation || "You ran out of interrogation tokens. Without a validated contradiction, the police chief was forced to release the suspect.";
+        confessionSec.classList.add("hidden");
+    }
+
+    gridPre.innerText = shareGrid || `THE ALIBI [${won ? "CONVICTED" : "DISMISSED"}]\nTokens Used: ${currentSession ? currentSession.maxTokens - currentSession.remainingTokens : 5}\nStatus: ${won ? "WON" : "LOST"}`;
+
+    navigateTo("screen-result");
+    refreshGlobalStatus();
+}
+
+// --------------------------------------------------------------------------
+// 10. ARCHIVE & RULES SCREENS
+// --------------------------------------------------------------------------
+async function loadArchivesScreen() {
+    playSound("key");
+    navigateTo("screen-archive");
+    const tbody = document.getElementById("archive-table-rows");
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--color-slate);">RETRIEVING COLD CASE EVIDENCE REPOSITORY...</td></tr>`;
+
+    try {
+        const resp = await fetch("/api/archive");
+        if (!resp.ok) return;
+        const data = await resp.json();
+        tbody.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No archived cases found.</td></tr>`;
+            return;
+        }
+
+        data.forEach(item => {
+            const tr = document.createElement("tr");
+            const statusTag = item.solved ? `<span style="color:var(--color-green); font-weight:700;">[CONVICTED]</span>` : `<span style="color:var(--color-slate);">[COLD CASE]</span>`;
+            tr.innerHTML = `
+                <td>${escapeHtml(item.date)}</td>
+                <td>${statusTag}</td>
+                <td style="color:var(--color-amber); font-weight:700;">${escapeHtml(item.title)}</td>
+                <td style="color:var(--color-cyan);">${escapeHtml(item.suspect_name)}</td>
+                <td>${escapeHtml(item.setting)}</td>
+                <td>
+                    <button class="action-btn back-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="startCaseFlow(false, '${item.date}')">
+                        [ REPLAY ]
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error("Archive error", e);
+    }
+}
+
+// --------------------------------------------------------------------------
+// 11. ENGINE CONFIGURATION & STATUS
+// --------------------------------------------------------------------------
+async function refreshGlobalStatus() {
+    try {
+        const resp = await fetch("/api/status");
         if (resp.ok) {
             const data = await resp.json();
+            document.getElementById("streak-badge-text").innerText = data.current_streak || 0;
+        }
+
+        const cResp = await fetch("/api/config/llm");
+        if (cResp.ok) {
+            const cData = await cResp.json();
             const badge = document.getElementById("engine-badge-text");
-            if (badge) {
-                if (data.provider === "groq") {
-                    badge.innerText = "⚡ GROQ CLOUD";
-                    badge.style.color = "var(--accent-green)";
-                } else {
-                    badge.innerText = "🖥️ LOCAL OLLAMA";
-                    badge.style.color = "var(--accent-cyan)";
-                }
-            }
-            if (data.provider === "groq") {
-                const rGroq = document.getElementById("radio-groq");
-                if (rGroq) rGroq.checked = true;
+            if (cData.provider === "groq") {
+                badge.innerText = "GROQ CLOUD";
+                badge.style.color = "var(--color-green)";
             } else {
-                const rOllama = document.getElementById("radio-ollama");
-                if (rOllama) rOllama.checked = true;
+                badge.innerText = "LOCAL OLLAMA";
+                badge.style.color = "var(--color-cyan)";
             }
         }
     } catch (e) {
-        console.warn("Could not load LLM engine status", e);
+        console.warn("Status refresh error", e);
     }
 }
+
+function openEngineModal() {
+    playSound("key");
+    document.getElementById("engine-feedback-box").classList.add("hidden");
+    document.getElementById("modal-engine").classList.remove("hidden");
+}
+
+function closeEngineModal() {
+    document.getElementById("modal-engine").classList.add("hidden");
+}
+
+async function saveEngineConfig() {
+    const isGroq = document.getElementById("radio-groq")?.checked;
+    const provider = isGroq ? "groq" : "ollama";
+    const apiKey = document.getElementById("input-groq-key").value.trim();
+    const alertBox = document.getElementById("engine-feedback-box");
+    const btn = document.getElementById("btn-save-engine-config");
+
+    btn.disabled = true;
+    btn.innerText = "[ CONNECTING... ]";
+
+    try {
+        const resp = await fetch("/api/config/llm", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                provider: provider,
+                groq_api_key: apiKey || undefined
+            })
+        });
+
+        const data = await resp.json();
+        alertBox.classList.remove("hidden");
+        if (data.verified) {
+            alertBox.className = "feedback-alert success";
+            alertBox.innerText = `[SUCCESS]: ${data.message}`;
+            playSound("win");
+            refreshGlobalStatus();
+            setTimeout(closeEngineModal, 1200);
+        } else {
+            alertBox.className = "feedback-alert error";
+            alertBox.innerText = `[ERROR]: ${data.message}`;
+            playSound("lose");
+        }
+    } catch (e) {
+        alertBox.classList.remove("hidden");
+        alertBox.className = "feedback-alert error";
+        alertBox.innerText = "[ERROR]: Failed to connect to server engine.";
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "[ CONNECT INFERENCE ENGINE ]";
+    }
+}
+
+// --------------------------------------------------------------------------
+// 12. UTILITIES & KEYBOARD EVENT HANDLERS
+// --------------------------------------------------------------------------
+function escapeHtml(text) {
+    if (!text) return "";
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Midnight Countdown Timer
+function updateCountdown() {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const diff = midnight - now;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const pad = n => String(n).padStart(2, '0');
+    const el = document.getElementById("countdown-text");
+    if (el) el.innerText = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// DOM Ready Bindings
+document.addEventListener("DOMContentLoaded", () => {
+    // Unmute on first body interaction
+    document.body.addEventListener("click", unlockAudio, { once: true });
+
+    // Header buttons
+    document.getElementById("btn-engine-config").addEventListener("click", openEngineModal);
+    document.getElementById("btn-close-engine-modal").addEventListener("click", closeEngineModal);
+    document.getElementById("btn-save-engine-config").addEventListener("click", saveEngineConfig);
+
+    document.getElementById("btn-audio-toggle").addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById("audio-btn-text");
+        btn.innerText = soundEnabled ? "[AUDIO: ON]" : "[AUDIO: MUTED]";
+        btn.className = soundEnabled ? "hud-val-green" : "hud-label";
+    });
+
+    // Menu Screen buttons
+    document.getElementById("btn-menu-today").addEventListener("click", () => startCaseFlow(false));
+    document.getElementById("btn-menu-practice").addEventListener("click", () => startCaseFlow(true));
+    document.getElementById("btn-menu-archive").addEventListener("click", loadArchivesScreen);
+    document.getElementById("btn-menu-rules").addEventListener("click", () => {
+        playSound("key");
+        navigateTo("screen-rules");
+    });
+
+    // Briefing Screen buttons
+    document.getElementById("btn-start-interrogation").addEventListener("click", enterInterrogationRoom);
+    document.getElementById("btn-briefing-back").addEventListener("click", () => {
+        playSound("key");
+        navigateTo("screen-menu");
+    });
+
+    // Interrogation Screen buttons
+    document.getElementById("btn-request-hint").addEventListener("click", requestHint);
+    document.getElementById("btn-open-accuse").addEventListener("click", openAccuseModal);
+    document.getElementById("btn-close-accuse-modal").addEventListener("click", closeAccuseModal);
+    document.getElementById("btn-submit-indictment").addEventListener("click", submitIndictment);
+
+    document.getElementById("form-interrogate").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("input-interrogate-question");
+        const val = input.value.trim();
+        if (val.toLowerCase() === "a" || val.toLowerCase() === "/accuse") {
+            input.value = "";
+            openAccuseModal();
+        } else if (val.toLowerCase() === "h" || val.toLowerCase() === "/hint") {
+            input.value = "";
+            requestHint();
+        } else if (val) {
+            submitQuestion(val);
+        }
+    });
+
+    // Keystroke sound on interrogation input
+    document.getElementById("input-interrogate-question").addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== "Escape" && e.key.length === 1) {
+            playSound("key");
+        }
+    });
+
+    // Result Screen buttons
+    document.getElementById("btn-result-play-again").addEventListener("click", () => startCaseFlow(true));
+    document.getElementById("btn-result-to-menu").addEventListener("click", () => {
+        playSound("key");
+        navigateTo("screen-menu");
+    });
+
+    document.getElementById("btn-copy-dossier").addEventListener("click", () => {
+        const text = document.getElementById("result-share-grid-text").innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            playSound("key");
+            const alert = document.getElementById("copy-status-indicator");
+            alert.classList.remove("hidden");
+            setTimeout(() => alert.classList.add("hidden"), 1500);
+        });
+    });
+
+    // Archive & Rules Return Buttons
+    document.getElementById("btn-archive-back").addEventListener("click", () => {
+        playSound("key");
+        navigateTo("screen-menu");
+    });
+    document.getElementById("btn-rules-back").addEventListener("click", () => {
+        playSound("key");
+        navigateTo("screen-menu");
+    });
+
+    // Global Keyboard Navigation
+    document.addEventListener("keydown", (e) => {
+        // If typing in input field, don't trigger global shortcuts
+        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+        if (activeTag === "input" && e.key !== "Escape") return;
+
+        if (e.key === "Escape") {
+            closeAccuseModal();
+            closeEngineModal();
+        } else if (e.key === "1" && document.getElementById("screen-menu").classList.contains("active-screen")) {
+            startCaseFlow(false);
+        } else if (e.key === "2" && document.getElementById("screen-menu").classList.contains("active-screen")) {
+            startCaseFlow(true);
+        } else if (e.key === "3" && document.getElementById("screen-menu").classList.contains("active-screen")) {
+            loadArchivesScreen();
+        } else if (e.key === "4" && document.getElementById("screen-menu").classList.contains("active-screen")) {
+            navigateTo("screen-rules");
+        } else if ((e.key === "a" || e.key === "A") && document.getElementById("screen-interrogation").classList.contains("active-screen")) {
+            e.preventDefault();
+            openAccuseModal();
+        } else if ((e.key === "h" || e.key === "H") && document.getElementById("screen-interrogation").classList.contains("active-screen")) {
+            e.preventDefault();
+            requestHint();
+        } else if (e.key === "Enter" && document.getElementById("screen-briefing").classList.contains("active-screen")) {
+            enterInterrogationRoom();
+        }
+    });
+
+    refreshGlobalStatus();
+});

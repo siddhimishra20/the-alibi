@@ -217,11 +217,20 @@ def get_hint(req: HintRequest):
         "remaining_tokens": gm.session.remaining_tokens
     }
 
-# Mount static files for the web frontend
+# Mount static files for the web frontend and audio assets
 static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "web", "static")
+audio_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "audio")
+
+if os.path.exists(audio_dir):
+    app.mount("/audio", StaticFiles(directory=audio_dir), name="audio")
+
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     @app.get("/")
     def index():
         return FileResponse(os.path.join(static_dir, "index.html"))
+
+    @app.get("/favicon.ico")
+    def favicon():
+        return JSONResponse(status_code=204, content=None)

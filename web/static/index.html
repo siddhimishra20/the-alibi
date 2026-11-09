@@ -3,268 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE ALIBI - Daily Micro-Crime Interrogation</title>
+    <title>THE ALIBI - Noir Interrogation Terminal</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body class="crt-theme">
-    <div class="crt-overlay"></div>
-    <div class="scanlines"></div>
+    <!-- CRT Screen Effects -->
+    <div class="crt-scanlines"></div>
+    <div class="crt-vignette"></div>
+    <div class="crt-phosphor-glow"></div>
 
-    <div class="app-container">
-        <!-- TOP STATUS BAR -->
-        <header class="top-nav">
-            <div class="brand">
-                <span class="brand-glitch" data-text="THE ALIBI">THE ALIBI</span>
-                <span class="sub-brand">TERMINAL MICRO-CRIME INTERROGATION ENGINE</span>
+    <div class="terminal-frame">
+        <!-- GLOBAL RETRO TOP BAR -->
+        <header class="system-header">
+            <div class="header-left">
+                <span class="system-tag">[SYS:ONLINE]</span>
+                <span class="system-title">THE ALIBI // DAILY NOIR INTERROGATION ENGINE</span>
             </div>
-            <div class="nav-metrics">
-                <button id="btn-engine-config" class="metric-badge btn-clickable" title="Configure AI Inference Engine">⚡ ENGINE: <span id="engine-badge-text">CHECKING...</span></button>
-                <span id="countdown-badge" class="metric-badge">NEXT CASE: --:--:--</span>
-                <span id="streak-badge" class="metric-badge">STREAK: 0 ★</span>
-                <button id="btn-sound-toggle" class="btn-icon" title="Toggle Sound">🔊</button>
+            <div class="header-right">
+                <button id="btn-engine-config" class="hud-btn" title="Configure AI Inference Engine">
+                    <span class="hud-label">[ENGINE:</span> <span id="engine-badge-text" class="hud-val">LOCAL OLLAMA</span><span class="hud-label">]</span>
+                </button>
+                <span class="hud-badge"><span class="hud-label">STREAK:</span> <span id="streak-badge-text" class="hud-val-gold">0</span></span>
+                <span id="countdown-badge" class="hud-badge"><span class="hud-label">RESET:</span> <span id="countdown-text" class="hud-val">--:--:--</span></span>
+                <button id="btn-audio-toggle" class="hud-btn" title="Toggle Sound FX">
+                    <span id="audio-btn-text" class="hud-val-green">[AUDIO: ON]</span>
+                </button>
             </div>
         </header>
 
-        <!-- CRT POLYGRAPH VOICE-STRESS MONITOR -->
-        <section class="polygraph-monitor cyber-panel">
-            <div class="polygraph-header">
-                <span class="panel-tag">// FORENSIC SIGNAL ANALYZER &amp; AUDIO CIPHER</span>
-                <span class="polygraph-status"><span class="blink-dot">●</span> SIGNAL LOCKED [0x47E0]</span>
-            </div>
-            <pre id="polygraph-display" class="polygraph-canvas">INITIALIZING FORENSIC AUDIO REGISTERS...</pre>
-        </section>
+        <!-- ======================================================== -->
+        <!-- SCREEN 1: MAIN MENU                                      -->
+        <!-- ======================================================== -->
+        <section id="screen-menu" class="game-screen active-screen">
+            <div class="menu-container">
+                <!-- ASCII Title Banner -->
+                <pre class="ascii-logo">
+ _______ _     _ _______   _______               ______  _____ 
+    |    |_____| |______   |_____| |      | _____|_____]   |   
+    |    |     | |______   |     | |_____ |      |_____] __|__ 
+                </pre>
+                <div class="menu-tagline">
+                    <span class="tag-bracket">&lt;</span> A SATIRICAL DAILY NOIR INTERROGATION GAME <span class="tag-bracket">&gt;</span>
+                </div>
+                <div class="menu-subtag">
+                    ONE CASE A DAY • 5 QUESTION TOKENS • 1 CONTRADICTION TO CONVICT
+                </div>
 
-        <!-- MAIN MENU / ACTION BAR -->
-        <div class="action-bar">
-            <button id="btn-today-case" class="btn btn-primary">▶ TODAY'S CASE</button>
-            <button id="btn-practice-case" class="btn btn-secondary">⚡ PRACTICE MODE</button>
-            <button id="btn-open-archive" class="btn btn-secondary">📁 ARCHIVES</button>
-            <button id="btn-rules" class="btn btn-secondary">❓ DOSSIER RULES</button>
-            
-            <div class="difficulty-picker">
-                <label for="select-difficulty">DIFFICULTY:</label>
-                <select id="select-difficulty" class="cyber-select">
-                    <option value="classic" selected>CLASSIC (5 Tokens, 1 Hint)</option>
-                    <option value="hardboiled">HARDBOILED (3 Tokens, No Hints, Double Penalty)</option>
-                    <option value="rookie">ROOKIE (7 Tokens, Multi-Hint)</option>
-                </select>
-            </div>
-        </div>
+                <!-- Live Voice-Stress & Audio Cipher Monitor -->
+                <div class="polygraph-box">
+                    <div class="polygraph-top-row">
+                        <span class="box-tag">// FORENSIC SIGNAL ANALYZER &amp; AUDIO CIPHER</span>
+                        <span class="box-status"><span class="glow-dot">●</span> SIGNAL LOCKED [0x47E0]</span>
+                    </div>
+                    <pre id="polygraph-display" class="polygraph-stream">INITIALIZING AUDIO CIPHER REGISTERS...</pre>
+                </div>
 
-        <!-- BRIEFING BANNER -->
-        <section id="briefing-panel" class="cyber-panel">
-            <div class="panel-header">
-                <span class="panel-tag">// CASE FILE:</span>
-                <h1 id="case-title">AWAITING BRIEFING...</h1>
-                <span id="case-date-badge" class="date-badge">YYYY-MM-DD</span>
-            </div>
-            <div class="briefing-grid">
-                <div class="briefing-desc">
-                    <p id="crime-description">Select Today's Case or Practice Mode to begin the investigation.</p>
-                    <div class="setting-row">
-                        <span class="label">LOCATION:</span>
-                        <span id="crime-setting" class="value">UNKNOWN</span>
+                <!-- Difficulty Selector -->
+                <div class="difficulty-control-row">
+                    <span class="row-label">[ DIFFICULTY PROTOCOL ]:</span>
+                    <div class="difficulty-pills">
+                        <label class="diff-pill">
+                            <input type="radio" name="difficulty-select" value="classic" checked>
+                            <span class="pill-text">CLASSIC (5 Tokens, 1 Hint)</span>
+                        </label>
+                        <label class="diff-pill">
+                            <input type="radio" name="difficulty-select" value="hardboiled">
+                            <span class="pill-text">HARDBOILED (3 Tokens, No Hints)</span>
+                        </label>
+                        <label class="diff-pill">
+                            <input type="radio" name="difficulty-select" value="rookie">
+                            <span class="pill-text">ROOKIE (7 Tokens, Multi-Hint)</span>
+                        </label>
                     </div>
                 </div>
-                <div class="suspect-mini-card">
-                    <pre id="suspect-face" class="ascii-portrait">
+
+                <!-- Main Menu Navigation Buttons -->
+                <nav class="menu-nav-grid">
+                    <button id="btn-menu-today" class="menu-btn primary-menu-btn">
+                        <span class="btn-idx">[ 1 ]</span>
+                        <span class="btn-main-text">TODAY'S CASE</span>
+                        <span class="btn-subtext">Seeded daily puzzle synchronized globally</span>
+                    </button>
+                    <button id="btn-menu-practice" class="menu-btn secondary-menu-btn">
+                        <span class="btn-idx">[ 2 ]</span>
+                        <span class="btn-main-text">PRACTICE CASE</span>
+                        <span class="btn-subtext">Random uncompleted micro-crime simulation</span>
+                    </button>
+                    <button id="btn-menu-archive" class="menu-btn secondary-menu-btn">
+                        <span class="btn-idx">[ 3 ]</span>
+                        <span class="btn-main-text">COLD CASE ARCHIVES</span>
+                        <span class="btn-subtext">Review and replay historical crime dossiers</span>
+                    </button>
+                    <button id="btn-menu-rules" class="menu-btn secondary-menu-btn">
+                        <span class="btn-idx">[ 4 ]</span>
+                        <span class="btn-main-text">DETECTIVE FIELD MANUAL</span>
+                        <span class="btn-subtext">Rules, contradiction mechanics, and scoring</span>
+                    </button>
+                </nav>
+
+                <div class="menu-footer">
+                    <span class="footer-tip">[TIP]: Use keyboard keys [1]-[4] to jump directly to options.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SCREEN 2: BRIEFING SCREEN                                -->
+        <!-- ======================================================== -->
+        <section id="screen-briefing" class="game-screen">
+            <div class="briefing-container">
+                <div class="briefing-header-bar">
+                    <span class="dispatch-tag">// POLICE DISPATCH • CONFIDENTIAL BRIEFING</span>
+                    <span id="briefing-date-badge" class="case-date-tag">DATE: YYYY-MM-DD</span>
+                </div>
+
+                <div class="briefing-card-main">
+                    <div class="briefing-meta-block">
+                        <span class="meta-label">CASE FILE:</span>
+                        <h1 id="briefing-title" class="case-headline">AWAITING DISPATCH...</h1>
+                        
+                        <div class="crime-incident-box">
+                            <span class="box-label">[ INCIDENT REPORT ]:</span>
+                            <p id="briefing-description" class="crime-narrative">Incident details loading...</p>
+                        </div>
+
+                        <div class="scene-row">
+                            <span class="meta-label">[ CRIME SCENE ]:</span>
+                            <span id="briefing-setting" class="scene-val">UNKNOWN LOCATION</span>
+                        </div>
+                    </div>
+
+                    <!-- Suspect Mugshot Card -->
+                    <div class="suspect-profile-card">
+                        <div class="mugshot-frame">
+                            <pre id="briefing-suspect-mugshot" class="mugshot-art">
    _____  
   /     \ 
  | () () |
   \  ^  / 
    |||||  
-                    </pre>
-                    <div class="suspect-meta">
-                        <h3 id="suspect-name">???</h3>
-                        <p id="suspect-occupation" class="dim">---</p>
-                        <p id="suspect-quirk" class="quirk-text">---</p>
+                            </pre>
+                        </div>
+                        <div class="suspect-bio">
+                            <span class="bio-tag">SUSPECT IDENTIFIED</span>
+                            <h2 id="briefing-suspect-name" class="suspect-name-heading">UNKNOWN</h2>
+                            <p id="briefing-suspect-occupation" class="suspect-occ-text">OCCUPATION: ---</p>
+                            <div class="quirk-box">
+                                <span class="quirk-label">[ SPEECH QUIRK ]:</span>
+                                <p id="briefing-suspect-quirk" class="quirk-val">---</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ground-Truth Evidence Dossier Preview -->
+                <div class="dossier-preview-section">
+                    <div class="dossier-preview-header">
+                        <span class="dossier-title">[ FORENSIC EVIDENCE DOSSIER — 3 UNTOUCHABLE FACTS ]</span>
+                        <span class="dossier-sub">Your ground truth. The suspect CANNOT change these facts.</span>
+                    </div>
+                    <div id="briefing-dossier-list" class="dossier-preview-cards">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Briefing Action Controls -->
+                <div class="briefing-actions">
+                    <button id="btn-start-interrogation" class="action-btn enter-btn">
+                        [ ENTER INTERROGATION ROOM ] &gt;
+                    </button>
+                    <button id="btn-briefing-back" class="action-btn back-btn">
+                        &lt; [ RETURN TO HQ ]
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SCREEN 3: INTERROGATION ROOM                             -->
+        <!-- ======================================================== -->
+        <section id="screen-interrogation" class="game-screen">
+            <!-- Room Top HUD -->
+            <div class="interrogation-hud">
+                <div class="hud-case-info">
+                    <span class="room-case-label">CASE:</span>
+                    <span id="room-case-title" class="room-case-title-text">THE FLAMINGO FLAP</span>
+                    <span class="room-divider">|</span>
+                    <span class="room-suspect-label">SUSPECT:</span>
+                    <span id="room-suspect-name" class="room-suspect-name-text">ARTHUR PENDELTON</span>
+                </div>
+
+                <!-- Question Tokens Display -->
+                <div class="tokens-tracker">
+                    <span class="tokens-title">QUESTION TOKENS:</span>
+                    <div id="room-tokens-pips" class="tokens-pips-row">
+                        <span class="token-pip active">[O]</span>
+                        <span class="token-pip active">[O]</span>
+                        <span class="token-pip active">[O]</span>
+                        <span class="token-pip active">[O]</span>
+                        <span class="token-pip active">[O]</span>
+                    </div>
+                    <span id="room-tokens-count" class="tokens-count-label">(5 / 5)</span>
+                </div>
+            </div>
+
+            <!-- Interrogation Main Split Grid -->
+            <div class="interrogation-split">
+                <!-- LEFT SIDEBAR: DOSSIER & SUSPECT MONITOR -->
+                <aside class="interrogation-sidebar">
+                    <!-- Suspect Mugshot & Mood Monitor -->
+                    <div class="sidebar-suspect-widget">
+                        <div class="suspect-widget-top">
+                            <span class="widget-label">// WIRE MONITOR</span>
+                            <span id="room-suspect-mood" class="mood-badge mood-calm">[MOOD: CALM]</span>
+                        </div>
+                        <div class="widget-center">
+                            <pre id="room-suspect-face" class="widget-mugshot">
+   _____  
+  /     \ 
+ | () () |
+  \  ^  / 
+   |||||  
+                            </pre>
+                            <div class="widget-meta">
+                                <span id="room-sidebar-quirk" class="sidebar-quirk-text">"Always says sugarplum"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Verified Dossier Facts -->
+                    <div class="sidebar-dossier-box">
+                        <div class="sidebar-dossier-header">
+                            <span class="box-tag">[ FORENSIC GROUND TRUTH ]</span>
+                            <span class="status-verified">100% FACTUAL</span>
+                        </div>
+                        <div id="room-dossier-facts" class="dossier-cards-col">
+                            <!-- Populated with 3 facts -->
+                        </div>
+                    </div>
+
+                    <!-- Hint / Narrator Call -->
+                    <div class="sidebar-hint-box">
+                        <button id="btn-request-hint" class="hint-action-btn">
+                            [?] CONSULT NOIR NARRATOR (HINT)
+                        </button>
+                        <span id="hint-status-text" class="hint-subtext">Costs 1 Token on Classic Protocol</span>
+                    </div>
+
+                    <!-- Shortcuts Guide -->
+                    <div class="shortcuts-legend">
+                        <span>[ENTER] Transmit</span> • <span>[A] Accuse</span> • <span>[H] Hint</span> • <span>[ESC] Exit</span>
+                    </div>
+                </aside>
+
+                <!-- RIGHT MAIN: TRANSCRIPT CONSOLE & TRANSMITTER -->
+                <main class="interrogation-console">
+                    <div class="console-header-bar">
+                        <span class="console-tag">// LIVE WIRE TRANSCRIPTION FEED</span>
+                        <span id="console-turn-counter" class="console-turn-label">TURN #0</span>
+                    </div>
+
+                    <!-- Dialogue Transcript Log -->
+                    <div id="interrogation-transcript" class="transcript-feed">
+                        <div class="transcript-msg system-msg">
+                            <span class="msg-sender">[POLICE HQ]:</span>
+                            <span class="msg-text">Interrogation room audio link established. You hold 5 Question Tokens. Trap the suspect in a direct contradiction against the 3 verified dossier facts.</span>
+                        </div>
+                    </div>
+
+                    <!-- Thinking / Spinner State -->
+                    <div id="transcript-spinner" class="transcript-spinner-row hidden">
+                        <span id="spinner-brackets" class="spinner-icon">[ · · · ]</span>
+                        <span id="spinner-label" class="spinner-text">SUSPECT IS FORMULATING AN ALIBI...</span>
+                    </div>
+
+                    <!-- Transmitter Input Form -->
+                    <form id="form-interrogate" class="interrogation-input-bar">
+                        <div class="input-prefix">&gt;</div>
+                        <input 
+                            type="text" 
+                            id="input-interrogate-question" 
+                            class="interrogate-field" 
+                            placeholder="Type question for suspect, or type 'a' to accuse..." 
+                            autocomplete="off"
+                            maxlength="200"
+                        >
+                        <button type="submit" id="btn-send-question" class="console-btn btn-send">
+                            [ TRANSMIT ]
+                        </button>
+                        <button type="button" id="btn-open-accuse" class="console-btn btn-accuse">
+                            [ ! ACCUSE ! ]
+                        </button>
+                    </form>
+                </main>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SCREEN 4: RESULT / CASE CLOSED                           -->
+        <!-- ======================================================== -->
+        <section id="screen-result" class="game-screen">
+            <div class="result-container">
+                <div id="result-status-banner" class="result-banner banner-win">
+                    <h1 id="result-main-heading" class="result-headline">★★★★★ CASE CLOSED: SUSPECT CONVICTED! ★★★★★</h1>
+                </div>
+
+                <div class="result-content-card">
+                    <!-- Verdict Explanation Box -->
+                    <div class="result-verdict-box">
+                        <span class="box-tag">[ CONTRADICTION JUDGE RULING ]:</span>
+                        <p id="result-explanation-text" class="verdict-explanation">
+                            The suspect claimed he was home sleeping, but Fact #2 proved he purchased heavy aluminum wire-snippers at the hardware store at 6:30 PM.
+                        </p>
+                    </div>
+
+                    <!-- Suspect Confession Breakdown (On Win) -->
+                    <div id="result-confession-section" class="result-confession-box">
+                        <span class="box-tag">[ SUSPECT BREAKDOWN &amp; FULL CONFESSION ]:</span>
+                        <blockquote id="result-confession-quote" class="confession-quote">
+                            "Alright! I took the plastic flamingos! They were mocking me from across the lawn!"
+                        </blockquote>
+                    </div>
+
+                    <!-- Wordle Share Grid -->
+                    <div class="result-share-section">
+                        <span class="box-tag">[ FORENSIC DOSSIER SHARE GRID ]:</span>
+                        <pre id="result-share-grid-text" class="share-grid-pre">THE ALIBI #0042</pre>
+                        <div class="share-actions-row">
+                            <button id="btn-copy-dossier" class="action-btn copy-btn">
+                                [ COPY SHARE GRID TO CLIPBOARD ]
+                            </button>
+                            <span id="copy-status-indicator" class="copy-alert hidden">[ COPIED! ]</span>
+                        </div>
+                    </div>
+
+                    <!-- Result Navigation Actions -->
+                    <div class="result-nav-actions">
+                        <button id="btn-result-play-again" class="action-btn enter-btn">
+                            [ PLAY PRACTICE CASE ] &gt;
+                        </button>
+                        <button id="btn-result-to-menu" class="action-btn back-btn">
+                            &lt; [ RETURN TO HEADQUARTERS ]
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- INVESTIGATION ROOM GRID -->
-        <main class="investigation-grid">
-            <!-- LEFT: DOSSIER FACTS -->
-            <aside class="dossier-panel cyber-panel">
-                <div class="panel-header">
-                    <h2>FORENSIC DOSSIER</h2>
-                    <span class="header-badge">100% VERIFIED</span>
-                </div>
-                <div id="dossier-facts-list" class="facts-container">
-                    <div class="fact-card empty">Facts will load when case begins.</div>
+        <!-- ======================================================== -->
+        <!-- SCREEN 5: COLD CASE ARCHIVES                             -->
+        <!-- ======================================================== -->
+        <section id="screen-archive" class="game-screen">
+            <div class="archive-container">
+                <div class="archive-top-bar">
+                    <span class="box-tag">// COLD CASE EVIDENCE REPOSITORY</span>
+                    <button id="btn-archive-back" class="action-btn back-btn">&lt; [ RETURN TO HQ ]</button>
                 </div>
 
-                <!-- QUESTION TOKENS HUD -->
-                <div class="tokens-hud">
-                    <div class="tokens-label">QUESTION TOKENS:</div>
-                    <div id="tokens-display" class="tokens-pips">● ● ● ● ●</div>
-                    <div id="tokens-count-text" class="tokens-sub">(5 / 5 REMAINING)</div>
+                <div class="archive-table-frame">
+                    <table class="archive-grid">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                                <th>CASE FILE TITLE</th>
+                                <th>SUSPECT</th>
+                                <th>LOCATION</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archive-table-rows">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SCREEN 6: DETECTIVE FIELD MANUAL (RULES)                 -->
+        <!-- ======================================================== -->
+        <section id="screen-rules" class="game-screen">
+            <div class="rules-container">
+                <div class="rules-top-bar">
+                    <span class="box-tag">// DETECTIVE TRAINING PROTOCOL &amp; FIELD MANUAL</span>
+                    <button id="btn-rules-back" class="action-btn back-btn">&lt; [ RETURN TO HQ ]</button>
                 </div>
 
-                <!-- CONTROLS -->
-                <div class="side-controls">
-                    <button id="btn-use-hint" class="btn btn-warning btn-block" disabled>💡 ASK NOIR NARRATOR (HINT)</button>
-                    <button id="btn-open-accuse" class="btn btn-danger btn-block" disabled>⚖️ ACCUSE SUSPECT (A)</button>
-                </div>
-            </aside>
+                <div class="rules-content-card">
+                    <div class="rule-step">
+                        <span class="step-num">[ STEP 1: THE INQUIRY ]</span>
+                        <h3 class="step-title">Ask Targeted Questions</h3>
+                        <p class="step-desc">Every suspect has an absurd speech quirk and a fabricated alibi. Every inquiry costs <strong>1 Question Token</strong>. You start with 5 tokens on Classic protocol. Do not waste them on idle chatter.</p>
+                    </div>
 
-            <!-- RIGHT: INTERROGATION CHAT LOG -->
-            <section class="interrogation-feed cyber-panel">
-                <div class="panel-header">
-                    <h2>INTERROGATION TRANSCRIPT</h2>
-                    <span id="interrogation-status" class="status-indicator">STANDBY</span>
-                </div>
+                    <div class="rule-step">
+                        <span class="step-num">[ STEP 2: THE EVIDENCE ]</span>
+                        <h3 class="step-title">Know Your 3 Verified Facts</h3>
+                        <p class="step-desc">Your dossier holds 3 untouchable forensic facts. These facts are the immutable truth of the case. Your entire mission is to guide the suspect into uttering a sentence that directly contradicts one of these facts.</p>
+                    </div>
 
-                <div id="chat-stream" class="chat-stream">
-                    <div class="chat-bubble system">
-                        [DISPATCH] Welcome to the interrogation room, Detective. Review the 3 forensic facts on the left. Type targeted questions to trap the suspect into an undeniable contradiction.
+                    <div class="rule-step">
+                        <span class="step-num">[ STEP 3: THE ACCUSATION ]</span>
+                        <h3 class="step-title">Catch the Slip &amp; Indict</h3>
+                        <p class="step-desc">When the suspect slips up, click <strong>[ ! ACCUSE ! ]</strong> or press <strong>[A]</strong>. Match their exact quote against the fact they violated. The independent Contradiction Judge will verify the claim. If airtight, the suspect breaks down and confesses!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL 1: FORMAL ACCUSATION INDICTMENT                    -->
+    <!-- ======================================================== -->
+    <div id="modal-accuse" class="modal-backdrop hidden">
+        <div class="modal-window accuse-window">
+            <div class="modal-title-bar accuse-title-bar">
+                <span class="modal-alert-tag">[ ! FORMAL ACCUSATION INDICTMENT ! ]</span>
+                <button id="btn-close-accuse-modal" class="modal-close-btn">[X]</button>
+            </div>
+            <div class="modal-body-scroll">
+                <p class="accuse-intro-text">
+                    Select one statement from the suspect's testimony, then select the verified dossier fact that proves it is a lie.
+                </p>
+
+                <div class="accuse-selection-columns">
+                    <!-- Column 1: Suspect Testimony Quotes -->
+                    <div class="accuse-col">
+                        <span class="col-heading">[ 1. SELECT SUSPECT QUOTE ]:</span>
+                        <div id="accuse-quotes-list" class="accuse-options-box">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Dossier Verified Facts -->
+                    <div class="accuse-col">
+                        <span class="col-heading">[ 2. SELECT CONTRADICTED FACT ]:</span>
+                        <div id="accuse-facts-list" class="accuse-options-box">
+                            <!-- Populated dynamically -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- LOADING INDICATOR -->
-                <div id="loading-spinner" class="loading-spinner hidden">
-                    <span id="spinner-art" class="spinner-icon">┌ ● · ┐</span>
-                    <span id="spinner-text" class="spinner-text">SUSPECT IS THINKING...</span>
+                <!-- Judging Spinner Indicator -->
+                <div id="accuse-judging-spinner" class="judging-spinner hidden">
+                    <span class="gavel-symbol">[ GAVEL ]</span>
+                    <span class="judging-text">CONTRADICTION JUDGE EVALUATING FORMAL EVIDENCE...</span>
                 </div>
 
-                <!-- QUESTION INPUT -->
-                <form id="question-form" class="question-form">
-                    <span class="prompt-symbol">&gt;</span>
-                    <input type="text" id="question-input" placeholder="Type your strategic question and press Enter..." autocomplete="off" disabled>
-                    <button type="submit" id="btn-submit-question" class="btn btn-primary" disabled>QUESTION</button>
-                </form>
-            </section>
-        </main>
-    </div>
-
-    <!-- ACCUSE MODAL -->
-    <div id="accuse-modal" class="modal-overlay hidden">
-        <div class="modal-box cyber-panel">
-            <div class="modal-header">
-                <h2>LEGAL ACCUSATION OF CONTRADICTION</h2>
-                <button id="btn-close-accuse" class="btn-icon">✖</button>
-            </div>
-            <p class="modal-subtitle">Present the suspect's false claim and the verified fact it destroys.</p>
-            
-            <div class="modal-body">
-                <div class="accuse-step">
-                    <label>1. SELECT SUSPECT'S CONTRADICTORY QUOTE:</label>
-                    <select id="accuse-quote-select" class="cyber-select block-select">
-                        <option value="">-- Choose statement from transcript --</option>
-                    </select>
-                </div>
-
-                <div class="accuse-step">
-                    <label>2. SELECT VERIFIED FACT IT DIRECTLY VIOLATES:</label>
-                    <select id="accuse-fact-select" class="cyber-select block-select">
-                        <option value="">-- Choose conflicting dossier fact --</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button id="btn-submit-accuse" class="btn btn-danger">💥 SLAM THE CONTRADICTION!</button>
-                <button id="btn-cancel-accuse" class="btn btn-secondary">CANCEL</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RESULT MODAL -->
-    <div id="result-modal" class="modal-overlay hidden">
-        <div class="modal-box cyber-panel">
-            <div class="modal-header">
-                <h2 id="result-title">CASE CLOSED</h2>
-                <button id="btn-close-result" class="btn-icon">✖</button>
-            </div>
-            <div class="modal-body">
-                <div id="result-badge" class="result-badge">VERDICT</div>
-                <p id="result-explanation" class="result-explanation">---</p>
-                <div id="result-confession-box" class="confession-box hidden">
-                    <span class="confession-label">SUSPECT CONFESSION:</span>
-                    <p id="result-confession">---</p>
-                </div>
-                <div class="share-grid-box">
-                    <pre id="result-share-grid">THE ALIBI</pre>
-                    <button id="btn-copy-share" class="btn btn-primary btn-block">📋 COPY SHARE GRID</button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-result-new-game" class="btn btn-secondary">PLAY ANOTHER CASE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ARCHIVE MODAL -->
-    <div id="archive-modal" class="modal-overlay hidden">
-        <div class="modal-box cyber-panel wide-modal">
-            <div class="modal-header">
-                <h2>COLD CASE ARCHIVES</h2>
-                <button id="btn-close-archive" class="btn-icon">✖</button>
-            </div>
-            <div class="modal-body">
-                <table class="archive-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Case Title</th>
-                            <th>Suspect</th>
-                            <th>Location</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="archive-table-body">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- LLM / ENGINE CONFIG MODAL -->
-    <div id="engine-modal" class="modal-overlay hidden">
-        <div class="modal-box cyber-panel">
-            <div class="modal-header">
-                <h2>⚡ AI INFERENCE ENGINE SETTINGS</h2>
-                <button id="btn-close-engine-modal" class="btn-icon">✖</button>
-            </div>
-            <div class="modal-body">
-                <p class="modal-desc">Switch between <strong>Free Local Ollama</strong> (on your hardware) and <strong>Groq Cloud</strong> (Free, ultra-fast 500 tok/sec).</p>
-                
-                <div class="config-group">
-                    <label class="config-label">ACTIVE ENGINE:</label>
-                    <div class="radio-group">
-                        <label class="radio-option">
-                            <input type="radio" name="engine-choice" value="groq" id="radio-groq">
-                            <span>⚡ Groq Cloud (Free, Instant ~500 tok/s)</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="engine-choice" value="ollama" id="radio-ollama">
-                            <span>🖥️ Local Ollama (llama3.1:latest)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div id="groq-inputs-section" class="config-group">
-                    <label for="input-groq-key" class="config-label">GROQ API KEY (<a href="https://console.groq.com" target="_blank" class="glow-link">Get Free Key</a>):</label>
-                    <input type="password" id="input-groq-key" class="cyber-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx">
-                    <p class="input-subtext">Free tier: 14,400 requests/day. No credit card required.</p>
-                </div>
-
-                <div id="engine-status-alert" class="engine-alert hidden"></div>
-
-                <div class="modal-footer-btns">
-                    <button id="btn-save-engine" class="btn btn-primary btn-block">CONNECT ENGINE</button>
+                <div class="modal-action-row">
+                    <button id="btn-submit-indictment" class="action-btn enter-btn btn-block">
+                        [ DELIVER INDICTMENT TO JUDGE ]
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ======================================================== -->
+    <!-- MODAL 2: AI INFERENCE ENGINE SETTINGS                    -->
+    <!-- ======================================================== -->
+    <div id="modal-engine" class="modal-backdrop hidden">
+        <div class="modal-window engine-window">
+            <div class="modal-title-bar">
+                <span class="modal-alert-tag">[ ⚡ AI INFERENCE ENGINE CONFIGURATION ]</span>
+                <button id="btn-close-engine-modal" class="modal-close-btn">[X]</button>
+            </div>
+            <div class="modal-body-scroll">
+                <p class="accuse-intro-text">
+                    Choose between <strong>Local Ollama</strong> (100% on-device on your Mac) and <strong>Groq Cloud</strong> (Free, instant ~500 tok/sec).
+                </p>
+
+                <div class="engine-radio-stack">
+                    <label class="engine-option-row">
+                        <input type="radio" name="engine-provider" value="groq" id="radio-groq">
+                        <div class="option-details">
+                            <span class="opt-name">[+] Groq Cloud (llama-3.1-8b-instant)</span>
+                            <span class="opt-sub">Free 14,400 requests/day • Instant 500 tokens/sec • Zero hardware load</span>
+                        </div>
+                    </label>
+
+                    <label class="engine-option-row">
+                        <input type="radio" name="engine-provider" value="ollama" id="radio-ollama" checked>
+                        <div class="option-details">
+                            <span class="opt-name">[+] Local Ollama (llama3.1:latest)</span>
+                            <span class="opt-sub">100% private on-device neural weights • No external internet calls</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="groq-key-group" class="groq-input-group">
+                    <label for="input-groq-key" class="field-label">[ GROQ API KEY ] (<a href="https://console.groq.com" target="_blank" class="cyber-link">Get Free Key</a>):</label>
+                    <input type="password" id="input-groq-key" class="terminal-text-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxx">
+                    <span class="field-sub">Free key with no credit card required.</span>
+                </div>
+
+                <div id="engine-feedback-box" class="feedback-alert hidden"></div>
+
+                <div class="modal-action-row">
+                    <button id="btn-save-engine-config" class="action-btn enter-btn btn-block">
+                        [ CONNECT INFERENCE ENGINE ]
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Entrypoint -->
     <script src="/static/app.js"></script>
 </body>
 </html>
-
