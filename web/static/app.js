@@ -781,6 +781,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Menu Screen buttons
+    document.querySelectorAll(".arcade-menu-item").forEach(item => {
+        item.addEventListener("mouseenter", () => playSound("key"));
+    });
     document.getElementById("btn-menu-today").addEventListener("click", () => startCaseFlow(false));
     document.getElementById("btn-menu-practice").addEventListener("click", () => startCaseFlow(true));
     document.getElementById("btn-menu-archive").addEventListener("click", loadArchivesScreen);

@@ -39,17 +39,22 @@
         <!-- ======================================================== -->
         <section id="screen-menu" class="game-screen active-screen">
             <div class="menu-container">
-                <!-- ASCII Title Banner -->
-                <pre class="ascii-logo">
- _______ _     _ _______   _______               ______  _____ 
-    |    |_____| |______   |_____| |      | _____|_____]   |   
-    |    |     | |______   |     | |_____ |      |_____] __|__ 
-                </pre>
-                <div class="menu-tagline">
-                    <span class="tag-bracket">&lt;</span> A SATIRICAL DAILY NOIR INTERROGATION GAME <span class="tag-bracket">&gt;</span>
-                </div>
-                <div class="menu-subtag">
-                    ONE CASE A DAY • 5 QUESTION TOKENS • 1 CONTRADICTION TO CONVICT
+                <!-- Massive Bold Block ASCII Title Banner -->
+                <div class="title-banner-box">
+                    <pre class="ascii-logo-bold">
+████████╗██╗  ██╗███████╗     █████╗ ██╗     ██╗██████╗ ██╗
+╚══██╔══╝██║  ██║██╔════╝    ██╔══██╗██║     ██║██╔══██╗██║
+   ██║   ███████║█████╗      ███████║██║     ██║██████╔╝██║
+   ██║   ██╔══██║██╔══╝      ██╔══██║██║     ██║██╔══██╗██║
+   ██║   ██║  ██║███████╗    ██║  ██║███████╗██║██████╔╝██║
+   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝╚═════╝ ╚═╝
+                    </pre>
+                    <div class="menu-tagline">
+                        <span class="tag-bracket">&lt;</span> DAILY NOIR INTERROGATION ENGINE <span class="tag-bracket">&gt;</span>
+                    </div>
+                    <div class="menu-subtag">
+                        1 CASE A DAY • 5 QUESTION TOKENS • 1 CONTRADICTION TO CONVICT
+                    </div>
                 </div>
 
                 <!-- Live Voice-Stress & Audio Cipher Monitor -->
@@ -61,7 +66,7 @@
                     <pre id="polygraph-display" class="polygraph-stream">INITIALIZING AUDIO CIPHER REGISTERS...</pre>
                 </div>
 
-                <!-- Difficulty Selector -->
+                <!-- Difficulty Protocol Selector -->
                 <div class="difficulty-control-row">
                     <span class="row-label">[ DIFFICULTY PROTOCOL ]:</span>
                     <div class="difficulty-pills">
@@ -80,32 +85,51 @@
                     </div>
                 </div>
 
-                <!-- Main Menu Navigation Buttons -->
-                <nav class="menu-nav-grid">
-                    <button id="btn-menu-today" class="menu-btn primary-menu-btn">
-                        <span class="btn-idx">[ 1 ]</span>
-                        <span class="btn-main-text">TODAY'S CASE</span>
-                        <span class="btn-subtext">Seeded daily puzzle synchronized globally</span>
+                <!-- Vertical Classic Game Menu List (One-by-One Stack) -->
+                <nav class="arcade-menu-list">
+                    <button id="btn-menu-today" class="arcade-menu-item primary-item">
+                        <span class="arcade-cursor">&gt;</span>
+                        <span class="item-tag">[ 1 ]</span>
+                        <div class="item-content">
+                            <span class="item-title">START TODAY'S CASE</span>
+                            <span class="item-desc">Seeded daily micro-crime synchronized globally</span>
+                        </div>
+                        <span class="item-badge">[ DAILY CASE ]</span>
                     </button>
-                    <button id="btn-menu-practice" class="menu-btn secondary-menu-btn">
-                        <span class="btn-idx">[ 2 ]</span>
-                        <span class="btn-main-text">PRACTICE CASE</span>
-                        <span class="btn-subtext">Random uncompleted micro-crime simulation</span>
+
+                    <button id="btn-menu-practice" class="arcade-menu-item">
+                        <span class="arcade-cursor">&gt;</span>
+                        <span class="item-tag">[ 2 ]</span>
+                        <div class="item-content">
+                            <span class="item-title">PRACTICE CASE (RANDOM)</span>
+                            <span class="item-desc">Endless randomized uncompleted crime simulations</span>
+                        </div>
+                        <span class="item-badge">[ PRACTICE ]</span>
                     </button>
-                    <button id="btn-menu-archive" class="menu-btn secondary-menu-btn">
-                        <span class="btn-idx">[ 3 ]</span>
-                        <span class="btn-main-text">COLD CASE ARCHIVES</span>
-                        <span class="btn-subtext">Review and replay historical crime dossiers</span>
+
+                    <button id="btn-menu-archive" class="arcade-menu-item">
+                        <span class="arcade-cursor">&gt;</span>
+                        <span class="item-tag">[ 3 ]</span>
+                        <div class="item-content">
+                            <span class="item-title">COLD CASE ARCHIVES</span>
+                            <span class="item-desc">Review and replay historical crime dossiers &amp; scores</span>
+                        </div>
+                        <span class="item-badge">[ ARCHIVES ]</span>
                     </button>
-                    <button id="btn-menu-rules" class="menu-btn secondary-menu-btn">
-                        <span class="btn-idx">[ 4 ]</span>
-                        <span class="btn-main-text">DETECTIVE FIELD MANUAL</span>
-                        <span class="btn-subtext">Rules, contradiction mechanics, and scoring</span>
+
+                    <button id="btn-menu-rules" class="arcade-menu-item">
+                        <span class="arcade-cursor">&gt;</span>
+                        <span class="item-tag">[ 4 ]</span>
+                        <div class="item-content">
+                            <span class="item-title">DETECTIVE FIELD MANUAL</span>
+                            <span class="item-desc">Interrogation rules, token economics, and contradiction judging</span>
+                        </div>
+                        <span class="item-badge">[ RULES ]</span>
                     </button>
                 </nav>
 
                 <div class="menu-footer">
-                    <span class="footer-tip">[TIP]: Use keyboard keys [1]-[4] to jump directly to options.</span>
+                    <span class="footer-tip">[TIP]: Press [1], [2], [3], or [4] on your keyboard to navigate directly.</span>
                 </div>
             </div>
         </section>
