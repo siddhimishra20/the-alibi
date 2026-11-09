@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
 from pydantic import BaseModel
 
 from alibi.llm.client import OllamaClient
@@ -227,9 +227,11 @@ if os.path.exists(audio_dir):
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-    @app.get("/")
+    @app.get("/", response_class=HTMLResponse)
     def index():
-        return FileResponse(os.path.join(static_dir, "index.html"))
+        html_file = os.path.join(static_dir, "index.html")
+        with open(html_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
 
     @app.get("/favicon.ico")
     def favicon():
