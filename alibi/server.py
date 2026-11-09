@@ -105,6 +105,7 @@ def get_status():
     verified, msg = client.verify_models()
     today_str = time.strftime("%Y-%m-%d")
     today_entry = game_manager.get_completed_result(today_str)
+    is_today_completed = today_entry is not None
     is_today_solved = today_entry is not None and today_entry.get("won", False)
 
     total_score = game_manager.progress_data.get("total_score", 0)
@@ -117,6 +118,7 @@ def get_status():
         "models_verified": verified,
         "installed_models": installed,
         "today": today_str,
+        "today_completed": is_today_completed,
         "today_solved": is_today_solved,
         "today_data": today_entry,
         "countdown_midnight": GameManager.get_time_until_midnight(),
@@ -178,24 +180,34 @@ def get_archive():
 @app.post("/api/session/start")
 def start_session(req: StartSessionRequest):
     case = architect.get_daily_case(date_str=req.date, practice=req.practice)
-    session_id = f"sess_{int(time.time() * 1000)}"
 
+    # Strictly block replaying today's daily case once already completed
+    if not req.practice:
+        completed_entry = game_manager.get_completed_result(case.date)
+        if completed_entry is not None:
+            return {
+                "success": False,
+                "already_completed": True,
+                "case": sanitize_case_for_client(case),
+                "completed_data": completed_entry,
+                "countdown_midnight": GameManager.get_time_until_midnight(),
+                "error": f"Case for {case.date} has already been concluded. Each daily case can only be investigated once."
+            }
+
+    session_id = f"sess_{int(time.time() * 1000)}"
     gm = GameManager(client=client)
     gm.init_session(case, is_practice=req.practice, difficulty=req.difficulty)
     active_sessions[session_id] = gm
 
-    already_solved = (not req.practice) and (gm.get_completed_result(case.date) is not None)
-    completed_data = gm.get_completed_result(case.date) if already_solved else None
-
     return {
+        "success": True,
         "session_id": session_id,
         "case": sanitize_case_for_client(case),
         "difficulty": req.difficulty,
         "remaining_tokens": gm.session.remaining_tokens,
         "max_tokens": gm.session.max_tokens,
         "is_practice": req.practice,
-        "already_solved": already_solved,
-        "completed_data": completed_data
+        "already_completed": False
     }
 
 @app.post("/api/session/interrogate")

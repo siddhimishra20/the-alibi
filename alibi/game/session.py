@@ -84,11 +84,18 @@ class GameManager:
         except Exception:
             pass
 
+    def reload_progress(self) -> Dict[str, Any]:
+        """Reload progress data fresh from disk."""
+        self.progress_data = self._load_progress()
+        return self.progress_data
+
     def is_daily_completed(self, date_str: str) -> bool:
         """Check if today's case was already completed."""
+        self.reload_progress()
         return date_str in self.progress_data.get("completed_dates", {})
 
     def get_completed_result(self, date_str: str) -> Optional[Dict[str, Any]]:
+        self.reload_progress()
         return self.progress_data.get("completed_dates", {}).get(date_str)
 
     def init_session(self, case: Case, is_practice: bool = False, difficulty: str = "classic"):

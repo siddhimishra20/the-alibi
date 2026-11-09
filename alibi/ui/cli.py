@@ -13,6 +13,24 @@ console = Console()
 
 def run_cli_game(game_manager: GameManager, case: Case, is_practice: bool = False):
     """Run an interactive CLI session using Rich (lightweight alternative to full TUI)."""
+    if not is_practice and game_manager.is_daily_completed(case.date):
+        completed = game_manager.get_completed_result(case.date)
+        status = "[bold green]CONVICTED ★[/bold green]" if completed.get("won") else "[bold red]WALKED FREE ✕[/bold red]"
+        score = completed.get("score", 0)
+        console.print(TITLE_BANNER, style="bold green")
+        console.print(Panel(
+            f"[bold yellow]CASE:[/bold yellow] {case.title} ({case.date})\n"
+            f"[bold yellow]STATUS:[/bold yellow] {status}\n"
+            f"[bold yellow]SCORE EARNED:[/bold yellow] +{score:,} PTS\n"
+            f"[bold yellow]TIME TO NEXT CASE:[/bold yellow] {GameManager.get_time_until_midnight()}\n\n"
+            f"[bold cyan]You have already concluded today's official daily case![/bold cyan]\n"
+            f"[dim]To play unlimited randomized practice cases, launch with:[/dim]\n"
+            f"    [bold green]python run.py --cli --practice[/bold green]",
+            title="[bold red]DAILY CASE CONCLUDED[/bold red]",
+            border_style="red"
+        ))
+        return
+
     game_manager.init_session(case, is_practice=is_practice)
     session = game_manager.session
 

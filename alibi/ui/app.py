@@ -1205,6 +1205,9 @@ class TheAlibiApp(App):
     def start_game(self, is_practice: bool = False):
         """Fetch/generate case, initialize session, start background music, and show briefing."""
         today = datetime.now().strftime("%Y-%m-%d")
+        if not is_practice and self.game_manager.is_daily_completed(today):
+            self.push_screen(ResultScreen(is_already_completed=True, date_str=today))
+            return
         case = self.case_architect.get_daily_case(date_str=today, practice=is_practice)
         self.game_manager.init_session(case, is_practice=is_practice)
         self.game_manager.audio.play_music("interrogation", loop=True)

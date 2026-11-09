@@ -6,6 +6,7 @@
 let currentSession = null;
 let currentCase = null;
 let currentDifficulty = "classic";
+let globalStatusData = null;
 let soundEnabled = true;
 let audioContextUnlocked = false;
 let audioCache = {};
@@ -221,6 +222,16 @@ async function startCaseFlow(isPractice = false, targetDate = null) {
         }
 
         const data = await resp.json();
+        if (data.already_completed) {
+            openTodayConcludedModal(data);
+            return;
+        }
+
+        if (!data.success && data.error) {
+            alert(data.error);
+            return;
+        }
+
         currentSession = {
             id: data.session_id,
             remainingTokens: data.remaining_tokens,
@@ -823,23 +834,46 @@ async function refreshGlobalStatus() {
             const archStreak = document.getElementById("archive-career-streak");
             if (archStreak) archStreak.innerText = `${data.current_streak || 0} DAYS`;
 
-            // Memory System: Check if Today's Challenge is Already Solved
+            // Memory System: Check if Today's Challenge is Already Completed
+            globalStatusData = data;
             const todayBtn = document.getElementById("btn-menu-today");
             const todayTitle = document.getElementById("menu-today-title");
             const todayDesc = document.getElementById("menu-today-desc");
             const todayBadge = document.getElementById("menu-today-badge");
 
-            if (data.today_solved && todayBtn) {
-                todayBtn.classList.add("solved-today");
+            const isCompleted = !!data.today_completed || !!data.today_data;
+            const isWon = !!data.today_solved || (data.today_data && data.today_data.won);
+
+            if (isCompleted && todayBtn) {
                 const todayScore = data.today_data?.score || 0;
-                if (todayTitle) todayTitle.innerText = "TODAY'S CASE: SOLVED ★";
-                if (todayDesc) todayDesc.innerText = `Case closed! Earned +${todayScore.toLocaleString()} PTS. Review dossier or play practice cases.`;
-                if (todayBadge) todayBadge.innerText = `[ SOLVED +${todayScore.toLocaleString()} PTS ]`;
+                if (isWon) {
+                    todayBtn.classList.remove("failed-today");
+                    todayBtn.classList.add("solved-today");
+                    if (todayTitle) todayTitle.innerText = "TODAY'S CASE: CLOSED ★";
+                    if (todayDesc) todayDesc.innerText = `Case solved! Earned +${todayScore.toLocaleString()} PTS. Click to view dossier & share grid.`;
+                    if (todayBadge) {
+                        todayBadge.innerText = `[ CLOSED: +${todayScore.toLocaleString()} PTS ]`;
+                        todayBadge.style.color = "var(--color-green)";
+                    }
+                } else {
+                    todayBtn.classList.remove("solved-today");
+                    todayBtn.classList.add("failed-today");
+                    if (todayTitle) todayTitle.innerText = "TODAY'S CASE: CLOSED ✕";
+                    if (todayDesc) todayDesc.innerText = `Suspect walked free. Next daily case in ${data.countdown_midnight || "midnight"}. Practice Mode available.`;
+                    if (todayBadge) {
+                        todayBadge.innerText = "[ CLOSED: FAILED ]";
+                        todayBadge.style.color = "var(--color-red)";
+                    }
+                }
             } else if (todayBtn) {
                 todayBtn.classList.remove("solved-today");
+                todayBtn.classList.remove("failed-today");
                 if (todayTitle) todayTitle.innerText = "START TODAY'S CASE";
                 if (todayDesc) todayDesc.innerText = "Seeded daily micro-crime synchronized globally";
-                if (todayBadge) todayBadge.innerText = "[ DAILY CASE ]";
+                if (todayBadge) {
+                    todayBadge.innerText = "[ DAILY CASE ]";
+                    todayBadge.style.color = "";
+                }
             }
         }
 
@@ -868,6 +902,70 @@ function openEngineModal() {
 
 function closeEngineModal() {
     document.getElementById("modal-engine").classList.add("hidden");
+}
+
+function openTodayConcludedModal(statusData) {
+    playSound("key");
+    const modal = document.getElementById("modal-today-concluded");
+    if (!modal) return;
+
+    const todayEntry = statusData.today_data || statusData.completed_data || {};
+    const won = todayEntry.won === true;
+    const score = todayEntry.score || 0;
+    const tokens = todayEntry.tokens_left ?? 0;
+    const grid = todayEntry.share_grid || "";
+    const countdown = statusData.countdown_midnight || "00:00:00";
+
+    const stamp = document.getElementById("concluded-verdict-stamp");
+    if (stamp) {
+        if (won) {
+            stamp.className = "result-stamp-badge stamp-convicted";
+            stamp.innerText = "[ CONVICTED ]";
+        } else {
+            stamp.className = "result-stamp-badge stamp-walked";
+            stamp.innerText = "[ WALKED FREE ]";
+        }
+    }
+
+    const titleEl = document.getElementById("concluded-case-title");
+    if (titleEl) {
+        const caseTitle = statusData.case ? statusData.case.title : (currentCase ? currentCase.title : "TODAY'S DAILY CASE");
+        titleEl.innerText = caseTitle.toUpperCase();
+    }
+
+    const verdictEl = document.getElementById("concluded-stat-verdict");
+    if (verdictEl) {
+        verdictEl.innerText = won ? "CONVICTED ★" : "WALKED FREE ✕";
+        verdictEl.style.color = won ? "var(--color-green)" : "var(--color-crimson)";
+    }
+
+    const scoreEl = document.getElementById("concluded-stat-score");
+    if (scoreEl) {
+        scoreEl.innerText = won ? `+${score.toLocaleString()} PTS` : "0 PTS";
+    }
+
+    const tokensEl = document.getElementById("concluded-stat-tokens");
+    if (tokensEl) {
+        tokensEl.innerText = `${tokens} / 5`;
+    }
+
+    const countdownEl = document.getElementById("concluded-stat-countdown");
+    if (countdownEl) {
+        countdownEl.innerText = countdown;
+    }
+
+    const gridEl = document.getElementById("concluded-share-grid");
+    if (gridEl) {
+        gridEl.innerText = grid || "Teletype record archived.";
+    }
+
+    modal.classList.remove("hidden");
+}
+
+function closeTodayConcludedModal() {
+    playSound("key");
+    const modal = document.getElementById("modal-today-concluded");
+    if (modal) modal.classList.add("hidden");
 }
 
 async function saveEngineConfig() {
@@ -987,13 +1085,65 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".arcade-menu-item").forEach(item => {
         item.addEventListener("mouseenter", () => playSound("key"));
     });
-    document.getElementById("btn-menu-today").addEventListener("click", () => startCaseFlow(false));
+    document.getElementById("btn-menu-today").addEventListener("click", () => {
+        if (globalStatusData && (globalStatusData.today_completed || globalStatusData.today_data)) {
+            openTodayConcludedModal(globalStatusData);
+            return;
+        }
+        startCaseFlow(false);
+    });
     document.getElementById("btn-menu-practice").addEventListener("click", () => startCaseFlow(true));
     document.getElementById("btn-menu-archive").addEventListener("click", loadArchivesScreen);
     document.getElementById("btn-menu-rules").addEventListener("click", () => {
         playSound("key");
         navigateTo("screen-rules");
     });
+
+    // Concluded Today Modal listeners
+    const btnCloseConcluded = document.getElementById("btn-close-concluded-modal");
+    if (btnCloseConcluded) btnCloseConcluded.addEventListener("click", closeTodayConcludedModal);
+
+    const btnDismissConcluded = document.getElementById("btn-concluded-dismiss");
+    if (btnDismissConcluded) btnDismissConcluded.addEventListener("click", closeTodayConcludedModal);
+
+    const btnConcludedPractice = document.getElementById("btn-concluded-practice");
+    if (btnConcludedPractice) {
+        btnConcludedPractice.addEventListener("click", () => {
+            closeTodayConcludedModal();
+            startCaseFlow(true);
+        });
+    }
+
+    const btnConcludedArchives = document.getElementById("btn-concluded-archives");
+    if (btnConcludedArchives) {
+        btnConcludedArchives.addEventListener("click", () => {
+            closeTodayConcludedModal();
+            loadArchivesScreen();
+        });
+    }
+
+    const btnConcludedCopy = document.getElementById("btn-concluded-copy-grid");
+    if (btnConcludedCopy) {
+        btnConcludedCopy.addEventListener("click", async () => {
+            const gridEl = document.getElementById("concluded-share-grid");
+            if (gridEl && gridEl.innerText) {
+                try {
+                    await navigator.clipboard.writeText(gridEl.innerText);
+                    const orig = btnConcludedCopy.innerText;
+                    btnConcludedCopy.innerText = "[ ✓ COPIED TO CLIPBOARD! ]";
+                    btnConcludedCopy.style.borderColor = "var(--color-green)";
+                    btnConcludedCopy.style.color = "var(--color-green)";
+                    setTimeout(() => {
+                        btnConcludedCopy.innerText = orig;
+                        btnConcludedCopy.style.borderColor = "";
+                        btnConcludedCopy.style.color = "";
+                    }, 2200);
+                } catch (e) {
+                    alert("Could not copy to clipboard: " + e);
+                }
+            }
+        });
+    }
 
     // Briefing Screen buttons
     document.getElementById("btn-start-interrogation").addEventListener("click", enterInterrogationRoom);
@@ -1066,8 +1216,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape") {
             closeAccuseModal();
             closeEngineModal();
+            closeTodayConcludedModal();
         } else if (e.key === "1" && document.getElementById("screen-menu").classList.contains("active-screen")) {
-            startCaseFlow(false);
+            if (globalStatusData && (globalStatusData.today_completed || globalStatusData.today_data)) {
+                openTodayConcludedModal(globalStatusData);
+            } else {
+                startCaseFlow(false);
+            }
         } else if (e.key === "2" && document.getElementById("screen-menu").classList.contains("active-screen")) {
             startCaseFlow(true);
         } else if (e.key === "3" && document.getElementById("screen-menu").classList.contains("active-screen")) {

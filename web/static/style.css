@@ -2029,6 +2029,128 @@ body.crt-theme {
     color: var(--color-green);
 }
 
+.arcade-menu-item.failed-today {
+    border-color: var(--color-crimson);
+    background: linear-gradient(90deg, rgba(255, 51, 85, 0.1) 0%, rgba(13, 19, 26, 0.95) 100%);
+}
+
+.arcade-menu-item.failed-today:hover {
+    box-shadow: 0 0 18px rgba(255, 51, 85, 0.4);
+}
+
+.arcade-menu-item.failed-today .item-title {
+    color: var(--color-crimson);
+}
+
+.arcade-menu-item.failed-today .item-badge {
+    background: rgba(255, 51, 85, 0.2);
+    border-color: var(--color-crimson);
+    color: var(--color-crimson);
+}
+
+/* Modal: Daily Case Concluded Window */
+.concluded-window {
+    border: 2px solid var(--color-amber);
+    box-shadow: 0 0 30px rgba(255, 179, 0, 0.35);
+    max-width: 660px;
+}
+
+.concluded-title-bar {
+    background: rgba(255, 179, 0, 0.12);
+    border-bottom: 1px solid var(--color-amber);
+}
+
+.concluded-title-bar .modal-alert-tag {
+    color: var(--color-amber);
+}
+
+.concluded-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: rgba(255, 179, 0, 0.05);
+    border: 1px solid var(--border-bright);
+    border-radius: 4px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.concluded-case-heading {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-bone);
+    letter-spacing: 1px;
+    margin: 4px 0;
+}
+
+.concluded-status-desc {
+    font-size: 0.85rem;
+    color: var(--color-slate);
+    line-height: 1.45;
+    max-width: 520px;
+}
+
+.concluded-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.concluded-stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    padding: 12px 14px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.concluded-stat-card .stat-label {
+    font-size: 0.72rem;
+    color: var(--color-slate);
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+}
+
+.concluded-stat-card .stat-value {
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+}
+
+.concluded-grid-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.concluded-grid-box .grid-label {
+    font-size: 0.75rem;
+    color: var(--color-slate);
+    letter-spacing: 0.5px;
+    font-family: var(--font-mono);
+}
+
+.concluded-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 18px;
+    background: #090e13;
+    border-top: 1px solid var(--border-bright);
+}
+
 /* ==========================================================================
    RESULT SCREEN: RUBBER STAMP & OFFICIAL COMMENDATION LEDGER
    ========================================================================== */
