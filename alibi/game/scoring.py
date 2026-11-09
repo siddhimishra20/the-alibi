@@ -97,3 +97,4 @@ def calculate_score(
         "difficulty": difficulty,
         "total": total
     }
+

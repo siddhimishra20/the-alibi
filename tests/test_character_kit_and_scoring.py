@@ -170,3 +170,4 @@ def test_api_status_scoring_fields():
     assert "today_solved" in data
     assert "countdown_midnight" in data
     assert isinstance(data["total_score"], int)
+

@@ -28,6 +28,7 @@
                 </button>
                 <span class="hud-badge"><span class="hud-label">SCORE:</span> <span id="hud-score-text" class="hud-val-amber">0 PTS</span></span>
                 <span class="hud-badge"><span class="hud-label">RANK:</span> <span id="hud-rank-text" class="hud-val-cyan">PATROL OFFICER</span></span>
+                <span class="hud-badge"><span class="hud-label">RECORD:</span> <span id="hud-record-text" class="hud-val-green">0/0</span></span>
                 <span class="hud-badge"><span class="hud-label">STREAK:</span> <span id="streak-badge-text" class="hud-val-gold">0</span></span>
                 <span id="countdown-badge" class="hud-badge"><span class="hud-label">RESET:</span> <span id="countdown-text" class="hud-val">--:--:--</span></span>
                 <button id="btn-audio-toggle" class="hud-btn" title="Toggle Sound FX">
@@ -60,14 +61,6 @@
                     <div class="menu-subtag">
                         1 CASE A DAY • 5 QUESTION TOKENS • 1 CONTRADICTION TO CONVICT
                     </div>
-                </div>
-
-                <!-- Detective Career Progress Bar -->
-                <div class="detective-career-bar">
-                    <div class="career-stat"><span class="career-label">CAREER SCORE:</span> <span id="menu-career-score" class="career-val text-amber">0 PTS</span></div>
-                    <div class="career-stat"><span class="career-label">COMMISSION RANK:</span> <span id="menu-career-rank" class="career-val text-cyan">PATROL OFFICER</span></div>
-                    <div class="career-stat"><span class="career-label">CASES CLOSED:</span> <span id="menu-career-record" class="career-val text-green">0 / 0</span></div>
-                    <div class="career-stat"><span class="career-label">DAILY STREAK:</span> <span id="menu-career-streak" class="career-val text-gold">0 DAYS</span></div>
                 </div>
 
                 <!-- Live Voice-Stress & Audio Cipher Monitor -->
@@ -453,6 +446,14 @@
                 <div class="archive-top-bar">
                     <span class="box-tag">// COLD CASE EVIDENCE REPOSITORY</span>
                     <button id="btn-archive-back" class="action-btn back-btn">&lt; [ RETURN TO HQ ]</button>
+                </div>
+
+                <!-- Official Detective Career Record Dossier in Archives -->
+                <div class="detective-career-bar">
+                    <div class="career-stat"><span class="career-label">CAREER SCORE:</span> <span id="archive-career-score" class="career-val text-amber">0 PTS</span></div>
+                    <div class="career-stat"><span class="career-label">COMMISSION RANK:</span> <span id="archive-career-rank" class="career-val text-cyan">PATROL OFFICER</span></div>
+                    <div class="career-stat"><span class="career-label">CASES CLOSED:</span> <span id="archive-career-record" class="career-val text-green">0 / 0</span></div>
+                    <div class="career-stat"><span class="career-label">DAILY STREAK:</span> <span id="archive-career-streak" class="career-val text-gold">0 DAYS</span></div>
                 </div>
 
                 <div class="archive-table-frame">

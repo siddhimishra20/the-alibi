@@ -18,6 +18,7 @@ from rich.table import Table
 from alibi.models.schema import Case
 from alibi.llm.client import OllamaClient
 from alibi.game.session import GameManager
+from alibi.game.scoring import get_detective_rank
 from alibi.agents.case_architect import CaseArchitectAgent
 from alibi.ui.ascii_art import (
     TITLE_BANNER, ASCII_FACES, SUSPECT_QUOTES, render_tokens,

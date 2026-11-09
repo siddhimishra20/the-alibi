@@ -798,26 +798,29 @@ async function refreshGlobalStatus() {
             const rankEl = document.getElementById("hud-rank-text");
             if (rankEl) rankEl.innerText = data.rank || "PATROL OFFICER";
 
+            const recordEl = document.getElementById("hud-record-text");
+            if (recordEl) recordEl.innerText = `${data.games_won || 0}/${data.games_played || 0}`;
+
             const streakEl = document.getElementById("streak-badge-text");
             if (streakEl) streakEl.innerText = data.current_streak || 0;
 
-            // Main Menu Career Progress Bar
-            const menuScore = document.getElementById("menu-career-score");
-            if (menuScore) menuScore.innerText = `${(data.total_score || 0).toLocaleString()} PTS`;
+            // Archive Career Dossier
+            const archScore = document.getElementById("archive-career-score");
+            if (archScore) archScore.innerText = `${(data.total_score || 0).toLocaleString()} PTS`;
 
-            const menuRank = document.getElementById("menu-career-rank");
-            if (menuRank) menuRank.innerText = `${data.rank_tier ? '[' + data.rank_tier + '] ' : ''}${data.rank || 'PATROL OFFICER'}`;
+            const archRank = document.getElementById("archive-career-rank");
+            if (archRank) archRank.innerText = `${data.rank_tier ? '[' + data.rank_tier + '] ' : ''}${data.rank || 'PATROL OFFICER'}`;
 
-            const menuRecord = document.getElementById("menu-career-record");
-            if (menuRecord) {
+            const archRecord = document.getElementById("archive-career-record");
+            if (archRecord) {
                 const won = data.games_won || 0;
                 const played = data.games_played || 0;
                 const pct = played > 0 ? Math.round((won / played) * 100) : 0;
-                menuRecord.innerText = `${won} / ${played} (${pct}%)`;
+                archRecord.innerText = `${won} / ${played} (${pct}%)`;
             }
 
-            const menuStreak = document.getElementById("menu-career-streak");
-            if (menuStreak) menuStreak.innerText = `${data.current_streak || 0} DAYS`;
+            const archStreak = document.getElementById("archive-career-streak");
+            if (archStreak) archStreak.innerText = `${data.current_streak || 0} DAYS`;
 
             // Memory System: Check if Today's Challenge is Already Solved
             const todayBtn = document.getElementById("btn-menu-today");
