@@ -12,6 +12,7 @@ from alibi.agents.claim_extractor import ClaimExtractorAgent
 from alibi.agents.judge import ContradictionJudgeAgent
 from alibi.agents.narrator import NarratorAgent
 from alibi.audio.manager import AudioManager
+from alibi.game.scoring import calculate_score, get_detective_rank
 
 class GameManager:
     """Orchestrates game state, token accounting, agent pipeline, and daily save persistence."""
@@ -27,13 +28,42 @@ class GameManager:
         self.claim_extractor: Optional[ClaimExtractorAgent] = None
         self.judge_agent: Optional[ContradictionJudgeAgent] = None
         self.narrator_agent = NarratorAgent(client)
+        self.last_score_info: Optional[Dict[str, Any]] = None
         self.progress_data = self._load_progress()
 
     def _load_progress(self) -> Dict[str, Any]:
         if os.path.exists(self.saves_path):
             try:
                 with open(self.saves_path, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    if "total_score" not in data:
+                        data["total_score"] = 0
+                    if "high_score" not in data:
+                        data["high_score"] = 0
+                    # Backfill any existing wins that lack score breakdown
+                    migrated = False
+                    for d_key, c_entry in data.get("completed_dates", {}).items():
+                        if c_entry.get("won") and "score" not in c_entry:
+                            toks = c_entry.get("tokens_left", 3)
+                            turns = c_entry.get("turns_taken", 1)
+                            sc = calculate_score(
+                                won=True,
+                                remaining_tokens=toks,
+                                turns_taken=turns,
+                                hint_used=False,
+                                difficulty="classic",
+                                streak=1
+                            )
+                            c_entry["score"] = sc["total"]
+                            c_entry["score_breakdown"] = sc
+                            data["total_score"] += sc["total"]
+                            if sc["total"] > data["high_score"]:
+                                data["high_score"] = sc["total"]
+                            migrated = True
+                    if migrated:
+                        self.progress_data = data
+                        self._save_progress()
+                    return data
             except Exception:
                 pass
         return {
@@ -42,6 +72,8 @@ class GameManager:
             "games_won": 0,
             "current_streak": 0,
             "max_streak": 0,
+            "total_score": 0,
+            "high_score": 0,
             "last_played_date": None
         }
 
@@ -237,32 +269,61 @@ class GameManager:
         return result
 
     def _record_game_end(self, won: bool):
-        """Update save progress and streak calculations (skips practice sessions)."""
+        """Update save progress, calculate detective score, and maintain streaks (skips practice sessions)."""
         if not self.session or getattr(self, "is_practice", False):
             return
         date_str = self.session.case.date
-        tokens_used = 5 - self.session.remaining_tokens
+        tokens_left = self.session.remaining_tokens
+        turns_taken = len(self.session.transcript)
+        diff = getattr(self, "difficulty", "classic")
+        hint_used = getattr(self.session, "hint_used", False)
 
-        self.progress_data["games_played"] = self.progress_data.get("games_played", 0) + 1
-        if won:
-            self.progress_data["games_won"] = self.progress_data.get("games_won", 0) + 1
-            cur_streak = self.progress_data.get("current_streak", 0) + 1
-            self.progress_data["current_streak"] = cur_streak
-            if cur_streak > self.progress_data.get("max_streak", 0):
-                self.progress_data["max_streak"] = cur_streak
-        else:
-            self.progress_data["current_streak"] = 0
+        cur_streak = self.progress_data.get("current_streak", 0)
+        new_streak = (cur_streak + 1) if won else 0
 
-        self.progress_data["last_played_date"] = date_str
-        self.progress_data["completed_dates"][date_str] = {
+        score_info = calculate_score(
+            won=won,
+            remaining_tokens=tokens_left,
+            turns_taken=turns_taken,
+            hint_used=hint_used,
+            difficulty=diff,
+            streak=new_streak
+        )
+        self.last_score_info = score_info
+
+        prev_entry = self.progress_data.get("completed_dates", {}).get(date_str)
+        already_completed = prev_entry is not None
+
+        if not already_completed:
+            self.progress_data["games_played"] = self.progress_data.get("games_played", 0) + 1
+            if won:
+                self.progress_data["games_won"] = self.progress_data.get("games_won", 0) + 1
+                self.progress_data["current_streak"] = new_streak
+                if new_streak > self.progress_data.get("max_streak", 0):
+                    self.progress_data["max_streak"] = new_streak
+                earned = score_info["total"]
+                self.progress_data["total_score"] = self.progress_data.get("total_score", 0) + earned
+                if earned > self.progress_data.get("high_score", 0):
+                    self.progress_data["high_score"] = earned
+            else:
+                self.progress_data["current_streak"] = 0
+
+            self.progress_data["last_played_date"] = date_str
+
+        self.progress_data.setdefault("completed_dates", {})[date_str] = {
             "won": won,
-            "tokens_left": self.session.remaining_tokens,
-            "turns_taken": len(self.session.transcript),
+            "score": score_info["total"],
+            "score_breakdown": score_info,
+            "tokens_left": tokens_left,
+            "turns_taken": turns_taken,
+            "difficulty": diff,
+            "hint_used": hint_used,
             "share_grid": self.generate_share_grid(),
             "completed_at": datetime.now().isoformat()
         }
         self.progress_data["active_session"] = None
         self._save_progress()
+        return score_info
 
     def generate_share_grid(self) -> str:
         """Generate Wordle-style share grid."""

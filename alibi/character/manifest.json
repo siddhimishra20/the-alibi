@@ -1,0 +1,1038 @@
+{
+ "canvas": 32,
+ "order": [
+  "base",
+  "outfit",
+  "nose",
+  "beard",
+  "eyes",
+  "mouth",
+  "accessory",
+  "hair",
+  "hat"
+ ],
+ "parts": {
+  "base": {
+   "round": {
+    "file": "parts/base/base_round.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "square": {
+    "file": "parts/base/base_square.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "long": {
+    "file": "parts/base/base_long.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "chubby": {
+    "file": "parts/base/base_chubby.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "pointy": {
+    "file": "parts/base/base_pointy.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   }
+  },
+  "outfit": {
+   "trench": {
+    "file": "parts/outfit/outfit_trench.png",
+    "recolor": [
+     {
+      "group": "outfit",
+      "main": [
+       74,
+       92,
+       82
+      ],
+      "shade": [
+       52,
+       66,
+       58
+      ]
+     }
+    ]
+   },
+   "suit": {
+    "file": "parts/outfit/outfit_suit.png",
+    "recolor": [
+     {
+      "group": "outfit",
+      "main": [
+       66,
+       62,
+       96
+      ],
+      "shade": [
+       44,
+       42,
+       70
+      ]
+     }
+    ]
+   },
+   "turtleneck": {
+    "file": "parts/outfit/outfit_turtleneck.png",
+    "recolor": [
+     {
+      "group": "outfit",
+      "main": [
+       112,
+       94,
+       62
+      ],
+      "shade": [
+       80,
+       66,
+       42
+      ]
+     }
+    ]
+   },
+   "prison": {
+    "file": "parts/outfit/outfit_prison.png",
+    "recolor": [
+     {
+      "group": "outfit",
+      "main": [
+       150,
+       100,
+       60
+      ],
+      "shade": [
+       100,
+       64,
+       36
+      ]
+     }
+    ]
+   },
+   "hoodie": {
+    "file": "parts/outfit/outfit_hoodie.png",
+    "recolor": [
+     {
+      "group": "outfit",
+      "main": [
+       80,
+       84,
+       100
+      ],
+      "shade": [
+       54,
+       58,
+       72
+      ]
+     }
+    ]
+   }
+  },
+  "nose": {
+   "dot": {
+    "file": "parts/nose/nose_dot.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "long": {
+    "file": "parts/nose/nose_long.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "big": {
+    "file": "parts/nose/nose_big.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   }
+  },
+  "eyes": {
+   "dots": {
+    "file": "parts/eyes/eyes_dots.png",
+    "recolor": []
+   },
+   "wide": {
+    "file": "parts/eyes/eyes_wide.png",
+    "recolor": []
+   },
+   "sleepy": {
+    "file": "parts/eyes/eyes_sleepy.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "angry": {
+    "file": "parts/eyes/eyes_angry.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "squint": {
+    "file": "parts/eyes/eyes_squint.png",
+    "recolor": []
+   },
+   "shades": {
+    "file": "parts/eyes/eyes_shades.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "monocle": {
+    "file": "parts/eyes/eyes_monocle.png",
+    "recolor": []
+   },
+   "eyepatch": {
+    "file": "parts/eyes/eyes_eyepatch.png",
+    "recolor": []
+   }
+  },
+  "mouth": {
+   "smile": {
+    "file": "parts/mouth/mouth_smile.png",
+    "recolor": []
+   },
+   "frown": {
+    "file": "parts/mouth/mouth_frown.png",
+    "recolor": []
+   },
+   "flat": {
+    "file": "parts/mouth/mouth_flat.png",
+    "recolor": []
+   },
+   "smirk": {
+    "file": "parts/mouth/mouth_smirk.png",
+    "recolor": []
+   },
+   "shout": {
+    "file": "parts/mouth/mouth_shout.png",
+    "recolor": []
+   },
+   "grin": {
+    "file": "parts/mouth/mouth_grin.png",
+    "recolor": []
+   },
+   "tongue": {
+    "file": "parts/mouth/mouth_tongue.png",
+    "recolor": []
+   },
+   "cigarette": {
+    "file": "parts/mouth/mouth_cigarette.png",
+    "recolor": []
+   }
+  },
+  "beard": {
+   "full": {
+    "file": "parts/beard/beard_full.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "goatee": {
+    "file": "parts/beard/beard_goatee.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "handlebar": {
+    "file": "parts/beard/beard_handlebar.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "chops": {
+    "file": "parts/beard/beard_chops.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "soulpatch": {
+    "file": "parts/beard/beard_soulpatch.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "stubble": {
+    "file": "parts/beard/beard_stubble.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   }
+  },
+  "accessory": {
+   "scar": {
+    "file": "parts/accessory/accessory_scar.png",
+    "recolor": []
+   },
+   "freckles": {
+    "file": "parts/accessory/accessory_freckles.png",
+    "recolor": [
+     {
+      "group": "skin",
+      "main": [
+       201,
+       156,
+       116
+      ],
+      "shade": [
+       161,
+       119,
+       86
+      ]
+     }
+    ]
+   },
+   "round_glasses": {
+    "file": "parts/accessory/accessory_round_glasses.png",
+    "recolor": []
+   },
+   "bandaid": {
+    "file": "parts/accessory/accessory_bandaid.png",
+    "recolor": []
+   }
+  },
+  "hair": {
+   "short": {
+    "file": "parts/hair/hair_short.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "slick": {
+    "file": "parts/hair/hair_slick.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "tuft": {
+    "file": "parts/hair/hair_tuft.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "long": {
+    "file": "parts/hair/hair_long.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "afro": {
+    "file": "parts/hair/hair_afro.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "mohawk": {
+    "file": "parts/hair/hair_mohawk.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   },
+   "buzz": {
+    "file": "parts/hair/hair_buzz.png",
+    "recolor": [
+     {
+      "group": "hair",
+      "main": [
+       90,
+       58,
+       40
+      ],
+      "shade": [
+       60,
+       38,
+       26
+      ]
+     }
+    ]
+   }
+  },
+  "hat": {
+   "fedora": {
+    "file": "parts/hat/hat_fedora.png",
+    "recolor": [
+     {
+      "group": "hat",
+      "main": [
+       62,
+       66,
+       84
+      ],
+      "shade": [
+       40,
+       43,
+       58
+      ]
+     }
+    ]
+   },
+   "bowler": {
+    "file": "parts/hat/hat_bowler.png",
+    "recolor": [
+     {
+      "group": "hat",
+      "main": [
+       62,
+       66,
+       84
+      ],
+      "shade": [
+       40,
+       43,
+       58
+      ]
+     }
+    ]
+   },
+   "flatcap": {
+    "file": "parts/hat/hat_flatcap.png",
+    "recolor": [
+     {
+      "group": "hat",
+      "main": [
+       62,
+       66,
+       84
+      ],
+      "shade": [
+       40,
+       43,
+       58
+      ]
+     }
+    ]
+   },
+   "tophat": {
+    "file": "parts/hat/hat_tophat.png",
+    "recolor": [
+     {
+      "group": "hat",
+      "main": [
+       62,
+       66,
+       84
+      ],
+      "shade": [
+       40,
+       43,
+       58
+      ]
+     }
+    ]
+   },
+   "beanie": {
+    "file": "parts/hat/hat_beanie.png",
+    "recolor": [
+     {
+      "group": "hat",
+      "main": [
+       62,
+       66,
+       84
+      ],
+      "shade": [
+       40,
+       43,
+       58
+      ]
+     }
+    ]
+   },
+   "sailor": {
+    "file": "parts/hat/hat_sailor.png",
+    "recolor": []
+   }
+  }
+ },
+ "palettes": {
+  "skin": [
+   [
+    [
+     214,
+     172,
+     134
+    ],
+    [
+     172,
+     130,
+     98
+    ]
+   ],
+   [
+    [
+     190,
+     142,
+     104
+    ],
+    [
+     150,
+     108,
+     76
+    ]
+   ],
+   [
+    [
+     150,
+     104,
+     74
+    ],
+    [
+     116,
+     78,
+     54
+    ]
+   ],
+   [
+    [
+     226,
+     190,
+     154
+    ],
+    [
+     184,
+     148,
+     116
+    ]
+   ],
+   [
+    [
+     110,
+     76,
+     56
+    ],
+    [
+     80,
+     54,
+     38
+    ]
+   ],
+   [
+    [
+     150,
+     166,
+     140
+    ],
+    [
+     112,
+     128,
+     104
+    ]
+   ]
+  ],
+  "hair": [
+   [
+    [
+     90,
+     58,
+     40
+    ],
+    [
+     60,
+     38,
+     26
+    ]
+   ],
+   [
+    [
+     36,
+     34,
+     44
+    ],
+    [
+     22,
+     20,
+     30
+    ]
+   ],
+   [
+    [
+     150,
+     150,
+     160
+    ],
+    [
+     110,
+     110,
+     122
+    ]
+   ],
+   [
+    [
+     160,
+     128,
+     80
+    ],
+    [
+     120,
+     92,
+     56
+    ]
+   ],
+   [
+    [
+     122,
+     58,
+     44
+    ],
+    [
+     88,
+     38,
+     28
+    ]
+   ],
+   [
+    [
+     200,
+     200,
+     196
+    ],
+    [
+     150,
+     150,
+     148
+    ]
+   ]
+  ],
+  "hat": [
+   [
+    [
+     62,
+     66,
+     84
+    ],
+    [
+     40,
+     43,
+     58
+    ]
+   ],
+   [
+    [
+     84,
+     60,
+     60
+    ],
+    [
+     56,
+     38,
+     40
+    ]
+   ],
+   [
+    [
+     60,
+     76,
+     66
+    ],
+    [
+     38,
+     52,
+     44
+    ]
+   ],
+   [
+    [
+     92,
+     84,
+     60
+    ],
+    [
+     64,
+     58,
+     40
+    ]
+   ],
+   [
+    [
+     40,
+     40,
+     48
+    ],
+    [
+     24,
+     24,
+     30
+    ]
+   ]
+  ],
+  "outfit": [
+   [
+    [
+     74,
+     92,
+     82
+    ],
+    [
+     52,
+     66,
+     58
+    ]
+   ],
+   [
+    [
+     66,
+     62,
+     96
+    ],
+    [
+     44,
+     42,
+     70
+    ]
+   ],
+   [
+    [
+     112,
+     94,
+     62
+    ],
+    [
+     80,
+     66,
+     42
+    ]
+   ],
+   [
+    [
+     150,
+     100,
+     60
+    ],
+    [
+     100,
+     64,
+     36
+    ]
+   ],
+   [
+    [
+     80,
+     84,
+     100
+    ],
+    [
+     54,
+     58,
+     72
+    ]
+   ],
+   [
+    [
+     110,
+     60,
+     76
+    ],
+    [
+     76,
+     40,
+     52
+    ]
+   ]
+  ]
+ },
+ "rules": {
+  "hat_compatible_hair": [
+   "short",
+   "slick",
+   "tuft",
+   "long",
+   "buzz"
+  ],
+  "glasses_conflict_eyes": [
+   "shades",
+   "monocle",
+   "eyepatch"
+  ],
+  "chance_none": {
+   "beard": 0.5,
+   "accessory": 0.55,
+   "hat": 0.35,
+   "hair": 0.1
+  }
+ }
+}

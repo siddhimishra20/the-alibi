@@ -138,6 +138,8 @@ class CaseRegistry:
                 "setting": meta.get("setting", ""),
                 "status": status,
                 "won": comp.get("won", False) if comp else False,
+                "score": comp.get("score", 0) if comp else 0,
+                "portrait_url": f"/api/character/{d_str}.png",
                 "is_today": d_str == today,
                 "file_exists": os.path.exists(os.path.join(self.cases_dir, f"{d_str}.json"))
             })
@@ -162,6 +164,8 @@ class CaseRegistry:
                                 "setting": raw.get("setting", ""),
                                 "status": status,
                                 "won": comp.get("won", False) if comp else False,
+                                "score": comp.get("score", 0) if comp else 0,
+                                "portrait_url": f"/api/character/{d_str}.png",
                                 "is_today": d_str == today,
                                 "file_exists": True
                             })

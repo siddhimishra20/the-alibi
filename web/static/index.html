@@ -26,6 +26,8 @@
                 <button id="btn-engine-config" class="hud-btn" title="Configure AI Inference Engine">
                     <span class="hud-label">[ENGINE:</span> <span id="engine-badge-text" class="hud-val">LOCAL OLLAMA</span><span class="hud-label">]</span>
                 </button>
+                <span class="hud-badge"><span class="hud-label">SCORE:</span> <span id="hud-score-text" class="hud-val-amber">0 PTS</span></span>
+                <span class="hud-badge"><span class="hud-label">RANK:</span> <span id="hud-rank-text" class="hud-val-cyan">PATROL OFFICER</span></span>
                 <span class="hud-badge"><span class="hud-label">STREAK:</span> <span id="streak-badge-text" class="hud-val-gold">0</span></span>
                 <span id="countdown-badge" class="hud-badge"><span class="hud-label">RESET:</span> <span id="countdown-text" class="hud-val">--:--:--</span></span>
                 <button id="btn-audio-toggle" class="hud-btn" title="Toggle Sound FX">
@@ -58,6 +60,14 @@
                     <div class="menu-subtag">
                         1 CASE A DAY • 5 QUESTION TOKENS • 1 CONTRADICTION TO CONVICT
                     </div>
+                </div>
+
+                <!-- Detective Career Progress Bar -->
+                <div class="detective-career-bar">
+                    <div class="career-stat"><span class="career-label">CAREER SCORE:</span> <span id="menu-career-score" class="career-val text-amber">0 PTS</span></div>
+                    <div class="career-stat"><span class="career-label">COMMISSION RANK:</span> <span id="menu-career-rank" class="career-val text-cyan">PATROL OFFICER</span></div>
+                    <div class="career-stat"><span class="career-label">CASES CLOSED:</span> <span id="menu-career-record" class="career-val text-green">0 / 0</span></div>
+                    <div class="career-stat"><span class="career-label">DAILY STREAK:</span> <span id="menu-career-streak" class="career-val text-gold">0 DAYS</span></div>
                 </div>
 
                 <!-- Live Voice-Stress & Audio Cipher Monitor -->
@@ -94,10 +104,10 @@
                         <span class="arcade-cursor">&gt;</span>
                         <span class="item-tag">[ 1 ]</span>
                         <div class="item-content">
-                            <span class="item-title">START TODAY'S CASE</span>
-                            <span class="item-desc">Seeded daily micro-crime synchronized globally</span>
+                            <span id="menu-today-title" class="item-title">START TODAY'S CASE</span>
+                            <span id="menu-today-desc" class="item-desc">Seeded daily micro-crime synchronized globally</span>
                         </div>
-                        <span class="item-badge">[ DAILY CASE ]</span>
+                        <span id="menu-today-badge" class="item-badge">[ DAILY CASE ]</span>
                     </button>
 
                     <button id="btn-menu-practice" class="arcade-menu-item">
@@ -165,14 +175,9 @@
 
                     <!-- Suspect Mugshot Card -->
                     <div class="suspect-profile-card">
-                        <div class="mugshot-frame">
-                            <pre id="briefing-suspect-mugshot" class="mugshot-art">
-   _____  
-  /     \ 
- | () () |
-  \  ^  / 
-   |||||  
-                            </pre>
+                        <div class="suspect-portrait-frame">
+                            <img id="briefing-suspect-portrait" class="suspect-pixel-portrait" src="/static/images/token.png" alt="Suspect Mugshot" />
+                            <div class="portrait-scanlines"></div>
                         </div>
                         <div class="suspect-bio">
                             <span class="bio-tag">SUSPECT IDENTIFIED</span>
@@ -181,6 +186,10 @@
                             <div class="quirk-box">
                                 <span class="quirk-label">[ SPEECH QUIRK ]:</span>
                                 <p id="briefing-suspect-quirk" class="quirk-val">---</p>
+                            </div>
+                            <div class="traits-box">
+                                <span class="traits-label">[ PHYSICAL TRAITS ]:</span>
+                                <p id="briefing-suspect-traits" class="traits-val">---</p>
                             </div>
                         </div>
                     </div>
@@ -248,15 +257,13 @@
                             <span id="room-suspect-mood" class="mood-badge mood-calm">[MOOD: CALM]</span>
                         </div>
                         <div class="widget-center">
-                            <pre id="room-suspect-face" class="widget-mugshot">
-   _____  
-  /     \ 
- | () () |
-  \  ^  / 
-   |||||  
-                            </pre>
+                            <div class="room-portrait-frame">
+                                <img id="room-suspect-portrait" class="suspect-pixel-portrait room-portrait" src="/static/images/token.png" alt="Suspect Wire" />
+                                <div class="portrait-scanlines"></div>
+                            </div>
                             <div class="widget-meta">
                                 <span id="room-sidebar-quirk" class="sidebar-quirk-text">"Always says sugarplum"</span>
+                                <span id="room-sidebar-traits" class="sidebar-traits-text">No distinctive markings</span>
                             </div>
                         </div>
                     </div>
@@ -339,6 +346,20 @@
                 </div>
 
                 <div class="result-content-card">
+                    <!-- Suspect Mugshot & Stamped Verdict Header -->
+                    <div class="result-suspect-profile-strip">
+                        <div class="result-portrait-wrapper">
+                            <img id="result-suspect-portrait" class="suspect-pixel-portrait result-portrait" src="/static/images/token.png" alt="Suspect Mugshot" />
+                            <div class="portrait-scanlines"></div>
+                            <div id="result-verdict-stamp" class="verdict-stamp stamp-convicted">[ CONVICTED ]</div>
+                        </div>
+                        <div class="result-suspect-bio">
+                            <span class="bio-tag">DEFENDANT IDENTIFIED</span>
+                            <h2 id="result-suspect-name" class="suspect-name-heading">SUSPECT NAME</h2>
+                            <p id="result-suspect-charge" class="suspect-occ-text">CHARGE: STATUTORY MICRO-CONTRADICTION</p>
+                        </div>
+                    </div>
+
                     <!-- Verdict Explanation Box -->
                     <div class="result-verdict-box">
                         <span class="box-tag">[ CONTRADICTION JUDGE RULING ]:</span>
@@ -353,6 +374,50 @@
                         <blockquote id="result-confession-quote" class="confession-quote">
                             "Alright! I took the plastic flamingos! They were mocking me from across the lawn!"
                         </blockquote>
+                    </div>
+
+                    <!-- Department Commendation & Score Ledger -->
+                    <div id="result-score-ledger-card" class="result-score-card">
+                        <div class="score-card-header">
+                            <span class="box-tag">[ DEPARTMENT COMMENDATION &amp; SCORE LEDGER ]</span>
+                            <span id="result-score-earned-badge" class="score-earned-badge">+0 PTS</span>
+                        </div>
+                        <div class="score-breakdown-grid">
+                            <div class="score-row">
+                                <span class="score-label">Base Felony Indictment:</span>
+                                <span id="score-row-base" class="score-num text-green">+1,000 PTS</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="score-label">Token Efficiency Bonus:</span>
+                                <span id="score-row-tokens" class="score-num text-amber">+0 PTS</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="score-label">Speed / Quick Deduction:</span>
+                                <span id="score-row-quick" class="score-num text-cyan">+0 PTS</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="score-label">Flawless (No Hints Used):</span>
+                                <span id="score-row-flawless" class="score-num text-cyan">+0 PTS</span>
+                            </div>
+                            <div class="score-row">
+                                <span class="score-label">Daily Streak Incentive:</span>
+                                <span id="score-row-streak" class="score-num text-gold">+0 PTS</span>
+                            </div>
+                            <div class="score-row row-multiplier">
+                                <span class="score-label">Protocol Multiplier:</span>
+                                <span id="score-row-multiplier" class="score-num">1.0x (CLASSIC)</span>
+                            </div>
+                        </div>
+                        <div class="score-career-summary">
+                            <div class="career-summary-col">
+                                <span class="summary-label">NEW CAREER SCORE:</span>
+                                <span id="result-career-score-text" class="summary-val text-amber">0 PTS</span>
+                            </div>
+                            <div class="career-summary-col">
+                                <span class="summary-label">COMMISSION RANK:</span>
+                                <span id="result-career-rank-text" class="summary-val text-cyan">PATROL OFFICER</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Wordle Share Grid -->
@@ -395,7 +460,9 @@
                         <thead>
                             <tr>
                                 <th>DATE</th>
+                                <th>MUGSHOT</th>
                                 <th>STATUS</th>
+                                <th>SCORE</th>
                                 <th>CASE FILE TITLE</th>
                                 <th>SUSPECT</th>
                                 <th>LOCATION</th>

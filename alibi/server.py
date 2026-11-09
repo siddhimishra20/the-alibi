@@ -4,12 +4,14 @@ from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse, Response
 from pydantic import BaseModel
 
 from alibi.llm.client import OllamaClient
 from alibi.agents.case_architect import CaseArchitectAgent
 from alibi.game.session import GameManager
+from alibi.game.scoring import calculate_score, get_detective_rank
+from alibi.character import get_suspect_png_bytes, pick_traits, describe_traits
 from alibi.ui.ascii_art import ASCII_FACES, get_suspect_face
 
 app = FastAPI(title="THE ALIBI - Web API", description="Satirical Noir Detective Micro-Crime Game API")
@@ -57,6 +59,14 @@ def sanitize_case_for_client(case_obj) -> Dict[str, Any]:
     """Sanitize case object so spoilers (truth timeline, weak points) are hidden from players."""
     s_name = case_obj.suspect.name
     face_art = get_suspect_face(s_name)
+    seed_key = getattr(case_obj, "id", None) or getattr(case_obj, "date", None) or s_name
+    try:
+        traits, _ = pick_traits(seed_key)
+        trait_desc = describe_traits(traits)
+    except Exception:
+        trait_desc = ""
+
+    portrait_url = f"/api/character/{seed_key}.png"
 
     return {
         "id": case_obj.id,
@@ -64,23 +74,40 @@ def sanitize_case_for_client(case_obj) -> Dict[str, Any]:
         "title": case_obj.title,
         "crime_description": case_obj.crime_description,
         "setting": case_obj.setting,
+        "portrait_url": portrait_url,
         "suspect": {
             "name": case_obj.suspect.name,
             "occupation": case_obj.suspect.occupation,
             "quirk": case_obj.suspect.quirk,
-            "ascii_face": face_art
+            "ascii_face": face_art,
+            "portrait_url": portrait_url,
+            "traits_description": trait_desc
         },
         "dossier": [
             {"id": f.id, "text": f.text} for f in case_obj.dossier
         ]
     }
 
+@app.api_route("/api/character/{seed}.png", methods=["GET", "HEAD"])
+def get_character_portrait(seed: str, scale: int = 6, crt: bool = True):
+    """Serve procedurally-generated pixel-art suspect portrait as PNG."""
+    try:
+        png_bytes = get_suspect_png_bytes(seed, scale=scale, crt=crt)
+        return Response(content=png_bytes, media_type="image/png")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate character: {e}")
+
 @app.get("/api/status")
 def get_status():
     installed = client.get_installed_models()
     verified, msg = client.verify_models()
     today_str = time.strftime("%Y-%m-%d")
-    is_today_solved = game_manager.get_completed_result(today_str) is not None
+    today_entry = game_manager.get_completed_result(today_str)
+    is_today_solved = today_entry is not None and today_entry.get("won", False)
+
+    total_score = game_manager.progress_data.get("total_score", 0)
+    high_score = game_manager.progress_data.get("high_score", 0)
+    rank_info = get_detective_rank(total_score)
 
     return {
         "status": "online",
@@ -89,6 +116,13 @@ def get_status():
         "installed_models": installed,
         "today": today_str,
         "today_solved": is_today_solved,
+        "today_data": today_entry,
+        "countdown_midnight": GameManager.get_time_until_midnight(),
+        "total_score": total_score,
+        "high_score": high_score,
+        "rank": rank_info["rank"],
+        "rank_tier": rank_info["tier"],
+        "rank_next": rank_info["next_tier"],
         "games_played": game_manager.progress_data.get("games_played", 0),
         "games_won": game_manager.progress_data.get("games_won", 0),
         "current_streak": game_manager.progress_data.get("current_streak", 0),
@@ -148,13 +182,18 @@ def start_session(req: StartSessionRequest):
     gm.init_session(case, is_practice=req.practice, difficulty=req.difficulty)
     active_sessions[session_id] = gm
 
+    already_solved = (not req.practice) and (gm.get_completed_result(case.date) is not None)
+    completed_data = gm.get_completed_result(case.date) if already_solved else None
+
     return {
         "session_id": session_id,
         "case": sanitize_case_for_client(case),
         "difficulty": req.difficulty,
         "remaining_tokens": gm.session.remaining_tokens,
         "max_tokens": gm.session.max_tokens,
-        "is_practice": req.practice
+        "is_practice": req.practice,
+        "already_solved": already_solved,
+        "completed_data": completed_data
     }
 
 @app.post("/api/session/interrogate")
@@ -172,6 +211,9 @@ def interrogate(req: InterrogateRequest):
             "game_over": gm.session.game_over
         }
 
+    tot_score = gm.progress_data.get("total_score", 0)
+    rank_info = get_detective_rank(tot_score)
+
     return {
         "success": True,
         "turn_number": statement.turn_number,
@@ -182,6 +224,9 @@ def interrogate(req: InterrogateRequest):
         "max_tokens": gm.session.max_tokens,
         "game_over": gm.session.game_over,
         "won": gm.session.won,
+        "score_info": getattr(gm, "last_score_info", None),
+        "total_score": tot_score,
+        "rank": rank_info["rank"],
         "extracted_claims": [c.model_dump() for c in statement.extracted_claims]
     }
 
@@ -192,6 +237,8 @@ def accuse(req: AccuseRequest):
         raise HTTPException(status_code=404, detail="Session not found or expired.")
 
     result = gm.accuse(req.quote, req.target_text, req.is_dossier_fact)
+    tot_score = gm.progress_data.get("total_score", 0)
+    rank_info = get_detective_rank(tot_score)
 
     return {
         "valid": result.valid,
@@ -201,6 +248,10 @@ def accuse(req: AccuseRequest):
         "remaining_tokens": gm.session.remaining_tokens,
         "game_over": gm.session.game_over,
         "won": gm.session.won,
+        "score_info": getattr(gm, "last_score_info", None),
+        "total_score": tot_score,
+        "rank": rank_info["rank"],
+        "rank_tier": rank_info["tier"],
         "share_grid": gm.generate_share_grid() if gm.session.game_over else ""
     }
 

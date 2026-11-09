@@ -226,6 +226,8 @@ async function startCaseFlow(isPractice = false, targetDate = null) {
             remainingTokens: data.remaining_tokens,
             maxTokens: data.max_tokens,
             difficulty: data.difficulty,
+            alreadySolved: data.already_solved,
+            completedData: data.completed_data,
             turn: 0,
             statements: []
         };
@@ -250,7 +252,16 @@ function renderBriefingScreen(caseObj) {
     document.getElementById("briefing-suspect-name").innerText = caseObj.suspect.name.toUpperCase();
     document.getElementById("briefing-suspect-occupation").innerText = `OCCUPATION: ${caseObj.suspect.occupation.toUpperCase()}`;
     document.getElementById("briefing-suspect-quirk").innerText = `"${caseObj.suspect.quirk}"`;
-    document.getElementById("briefing-suspect-mugshot").innerText = caseObj.suspect.ascii_face || ASCII_FACES.calm;
+
+    // Character Kit Procedural Portrait & Traits
+    const portraitImg = document.getElementById("briefing-suspect-portrait");
+    if (portraitImg) {
+        portraitImg.src = caseObj.portrait_url || `/api/character/${caseObj.id || caseObj.date}.png`;
+    }
+    const traitsEl = document.getElementById("briefing-suspect-traits");
+    if (traitsEl) {
+        traitsEl.innerText = caseObj.suspect.traits_description || "Standard noir criminal suspect profile";
+    }
 
     // Dossier Facts Preview
     const factsContainer = document.getElementById("briefing-dossier-list");
@@ -274,9 +285,18 @@ function enterInterrogationRoom() {
     document.getElementById("room-case-title").innerText = currentCase.title.toUpperCase();
     document.getElementById("room-suspect-name").innerText = currentCase.suspect.name.toUpperCase();
     document.getElementById("room-sidebar-quirk").innerText = `"${currentCase.suspect.quirk}"`;
-    document.getElementById("room-suspect-face").innerText = currentCase.suspect.ascii_face || ASCII_FACES.calm;
     document.getElementById("room-suspect-mood").innerText = "[MOOD: CALM]";
     document.getElementById("room-suspect-mood").className = "mood-badge mood-calm";
+
+    // Character Kit Portrait & Traits in Wire Monitor
+    const roomPort = document.getElementById("room-suspect-portrait");
+    if (roomPort) {
+        roomPort.src = currentCase.portrait_url || `/api/character/${currentCase.id || currentCase.date}.png`;
+    }
+    const roomTraits = document.getElementById("room-sidebar-traits");
+    if (roomTraits) {
+        roomTraits.innerText = currentCase.suspect.traits_description || "";
+    }
 
     // Populate Dossier
     const dossierList = document.getElementById("room-dossier-facts");
@@ -395,7 +415,7 @@ async function submitQuestion(questionText) {
             errDiv.innerHTML = `<span class="msg-sender">[ALERT]:</span> <span class="msg-text">${escapeHtml(data.error || "Turn rejected.")}</span>`;
             transcript.appendChild(errDiv);
             if (data.game_over) {
-                handleGameOver(false, "You ran out of Question Tokens without extracting a formal contradiction.");
+                handleGameOver(false, "You ran out of Question Tokens without extracting a formal contradiction.", "", "", data.score_info, data.total_score, data.rank);
             }
             return;
         }
@@ -435,7 +455,7 @@ async function submitQuestion(questionText) {
 
         // Check if out of tokens
         if (data.game_over && !data.won) {
-            handleGameOver(false, "You exhausted your final question token without lodging an indictment.");
+            handleGameOver(false, "You exhausted your final question token without lodging an indictment.", "", "", data.score_info, data.total_score, data.rank);
         }
 
     } catch (e) {
@@ -593,7 +613,7 @@ async function submitIndictment() {
         if (data.valid) {
             // CONVICTED!
             playSound("win");
-            handleGameOver(true, data.explanation, data.breakdown_confession, data.share_grid);
+            handleGameOver(true, data.explanation, data.breakdown_confession, data.share_grid, data.score_info, data.total_score, data.rank);
         } else {
             // Failed accusation
             playSound("nervous");
@@ -608,7 +628,7 @@ async function submitIndictment() {
             transcript.scrollTop = transcript.scrollHeight;
 
             if (data.game_over) {
-                handleGameOver(false, "Your accusation failed and exhausted all remaining interrogation tokens.");
+                handleGameOver(false, "Your accusation failed and exhausted all remaining interrogation tokens.", "", "", data.score_info, data.total_score, data.rank);
             }
         }
 
@@ -623,7 +643,7 @@ async function submitIndictment() {
 // --------------------------------------------------------------------------
 // 9. GAME OVER & RESULT SCREEN
 // --------------------------------------------------------------------------
-function handleGameOver(won, explanation, confession = "", shareGrid = "") {
+function handleGameOver(won, explanation, confession = "", shareGrid = "", scoreInfo = null, totalScore = 0, rank = "") {
     const banner = document.getElementById("result-status-banner");
     const heading = document.getElementById("result-main-heading");
     const explBox = document.getElementById("result-explanation-text");
@@ -631,11 +651,27 @@ function handleGameOver(won, explanation, confession = "", shareGrid = "") {
     const confessionQuote = document.getElementById("result-confession-quote");
     const gridPre = document.getElementById("result-share-grid-text");
 
+    // Suspect Mugshot & Stamped Verdict
+    const portraitImg = document.getElementById("result-suspect-portrait");
+    if (portraitImg && currentCase) {
+        portraitImg.src = currentCase.portrait_url || `/api/character/${currentCase.id || currentCase.date}.png`;
+    }
+    const suspectNameEl = document.getElementById("result-suspect-name");
+    if (suspectNameEl && currentCase) {
+        suspectNameEl.innerText = currentCase.suspect.name.toUpperCase();
+    }
+    const stampBadge = document.getElementById("result-verdict-stamp");
+
     if (won) {
         banner.className = "result-banner banner-win";
         heading.innerText = "★★★★★ CASE CLOSED: SUSPECT CONVICTED! ★★★★★";
         explBox.innerText = explanation || "Airtight contradiction established. Suspect broke down under interrogation.";
         
+        if (stampBadge) {
+            stampBadge.innerText = "[ CONVICTED ]";
+            stampBadge.className = "verdict-stamp stamp-convicted";
+        }
+
         if (confession) {
             confessionSec.classList.remove("hidden");
             confessionQuote.innerText = `"${confession}"`;
@@ -648,7 +684,45 @@ function handleGameOver(won, explanation, confession = "", shareGrid = "") {
         heading.innerText = "✖✖✖✖✖ CASE DISMISSED: SUSPECT WALKED FREE ✖✖✖✖✖";
         explBox.innerText = explanation || "You ran out of interrogation tokens. Without a validated contradiction, the police chief was forced to release the suspect.";
         confessionSec.classList.add("hidden");
+
+        if (stampBadge) {
+            stampBadge.innerText = "[ WALKED FREE ]";
+            stampBadge.className = "verdict-stamp stamp-dismissed";
+        }
     }
+
+    // Official Department Score Ledger Updates
+    const earnedBadge = document.getElementById("result-score-earned-badge");
+    const rowBase = document.getElementById("score-row-base");
+    const rowTokens = document.getElementById("score-row-tokens");
+    const rowQuick = document.getElementById("score-row-quick");
+    const rowFlawless = document.getElementById("score-row-flawless");
+    const rowStreak = document.getElementById("score-row-streak");
+    const rowMultiplier = document.getElementById("score-row-multiplier");
+    const careerScoreText = document.getElementById("result-career-score-text");
+    const careerRankText = document.getElementById("result-career-rank-text");
+
+    if (scoreInfo && won) {
+        if (earnedBadge) earnedBadge.innerText = `+${(scoreInfo.total || 0).toLocaleString()} PTS`;
+        if (rowBase) rowBase.innerText = `+${(scoreInfo.base || 1000).toLocaleString()} PTS`;
+        const toks = scoreInfo.tokens_left ?? (currentSession ? currentSession.remainingTokens : 0);
+        if (rowTokens) rowTokens.innerText = `+${(scoreInfo.tokens_bonus || 0).toLocaleString()} PTS (${toks} tokens saved)`;
+        if (rowQuick) rowQuick.innerText = `+${(scoreInfo.quick_bonus || 0).toLocaleString()} PTS`;
+        if (rowFlawless) rowFlawless.innerText = `+${(scoreInfo.flawless_bonus || 0).toLocaleString()} PTS`;
+        if (rowStreak) rowStreak.innerText = `+${(scoreInfo.streak_bonus || 0).toLocaleString()} PTS`;
+        if (rowMultiplier) rowMultiplier.innerText = `${scoreInfo.multiplier || 1.0}x (${(scoreInfo.difficulty || 'classic').toUpperCase()})`;
+    } else {
+        if (earnedBadge) earnedBadge.innerText = `0 PTS`;
+        if (rowBase) rowBase.innerText = `0 PTS`;
+        if (rowTokens) rowTokens.innerText = `0 PTS`;
+        if (rowQuick) rowQuick.innerText = `0 PTS`;
+        if (rowFlawless) rowFlawless.innerText = `0 PTS`;
+        if (rowStreak) rowStreak.innerText = `0 PTS`;
+        if (rowMultiplier) rowMultiplier.innerText = `1.0x (CLASSIC)`;
+    }
+
+    if (careerScoreText) careerScoreText.innerText = `${(totalScore || 0).toLocaleString()} PTS`;
+    if (careerRankText) careerRankText.innerText = rank || "PATROL OFFICER";
 
     gridPre.innerText = shareGrid || `THE ALIBI [${won ? "CONVICTED" : "DISMISSED"}]\nTokens Used: ${currentSession ? currentSession.maxTokens - currentSession.remainingTokens : 5}\nStatus: ${won ? "WON" : "LOST"}`;
 
@@ -663,7 +737,7 @@ async function loadArchivesScreen() {
     playSound("key");
     navigateTo("screen-archive");
     const tbody = document.getElementById("archive-table-rows");
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--color-slate);">RETRIEVING COLD CASE EVIDENCE REPOSITORY...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:var(--color-slate);">RETRIEVING COLD CASE EVIDENCE REPOSITORY...</td></tr>`;
 
     try {
         const resp = await fetch("/api/archive");
@@ -672,16 +746,26 @@ async function loadArchivesScreen() {
         tbody.innerHTML = "";
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No archived cases found.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px;">No archived cases found.</td></tr>`;
             return;
         }
 
         data.forEach(item => {
             const tr = document.createElement("tr");
-            const statusTag = item.solved ? `<span style="color:var(--color-green); font-weight:700;">[CONVICTED]</span>` : `<span style="color:var(--color-slate);">[COLD CASE]</span>`;
+            const isSolved = item.status === "SOLVED" || item.won;
+            const statusTag = isSolved 
+                ? `<span style="color:var(--color-green); font-weight:700;">[CONVICTED]</span>` 
+                : (item.status === "FAILED" ? `<span style="color:var(--color-crimson);">[DISMISSED]</span>` : `<span style="color:var(--color-slate);">[COLD CASE]</span>`);
+            const scoreStr = item.score ? `+${item.score.toLocaleString()} PTS` : `-`;
+            const thumbUrl = item.portrait_url || `/api/character/${item.date}.png`;
+
             tr.innerHTML = `
                 <td class="col-date">${escapeHtml(item.date)}</td>
+                <td class="col-thumb">
+                    <img src="${thumbUrl}" class="archive-portrait-thumb" alt="Mugshot" onerror="this.style.display='none'">
+                </td>
                 <td class="col-status">${statusTag}</td>
+                <td class="col-score">${scoreStr}</td>
                 <td class="col-title" style="color:var(--color-amber);">${escapeHtml(item.title)}</td>
                 <td class="col-suspect" style="color:var(--color-cyan);">${escapeHtml(item.suspect_name)}</td>
                 <td class="col-scene">${escapeHtml(item.setting)}</td>
@@ -706,7 +790,53 @@ async function refreshGlobalStatus() {
         const resp = await fetch("/api/status");
         if (resp.ok) {
             const data = await resp.json();
-            document.getElementById("streak-badge-text").innerText = data.current_streak || 0;
+            
+            // Top Bar HUD
+            const scoreEl = document.getElementById("hud-score-text");
+            if (scoreEl) scoreEl.innerText = `${(data.total_score || 0).toLocaleString()} PTS`;
+
+            const rankEl = document.getElementById("hud-rank-text");
+            if (rankEl) rankEl.innerText = data.rank || "PATROL OFFICER";
+
+            const streakEl = document.getElementById("streak-badge-text");
+            if (streakEl) streakEl.innerText = data.current_streak || 0;
+
+            // Main Menu Career Progress Bar
+            const menuScore = document.getElementById("menu-career-score");
+            if (menuScore) menuScore.innerText = `${(data.total_score || 0).toLocaleString()} PTS`;
+
+            const menuRank = document.getElementById("menu-career-rank");
+            if (menuRank) menuRank.innerText = `${data.rank_tier ? '[' + data.rank_tier + '] ' : ''}${data.rank || 'PATROL OFFICER'}`;
+
+            const menuRecord = document.getElementById("menu-career-record");
+            if (menuRecord) {
+                const won = data.games_won || 0;
+                const played = data.games_played || 0;
+                const pct = played > 0 ? Math.round((won / played) * 100) : 0;
+                menuRecord.innerText = `${won} / ${played} (${pct}%)`;
+            }
+
+            const menuStreak = document.getElementById("menu-career-streak");
+            if (menuStreak) menuStreak.innerText = `${data.current_streak || 0} DAYS`;
+
+            // Memory System: Check if Today's Challenge is Already Solved
+            const todayBtn = document.getElementById("btn-menu-today");
+            const todayTitle = document.getElementById("menu-today-title");
+            const todayDesc = document.getElementById("menu-today-desc");
+            const todayBadge = document.getElementById("menu-today-badge");
+
+            if (data.today_solved && todayBtn) {
+                todayBtn.classList.add("solved-today");
+                const todayScore = data.today_data?.score || 0;
+                if (todayTitle) todayTitle.innerText = "TODAY'S CASE: SOLVED ★";
+                if (todayDesc) todayDesc.innerText = `Case closed! Earned +${todayScore.toLocaleString()} PTS. Review dossier or play practice cases.`;
+                if (todayBadge) todayBadge.innerText = `[ SOLVED +${todayScore.toLocaleString()} PTS ]`;
+            } else if (todayBtn) {
+                todayBtn.classList.remove("solved-today");
+                if (todayTitle) todayTitle.innerText = "START TODAY'S CASE";
+                if (todayDesc) todayDesc.innerText = "Seeded daily micro-crime synchronized globally";
+                if (todayBadge) todayBadge.innerText = "[ DAILY CASE ]";
+            }
         }
 
         const cResp = await fetch("/api/config/llm");
