@@ -441,7 +441,8 @@ async function submitQuestion(questionText) {
         } else {
             moodBadge.className = "mood-badge mood-calm";
         }
-        document.getElementById("room-suspect-face").innerText = getFaceForEmotion(mood);
+        const faceEl = document.getElementById("room-suspect-face");
+        if (faceEl) faceEl.innerText = getFaceForEmotion(mood);
 
         // Append Suspect Reply (Clean noir dialogue without internal claim tag clutter)
         const sMsg = document.createElement("div");
