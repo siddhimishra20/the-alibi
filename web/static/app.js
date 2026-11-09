@@ -9,9 +9,12 @@ let currentDifficulty = "classic";
 let soundEnabled = true;
 let audioContextUnlocked = false;
 let audioCache = {};
+let currentBgm = null;
+let bgmTitle = null;
+let bgmInterrogation = null;
 
 // --------------------------------------------------------------------------
-// 1. AUDIO ENGINE (WAV Asset Loader & Web Audio Unlocking)
+// 1. AUDIO ENGINE (WAV Music Loops, Sound FX & Web Audio Unlocking)
 // --------------------------------------------------------------------------
 const AUDIO_FILES = {
     key: "/audio/key_click.wav",
@@ -25,7 +28,17 @@ const AUDIO_FILES = {
 function unlockAudio() {
     if (audioContextUnlocked) return;
     audioContextUnlocked = true;
-    // Preload audio elements
+
+    // Background Music Loops (705KB WAV ambient loops)
+    bgmTitle = new Audio("/audio/title.wav");
+    bgmTitle.loop = true;
+    bgmTitle.volume = 0.35;
+
+    bgmInterrogation = new Audio("/audio/interrogation.wav");
+    bgmInterrogation.loop = true;
+    bgmInterrogation.volume = 0.35;
+
+    // Preload SFX
     for (const [key, path] of Object.entries(AUDIO_FILES)) {
         try {
             const a = new Audio(path);
@@ -35,6 +48,36 @@ function unlockAudio() {
             console.warn("Audio load error for", key, e);
         }
     }
+
+    // Auto-play menu title music if currently on menu screen
+    const menuScreen = document.getElementById("screen-menu");
+    if (menuScreen && menuScreen.classList.contains("active-screen")) {
+        playBGM("title");
+    }
+}
+
+function playBGM(track) {
+    if (!soundEnabled) return;
+    if (!audioContextUnlocked) unlockAudio();
+    if (track === currentBgm) return;
+
+    if (bgmTitle) bgmTitle.pause();
+    if (bgmInterrogation) bgmInterrogation.pause();
+
+    currentBgm = track;
+    if (track === "title" && bgmTitle) {
+        bgmTitle.currentTime = 0;
+        bgmTitle.play().catch(e => console.warn("Title BGM play error", e));
+    } else if (track === "interrogation" && bgmInterrogation) {
+        bgmInterrogation.currentTime = 0;
+        bgmInterrogation.play().catch(e => console.warn("Interrogation BGM play error", e));
+    }
+}
+
+function stopBGM() {
+    if (bgmTitle) bgmTitle.pause();
+    if (bgmInterrogation) bgmInterrogation.pause();
+    currentBgm = null;
 }
 
 function playSound(name) {
@@ -66,6 +109,15 @@ function navigateTo(screenId) {
     if (target) {
         target.classList.add("active-screen");
         window.scrollTo(0, 0);
+
+        // Dynamic BGM Track Switching
+        if (screenId === "screen-menu" || screenId === "screen-briefing" || screenId === "screen-archive" || screenId === "screen-rules") {
+            playBGM("title");
+        } else if (screenId === "screen-interrogation") {
+            playBGM("interrogation");
+        } else if (screenId === "screen-result") {
+            stopBGM();
+        }
     }
 }
 
@@ -633,13 +685,13 @@ async function loadArchivesScreen() {
             const tr = document.createElement("tr");
             const statusTag = item.solved ? `<span style="color:var(--color-green); font-weight:700;">[CONVICTED]</span>` : `<span style="color:var(--color-slate);">[COLD CASE]</span>`;
             tr.innerHTML = `
-                <td>${escapeHtml(item.date)}</td>
-                <td>${statusTag}</td>
-                <td style="color:var(--color-amber); font-weight:700;">${escapeHtml(item.title)}</td>
-                <td style="color:var(--color-cyan);">${escapeHtml(item.suspect_name)}</td>
-                <td>${escapeHtml(item.setting)}</td>
-                <td>
-                    <button class="action-btn back-btn" style="padding:4px 10px; font-size:0.75rem;" onclick="startCaseFlow(false, '${item.date}')">
+                <td class="col-date">${escapeHtml(item.date)}</td>
+                <td class="col-status">${statusTag}</td>
+                <td class="col-title" style="color:var(--color-amber);">${escapeHtml(item.title)}</td>
+                <td class="col-suspect" style="color:var(--color-cyan);">${escapeHtml(item.suspect_name)}</td>
+                <td class="col-scene">${escapeHtml(item.setting)}</td>
+                <td class="col-action">
+                    <button class="archive-replay-btn" onclick="startCaseFlow(false, '${item.date}')">
                         [ REPLAY ]
                     </button>
                 </td>
@@ -765,8 +817,18 @@ updateCountdown();
 
 // DOM Ready Bindings
 document.addEventListener("DOMContentLoaded", () => {
-    // Unmute on first body interaction
-    document.body.addEventListener("click", unlockAudio, { once: true });
+    // Unmute & start background music on first body interaction
+    document.body.addEventListener("click", () => {
+        unlockAudio();
+        if (soundEnabled && !currentBgm) {
+            const activeScreen = document.querySelector(".game-screen.active-screen");
+            if (activeScreen && activeScreen.id === "screen-interrogation") {
+                playBGM("interrogation");
+            } else {
+                playBGM("title");
+            }
+        }
+    }, { once: true });
 
     // Header buttons
     document.getElementById("btn-engine-config").addEventListener("click", openEngineModal);
@@ -778,6 +840,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const btn = document.getElementById("audio-btn-text");
         btn.innerText = soundEnabled ? "[AUDIO: ON]" : "[AUDIO: MUTED]";
         btn.className = soundEnabled ? "hud-val-green" : "hud-label";
+
+        if (!soundEnabled) {
+            stopBGM();
+        } else {
+            unlockAudio();
+            const activeScreen = document.querySelector(".game-screen.active-screen");
+            if (activeScreen && activeScreen.id === "screen-interrogation") {
+                playBGM("interrogation");
+            } else {
+                playBGM("title");
+            }
+        }
     });
 
     // Menu Screen buttons
