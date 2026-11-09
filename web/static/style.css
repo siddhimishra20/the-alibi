@@ -823,24 +823,38 @@ body.crt-theme {
 
 .tokens-pips-row {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
 }
 
-.token-pip {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: var(--border-bright);
+.token-coin {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+    vertical-align: middle;
 }
 
-.token-pip.active {
-    color: var(--color-amber);
-    text-shadow: 0 0 6px var(--color-amber-glow);
+.token-coin.active {
+    filter: drop-shadow(0 0 6px rgba(255, 184, 51, 0.65));
+    opacity: 1;
+    transform: scale(1);
 }
 
-.token-pip.critical {
-    color: var(--color-crimson);
-    text-shadow: 0 0 8px var(--color-crimson-glow);
-    animation: blink-dot 1s infinite;
+.token-coin.active:hover {
+    transform: scale(1.18) translateY(-2px);
+    filter: drop-shadow(0 0 10px var(--color-amber-glow));
+}
+
+.token-coin.critical {
+    filter: drop-shadow(0 0 8px var(--color-crimson-glow)) hue-rotate(-30deg);
+    animation: blink-dot 0.8s infinite;
+}
+
+.token-coin.spent {
+    filter: grayscale(100%) opacity(0.22);
+    transform: scale(0.88);
 }
 
 .tokens-count-label {

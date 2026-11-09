@@ -319,15 +319,18 @@ function updateTokensUI() {
 
     pipsContainer.innerHTML = "";
     for (let i = 0; i < currentSession.maxTokens; i++) {
-        const span = document.createElement("span");
+        const img = document.createElement("img");
+        img.src = "/static/images/token.png";
         if (i < currentSession.remainingTokens) {
-            span.className = "token-pip active" + (currentSession.remainingTokens <= 2 ? " critical" : "");
-            span.innerText = "[O]";
+            img.className = "token-coin active" + (currentSession.remainingTokens <= 2 ? " critical" : "");
+            img.title = `Token #${i + 1} (Available)`;
+            img.alt = "[O]";
         } else {
-            span.className = "token-pip";
-            span.innerText = "[X]";
+            img.className = "token-coin spent";
+            img.title = `Token #${i + 1} (Spent)`;
+            img.alt = "[X]";
         }
-        pipsContainer.appendChild(span);
+        pipsContainer.appendChild(img);
     }
 
     label.innerText = `(${currentSession.remainingTokens} / ${currentSession.maxTokens})`;
