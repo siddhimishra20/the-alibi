@@ -1241,4 +1241,99 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     refreshGlobalStatus();
+
+    // Demo URL parameter dispatcher for presentation & screenshot capture
+    const urlParams = new URLSearchParams(window.location.search);
+    const demoMode = urlParams.get("demo");
+    if (demoMode) {
+        setupDemoState(demoMode);
+    }
 });
+
+function setupDemoState(mode) {
+    const sampleCase = {
+        id: "case-2026-11-10",
+        date: "2026-11-10",
+        title: "THE CUCKOO CLOCK MUTINY",
+        crime_description: "The master gears in the astronomical town clock were reprogrammed so the cuckoo shrieks like an enraged rooster.",
+        setting: "THE MUNICIPAL CLOCKTOWER BELFRY",
+        suspect: {
+            name: "Ignatius 'Cogs' Geary",
+            occupation: "Clockmaker & Competitive Pigeon Racer",
+            quirk: "Intersperses speech with mechanical ticking ('tick-tick', 'tock') and timekeeping metaphors.",
+            traits_description: "buzz hair, trench attire",
+            portrait_url: "/api/character/case-2026-11-10.png"
+        },
+        dossier: [
+            { id: "fact-1", text: "A brass 14-tooth escapement gear stamped with serial number IG-99 was left on the belfry gear rack." },
+            { id: "fact-2", text: "The tower keeper found muddy size-9 workboot prints ascending the external maintenance ladder at 10:00 PM." },
+            { id: "fact-3", text: "An audio recording cassette labeled 'Enraged Farm Cockerel 1994' was found missing from Ignatius's workshop." }
+        ]
+    };
+
+    if (mode === "briefing") {
+        currentCase = sampleCase;
+        renderBriefingScreen(currentCase);
+        navigateTo("screen-briefing");
+    } else if (mode === "interrogation" || mode === "accuse") {
+        currentCase = sampleCase;
+        currentSession = {
+            id: "demo-sess",
+            remainingTokens: 3,
+            maxTokens: 5,
+            difficulty: "classic",
+            turn: 2,
+            statements: [
+                { turn_number: 1, question: "Where were you last night at 10:00 PM?", answer: "Tick-tick! I was quietly synchronizing grandfather clocks in my ground-floor shop, detective! My pendulum never leaves the bench!" },
+                { turn_number: 2, question: "Did you climb the external maintenance ladder to the belfry?", answer: "Tock! My balance wheel spins out at heights! I suffer from acute vertigo and have never scaled any external ladders in heavy workboots!" }
+            ]
+        };
+        renderBriefingScreen(currentCase);
+        enterInterrogationRoom();
+        updateTokensUI();
+        if (mode === "accuse") {
+            setTimeout(openAccuseModal, 250);
+        }
+    } else if (mode === "result") {
+        currentCase = sampleCase;
+        currentSession = { id: "demo-sess", remainingTokens: 3 };
+        const scoreInfo = {
+            base: 1000,
+            tokens_bonus: 750,
+            tokens_left: 3,
+            quick_bonus: 500,
+            turns_taken: 2,
+            flawless_bonus: 250,
+            hint_used: false,
+            streak_bonus: 700,
+            streak: 7,
+            multiplier: 1.0,
+            difficulty: "classic",
+            total: 3200
+        };
+        handleGameOver(
+            true,
+            "The suspect's claim of debilitating vertigo directly clashes with the muddy size-9 bootprints found ascending the belfry ladder at 10:00 PM.",
+            "Tick-tick! Curse your relentless cogwork, detective! Yes, I scaled the belfry ladder! That insufferable cuckoo needed to sing like a proper barnyard cockerel!",
+            "THE ALIBI [2026-11-10]\n🔍🔍💥⬛⬛\nCaught in 3/5",
+            scoreInfo,
+            12000,
+            "CHIEF OF DETECTIVES [GRADE I]"
+        );
+    } else if (mode === "archive") {
+        loadArchivesScreen();
+    } else if (mode === "concluded") {
+        openTodayConcludedModal({
+            today_completed: true,
+            today_solved: true,
+            countdown_midnight: "06:45:12",
+            today_data: {
+                won: true,
+                score: 3450,
+                tokens_left: 4,
+                share_grid: "THE ALIBI [2026-11-10]\n💥⬛⬛⬛⬛\nCaught in 1/5"
+            },
+            case: sampleCase
+        });
+    }
+}

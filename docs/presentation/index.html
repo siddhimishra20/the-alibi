@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE ALIBI - Project Presentation Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-crt: #080c10;
+            --bg-slide: #0d131a;
+            --bg-card: #131c26;
+            --color-cyan: #00f0ff;
+            --color-cyan-glow: rgba(0, 240, 255, 0.45);
+            --color-amber: #ffb300;
+            --color-amber-glow: rgba(255, 179, 0, 0.45);
+            --color-green: #33ff99;
+            --color-crimson: #ff3355;
+            --color-bone: #d8e2dc;
+            --color-slate: #7a8c99;
+            --border-dim: #1e2c38;
+            --border-bright: #30475e;
+            --font-mono: 'Share Tech Mono', monospace;
+            --font-display: 'VT323', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-crt);
+            color: var(--color-bone);
+            font-family: var(--font-mono);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CRT Scanlines Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .crt-vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        /* Presentation Frame */
+        .deck-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Top HUD Bar */
+        .deck-hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-bright);
+            padding: 10px 18px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .hud-brand {
+            color: var(--color-cyan);
+            font-weight: 800;
+            text-shadow: 0 0 8px var(--color-cyan-glow);
+        }
+
+        .hud-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hud-btn {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--color-cyan);
+            color: var(--color-cyan);
+            padding: 4px 10px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .hud-btn:hover {
+            background: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 10px var(--color-cyan-glow);
+        }
+
+        .hud-counter {
+            color: var(--color-amber);
+            font-weight: 800;
+        }
+
+        /* Slide Viewport */
+        .slide-viewport {
+            background: var(--bg-slide);
+            border: 2px solid var(--border-bright);
+            border-radius: 6px;
+            min-height: 640px;
+            padding: 36px 44px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Typography & Badges */
+        .slide-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--color-cyan);
+            background: rgba(0, 240, 255, 0.12);
+            border: 1px solid var(--color-cyan);
+            padding: 3px 8px;
+            border-radius: 3px;
+            letter-spacing: 1px;
+            align-self: flex-start;
+        }
+
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            color: var(--color-cyan);
+            text-shadow: 0 0 12px var(--color-cyan-glow);
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+
+        .slide-subtitle {
+            font-size: 1.05rem;
+            color: var(--color-amber);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .slide-body {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .slide-body.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .text-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: var(--color-bone);
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .feature-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--color-cyan);
+            font-size: 0.75rem;
+            top: 2px;
+        }
+
+        .feature-list li strong {
+            color: var(--color-cyan);
+        }
+
+        /* Screenshot Container */
+        .screenshot-box {
+            position: relative;
+            background: #000;
+            border: 1px solid var(--color-cyan);
+            box-shadow: 0 0 16px var(--color-cyan-glow);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screenshot-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: auto;
+        }
+
+        .screenshot-caption {
+            background: #090e13;
+            border-top: 1px solid var(--border-bright);
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            color: var(--color-slate);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* Grid of Spec Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-bright);
+            padding: 16px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-header {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--color-amber);
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 6px;
+        }
+
+        .card-body {
+            font-size: 0.82rem;
+            color: var(--color-bone);
+            line-height: 1.5;
+        }
+
+        /* Title Slide Custom Layout */
+        .title-slide {
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            gap: 24px;
+        }
+
+        .title-slide .slide-title {
+            font-size: 4.6rem;
+            margin-bottom: 8px;
+        }
+
+        .ascii-art-banner {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--color-amber);
+            line-height: 1;
+            white-space: pre;
+            text-shadow: 0 0 10px var(--color-amber-glow);
+        }
+
+        .meta-tags-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Navigation Footer */
+        .deck-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-dim);
+            padding-top: 16px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--color-slate);
+        }
+
+        .nav-keys-hint {
+            color: var(--color-slate);
+        }
+
+        .nav-keys-hint kbd {
+            background: #1a2530;
+            border: 1px solid var(--border-bright);
+            color: var(--color-bone);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+
+        /* Printable PDF Styling */
+        @page {
+            size: landscape;
+            margin: 0;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            html, body {
+                background: #080c10 !important;
+                color: #d8e2dc !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .scanlines, .crt-vignette, .deck-hud, .deck-footer {
+                display: none !important;
+            }
+            .deck-wrapper {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .slide-viewport {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                min-height: auto !important;
+                background: transparent !important;
+                display: block !important;
+            }
+            .slide {
+                display: flex !important;
+                opacity: 1 !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                box-sizing: border-box !important;
+                padding: 40px 50px !important;
+                background: #0d131a !important;
+                overflow: hidden !important;
+                justify-content: flex-start !important;
+                border-bottom: 2px solid #1e2c38 !important;
+            }
+            .slide.title-slide {
+                justify-content: center !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .slide-title {
+                color: #00f0ff !important;
+                text-shadow: 0 0 10px rgba(0, 240, 255, 0.4) !important;
+            }
+            .slide-subtitle {
+                color: #ffb300 !important;
+            }
+            .card {
+                border: 1px solid #30475e !important;
+                background: #131c26 !important;
+                color: #d8e2dc !important;
+            }
+            .card-header {
+                color: #ffb300 !important;
+                border-bottom: 1px solid #1e2c38 !important;
+            }
+            .card-body {
+                color: #d8e2dc !important;
+            }
+            .screenshot-box {
+                box-shadow: 0 0 12px rgba(0, 240, 255, 0.3) !important;
+                border: 1px solid #00f0ff !important;
+                max-height: 480px !important;
+            }
+            .screenshot-box img {
+                max-height: 440px !important;
+                object-fit: contain !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="crt-vignette"></div>
+
+    <div class="deck-wrapper">
+        <!-- Top HUD Navigation -->
+        <header class="deck-hud">
+            <span class="hud-brand">[ THE ALIBI : PROJECT DOSSIER &amp; PRESENTATION ]</span>
+            <div class="hud-controls">
+                <span class="hud-counter" id="slide-counter">SLIDE 01 / 12</span>
+                <button class="hud-btn" id="btn-prev" title="Previous Slide (Left Arrow)">◀ PREV</button>
+                <button class="hud-btn" id="btn-next" title="Next Slide (Right Arrow or Space)">NEXT ▶</button>
+                <button class="hud-btn" id="btn-fullscreen" title="Toggle Fullscreen (F)">[ FULLSCREEN ]</button>
+                <button class="hud-btn" id="btn-print" title="Print to PDF (P)">[ EXPORT PDF ]</button>
+            </div>
+        </header>
+
+        <!-- Slide Container -->
+        <main class="slide-viewport">
+
+            <!-- SLIDE 1: TITLE SLIDE -->
+            <section class="slide active title-slide" data-slide="1">
+                <div class="slide-tag">[ OFFICIAL POLICE COMMISSION BRIEFING ]</div>
+                <h1 class="slide-title">THE ALIBI</h1>
+                <p class="slide-subtitle">A Daily Satirical 1980s Retro CRT Noir Detective Micro-Crime Game</p>
+                <pre class="ascii-art-banner">
+  ┌────────────────────────────────────────────────────────────┐
+  │  [!] LIVE POLICE WIRE WIRE-TAP • MULTI-AGENT AI SYSTEM    │
+  │  AUTONOMOUS LLM SUSPECTS • PROCEDURAL PIXEL ART PORTRAITS  │
+  └────────────────────────────────────────────────────────────┘
+                </pre>
+                <div class="meta-tags-row">
+                    <span class="slide-tag">LOCAL OLLAMA (LLAMA 3.1)</span>
+                    <span class="slide-tag">GROQ CLOUD (500 TOK/S)</span>
+                    <span class="slide-tag">CHROMADB RAG</span>
+                    <span class="slide-tag">FASTAPI + TEXTUAL TUI</span>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: THE PREMISE & GAME VISION -->
+            <section class="slide" data-slide="2">
+                <div class="slide-tag">[ 01 : VISION &amp; GAMEPLAY ]</div>
+                <h2 class="slide-title">THE PREMISE &amp; CORE VISION</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">A satirical noir detective game with a daily habit loop.</p>
+                        <ul class="feature-list">
+                            <li><strong>The Daily Micro-Crime:</strong> Every 24 hours at midnight local time, a bizarre micro-crime occurs (e.g., swapping ancient Roman spoons for neon plastic sporks, reprogramming clocktower cuckoos to scream like roosters).</li>
+                            <li><strong>The Interrogation Table:</strong> You sit across from an eccentric guilty suspect with a compulsive speech quirk and a fabricated cover story.</li>
+                            <li><strong>Question Token Economics:</strong> You start with <strong>5 Question Tokens</strong>. Every interrogation costs 1 token. You must interrogate smartly and corner them into an undeniable contradiction.</li>
+                            <li><strong>The Viral Habit Loop:</strong> One shared global daily case, Wordle-style investigation teletype share grids, and high-stakes detective streak scores.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/01_main_menu.png" alt="The Alibi Main Menu Screen">
+                        <div class="screenshot-caption">Authentic 1980s Retro CRT Terminal Main Menu &amp; Difficulty Protocol Selector</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: MULTI-AGENT ARCHITECTURE -->
+            <section class="slide" data-slide="3">
+                <div class="slide-tag">[ 02 : SYSTEM ARCHITECTURE ]</div>
+                <h2 class="slide-title">5-AGENT AUTONOMOUS AI ECOSYSTEM</h2>
+                <div class="slide-body full-width">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">1. CASE ARCHITECT AGENT</div>
+                            <div class="card-body">Procedurally generates solvable micro-crimes, immutable 3-fact dossiers, true timelines, and guaranteed catchable weak points seeded daily.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">2. SUSPECT AGENT</div>
+                            <div class="card-body">Autonomous persona agent. Internalizes cover stories, tracks speech quirks, maintains lie consistency, and projects emotional states (calm, nervous, rattled).</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">3. CLAIM EXTRACTOR AGENT</div>
+                            <div class="card-body">Synthesizes spoken answers into atomic subject-predicate-object claims logged into ChromaDB RAG for instant retrieval.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">4. CONTRADICTION JUDGE</div>
+                            <div class="card-body">Strict legal evidentiary judge. Uses Chain-of-Verification (CoV) to enforce direct physical mutual exclusivity between testimony and facts.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">5. NOIR NARRATOR AGENT</div>
+                            <div class="card-body">Hardboiled 1980s narrator. Evaluates detective performance, delivers cryptic case hints, and writes courtroom verdicts.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: THE CLASSIFIED CRIME BRIEFING -->
+            <section class="slide" data-slide="4">
+                <div class="slide-tag">[ 03 : INVESTIGATION WORKFLOW ]</div>
+                <h2 class="slide-title">THE CLASSIFIED CRIME DOSSIER</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Before stepping into the interrogation room, inspect the facts.</p>
+                        <ul class="feature-list">
+                            <li><strong>Immutable Forensic Truths:</strong> The police crime lab provides exactly 3 verified forensic facts that cannot lie (e.g., serial stamped gears, mud bootprints, audio cassettes).</li>
+                            <li><strong>Procedural Pixel Suspect Portraits:</strong> Generated dynamically by the custom Alibi Character Kit based on physical traits (hair, trench attire, monocles).</li>
+                            <li><strong>Quirk Briefing:</strong> Highlights the suspect's compulsive speech mannerisms to help you detect nervousness and slips.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/02_case_briefing.png" alt="Classified Case Briefing Screen">
+                        <div class="screenshot-caption">Classified Briefing: Suspect Mugshot, Physical Traits, &amp; Immutable Dossier</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: THE WIRE-TAP INTERROGATION -->
+            <section class="slide" data-slide="5">
+                <div class="slide-tag">[ 04 : THE INTERROGATION ROOM ]</div>
+                <h2 class="slide-title">LIVE WIRE INTERROGATION TABLE</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Direct, unscripted neural dialogue with the suspect.</p>
+                        <ul class="feature-list">
+                            <li><strong>Live Dialogue Wire:</strong> Every question typed is processed through the local neural LLM, generating real-time in-character responses.</li>
+                            <li><strong>Nervousness Cues &amp; Audio:</strong> Suspect emotional shifts trigger audio clicks and CRT expression updates when pressed on weak points.</li>
+                            <li><strong>Coin Token Tracker:</strong> Authentic pixel-art token coins indicate remaining interrogation stamina, flashing critically when depleted.</li>
+                            <li><strong>Cryptic Noir Hints:</strong> When stuck, spend 1 token to request guidance from the Hardboiled Noir Narrator.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/03_interrogation_room.png" alt="Interrogation Wire Room">
+                        <div class="screenshot-caption">Interrogation Wire: CRT Monitor, Pixel Portrait, Tokens, &amp; Dialogue Transcript</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: THE FORMAL CONTRADICTION INDICTMENT -->
+            <section class="slide" data-slide="6">
+                <div class="slide-tag">[ 05 : THE CORE PUZZLE ]</div>
+                <h2 class="slide-title">THE CONTRADICTION INDICTMENT</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Pair a suspect quote directly against an immutable fact.</p>
+                        <ul class="feature-list">
+                            <li><strong>Point-and-Click Indictment:</strong> Select the exact quote from the suspect's transcript and the conflicting dossier fact.</li>
+                            <li><strong>Strict Chain of Verification:</strong> The Contradiction Judge checks mutual exclusivity: can both Claim A and Claim B coexist in physical reality?</li>
+                            <li><strong>Zero Sycophancy:</strong> Circumstantial suspicion is NOT enough. If the suspect didn't make a direct, physically impossible assertion, the judge rules INVALID.</li>
+                            <li><strong>Penalty Token Enforcement:</strong> False accusations penalize 1 token (2 on Hardboiled). Run out of tokens, and you lose!</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/04_formal_indictment.png" alt="Formal Accusation Modal">
+                        <div class="screenshot-caption">Accusation Indictment: Selecting Contradictory Quotes &amp; Immutable Evidence</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: VERDICT & CONFESSION BREAKDOWN -->
+            <section class="slide" data-slide="7">
+                <div class="slide-tag">[ 06 : THE PAYOFF ]</div>
+                <h2 class="slide-title">VERDICT COMMENDATION &amp; CONFESSION</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Watch the suspect's story crumble in dramatic fashion.</p>
+                        <ul class="feature-list">
+                            <li><strong>Breakdown Confession:</strong> Cornered suspects deliver hilarious in-character breakdown confessions admitting their micro-crime.</li>
+                            <li><strong>Rubber-Stamped Verdict Badge:</strong> Officially stamps <code>[ CONVICTED ]</code> or <code>[ WALKED FREE ]</code> across the suspect's mugshot.</li>
+                            <li><strong>Detailed Scoring Ledger:</strong> Awards Base points (+1,000), Token conservation (+250/token), Speed bonus (+500), Flawless bonus (+250), and daily streak multipliers.</li>
+                            <li><strong>Wordle-Style Share Grid:</strong> Generates formatted emojis teletype to copy and challenge friends.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/05_conviction_verdict.png" alt="Conviction Result Screen">
+                        <div class="screenshot-caption">Result Commendation: Rubber Stamp, Confession, &amp; Score Ledger</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: DAILY LOCKING & CAREER MEMORY -->
+            <section class="slide" data-slide="8">
+                <div class="slide-tag">[ 07 : PERSISTENCE &amp; PROGRESSION ]</div>
+                <h2 class="slide-title">CAREER MEMORY &amp; DAILY LOCKOUT</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Strict 1-attempt-per-day rule with lifetime detective rank progression.</p>
+                        <ul class="feature-list">
+                            <li><strong>Daily Case Lockout:</strong> Once today's case is played, it cannot be re-investigated. The menu locks and displays a live countdown timer to the next midnight case.</li>
+                            <li><strong>Concluded Review Screen:</strong> Re-inspect your score breakdown, teletype record, and copy results without corrupting game state.</li>
+                            <li><strong>Detective Rank Hierarchy:</strong> Progress from Patrol Officer to Senior Inspector and Chief of Detectives (Grade I).</li>
+                            <li><strong>Cold Case Archives:</strong> Replay historical crime dossiers for practice without affecting your active streak.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/07_daily_challenge_concluded.png" alt="Daily Challenge Concluded Screen">
+                        <div class="screenshot-caption">Daily Lockout Modal: Case Statistics, Midnight Timer, &amp; Teletype Record</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: TECHNICAL STACK & TOOLS -->
+            <section class="slide" data-slide="9">
+                <div class="slide-tag">[ 08 : TECHNOLOGY STACK ]</div>
+                <h2 class="slide-title">TOOLS &amp; TECHNOLOGIES USED</h2>
+                <div class="slide-body full-width">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">AI INFERENCE &amp; LLMS</div>
+                            <div class="card-body">
+                                • <strong>Ollama</strong> (Local on-device Llama 3.1 8B)<br>
+                                • <strong>Groq Cloud API</strong> (500 tok/sec cloud fallback)<br>
+                                • Zero external API dependency required.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">RAG &amp; VECTOR SEARCH</div>
+                            <div class="card-body">
+                                • <strong>ChromaDB</strong> on-disk vector database<br>
+                                • <strong>Nomic Embed Text</strong> local embeddings<br>
+                                • Dynamic session-scoped collection namespaces.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">BACKEND SERVICES</div>
+                            <div class="card-body">
+                                • <strong>Python 3.13</strong> clean virtual environment<br>
+                                • <strong>FastAPI &amp; Uvicorn</strong> async ASGI server<br>
+                                • <strong>Pydantic v2</strong> rigorous JSON validation.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">RETRO FRONTEND &amp; UI</div>
+                            <div class="card-body">
+                                • <strong>Vanilla JS + CSS Grid</strong> (zero bloat)<br>
+                                • <strong>Textual &amp; Rich</strong> terminal TUI &amp; CLI<br>
+                                • Hardware-accelerated CRT scanlines.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">GRAPHICS &amp; AUDIO</div>
+                            <div class="card-body">
+                                • <strong>Pillow (PIL)</strong> procedural pixel portraits<br>
+                                • <strong>Web Audio API &amp; Pygame</strong> sound effects<br>
+                                • Atmospheric WAV background music loops.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">DEV OPS &amp; QUALITY</div>
+                            <div class="card-body">
+                                • <strong>Pytest</strong> automated test suite (39 tests)<br>
+                                • <strong>Git &amp; GitHub</strong> remote version control<br>
+                                • <strong>LocalTunnel</strong> public HTTPS edge tunnel.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: QUALITY ASSURANCE & TESTING -->
+            <section class="slide" data-slide="10">
+                <div class="slide-tag">[ 09 : VERIFICATION &amp; RELIABILITY ]</div>
+                <h2 class="slide-title">AUTOMATED VERIFICATION &amp; QA</h2>
+                <div class="slide-body">
+                    <div class="text-column">
+                        <p class="slide-subtitle">Rigorous test engineering ensuring 100% deterministic reliability.</p>
+                        <ul class="feature-list">
+                            <li><strong>39 Automated Test Cases:</strong> 100% passing test suite across unit, integration, and UI pilots.</li>
+                            <li><strong>Strict Contradiction Benchmarks:</strong> Tested against tricky circumstantial claims (tea vs yarn $\to$ INVALID; walking past store $\to$ INVALID; absolute denial $\to$ VALID).</li>
+                            <li><strong>Pydantic Schema Normalization:</strong> Custom pre-validators handle arbitrary LLM casing, whitespace, and aliases gracefully.</li>
+                            <li><strong>Fail-State &amp; Token Auditing:</strong> Guaranteed deduction of tokens on failed accusations and proper defeat states.</li>
+                        </ul>
+                    </div>
+                    <div class="screenshot-box">
+                        <img src="/screenshots/06_cold_case_archives.png" alt="Cold Case Archives">
+                        <div class="screenshot-caption">Cold Case Archives: Career Stats, Streak Tracking, &amp; Case Registry</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: KEY TAKEAWAYS & HIGHLIGHTS -->
+            <section class="slide" data-slide="11">
+                <div class="slide-tag">[ 10 : SUMMARY &amp; HIGHLIGHTS ]</div>
+                <h2 class="slide-title">PROJECT HIGHLIGHTS</h2>
+                <div class="slide-body full-width">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">AUTHENTIC THEMATIC COHESION</div>
+                            <div class="card-body">Every visual element, sound effect, and narrative tone adheres strictly to the 1980s retro CRT noir atmosphere. No emojis, no modern generic design.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">INTELLECTUAL RIGOR</div>
+                            <div class="card-body">Unlike typical AI chat toys that agree with anything, the Contradiction Judge holds the player to strict legal standards of proof with real stakes.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">DUAL DEPLOYMENT MODES</div>
+                            <div class="card-body">Play seamlessly in your terminal via the Textual/Rich TUI, or in any web browser via the FastAPI CRT noir interface.</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">ZERO-COST PRIVATE DEPLOYMENT</div>
+                            <div class="card-body">Runs 100% on-device on consumer hardware with local Ollama, with zero cloud API costs or privacy leaks.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 12: ACCESS & DEMO LINKS -->
+            <section class="slide" data-slide="12">
+                <div class="slide-tag">[ 11 : ACCESS &amp; DEMO ]</div>
+                <h2 class="slide-title">LIVE ACCESS &amp; RESOURCES</h2>
+                <div class="slide-body full-width">
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">WEB APPLICATION (LOCAL)</div>
+                            <div class="card-body">
+                                <strong>URL:</strong> <a href="http://127.0.0.1:8000" target="_blank" style="color:var(--color-cyan);">http://127.0.0.1:8000</a><br>
+                                Launch web interface with real-time audio and CRT monitor.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">PUBLIC CLOUD TUNNEL</div>
+                            <div class="card-body">
+                                <strong>URL:</strong> <a href="https://six-shoes-lead.loca.lt" target="_blank" style="color:var(--color-cyan);">https://six-shoes-lead.loca.lt</a><br>
+                                Live public tunnel access for external evaluation.
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">TERMINAL CLI / TUI</div>
+                            <div class="card-body">
+                                <code>python run.py</code> (Textual TUI)<br>
+                                <code>python run.py --cli</code> (Lightweight CLI)<br>
+                                <code>python run.py --cli --practice</code> (Practice Mode)
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">GITHUB REPOSITORY</div>
+                            <div class="card-body">
+                                <strong>Remote:</strong> <a href="https://github.com/siddhimishra20/the-alibi" target="_blank" style="color:var(--color-cyan);">github.com/siddhimishra20/the-alibi</a><br>
+                                Complete open-source code, test suites, and documentation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Deck Footer -->
+        <footer class="deck-footer">
+            <span>[ THE ALIBI • AUTONOMOUS MULTI-AGENT NOIR GAME ]</span>
+            <span class="nav-keys-hint">Navigate with <kbd>◀</kbd> <kbd>▶</kbd> or <kbd>Space</kbd> • <kbd>F</kbd> Fullscreen • <kbd>P</kbd> Print/PDF</span>
+        </footer>
+    </div>
+
+    <!-- Presentation Controller Script -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > totalSlides) n = totalSlides;
+            currentSlide = n;
+
+            document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
+            const target = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+            if (target) target.classList.add("active");
+
+            const counter = document.getElementById("slide-counter");
+            if (counter) counter.innerText = `SLIDE ${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+
+            document.getElementById("btn-prev").disabled = (currentSlide === 1);
+            document.getElementById("btn-next").disabled = (currentSlide === totalSlides);
+        }
+
+        document.getElementById("btn-prev").addEventListener("click", () => showSlide(currentSlide - 1));
+        document.getElementById("btn-next").addEventListener("click", () => showSlide(currentSlide + 1));
+
+        document.getElementById("btn-fullscreen").addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => alert("Fullscreen error: " + err));
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        document.getElementById("btn-print").addEventListener("click", () => {
+            window.print();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+                e.preventDefault();
+                showSlide(currentSlide + 1);
+            } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                e.preventDefault();
+                showSlide(currentSlide - 1);
+            } else if (e.key === "f" || e.key === "F") {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen();
+                }
+            } else if (e.key === "p" || e.key === "P") {
+                window.print();
+            }
+        });
+
+        showSlide(1);
+    </script>
+</body>
+</html>

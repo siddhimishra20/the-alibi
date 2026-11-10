@@ -292,6 +292,17 @@ if os.path.exists(audio_dir):
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+docs_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "docs")
+screenshots_dir = os.path.join(docs_dir, "screenshots")
+presentation_dir = os.path.join(docs_dir, "presentation")
+
+if os.path.exists(screenshots_dir):
+    app.mount("/screenshots", StaticFiles(directory=screenshots_dir), name="screenshots")
+
+if os.path.exists(presentation_dir):
+    app.mount("/presentation", StaticFiles(directory=presentation_dir, html=True), name="presentation")
+
+if os.path.exists(static_dir):
     @app.get("/", response_class=HTMLResponse)
     def index():
         html_file = os.path.join(static_dir, "index.html")
