@@ -11,7 +11,7 @@
 
 ---
 
-## 🎩 Executive Summary & Presentation Pitch
+## 🎩 Executive Summary 
 
 **THE ALIBI** is a daily detective interrogation game in the spirit of *Wordle meets Papers, Please* with a hardboiled 1940s noir satirical aesthetic. 
 
