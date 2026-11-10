@@ -28,6 +28,6 @@ RUN python -c "from alibi.audio.manager import ensure_all_audio_assets; ensure_a
 # Expose web server port
 EXPOSE 8000
 
-# Default command: launch the FastAPI Web Application
-CMD ["python", "run.py", "--web", "--port", "8000"]
+# Default command: launch the FastAPI Web Application (dynamic cloud $PORT support)
+CMD ["sh", "-c", "python run.py --web --host 0.0.0.0 --port ${PORT:-8000}"]
 

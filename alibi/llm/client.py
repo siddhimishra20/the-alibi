@@ -16,11 +16,13 @@ class OllamaClient:
         base_url: Optional[str] = None,
         model: Optional[str] = None,
         embed_model: Optional[str] = None,
-        log_file: str = "logs/session.jsonl"
+        log_file: Optional[str] = None
     ):
         self.base_url = (base_url or os.getenv("OLLAMA_HOST") or "http://localhost:11434").rstrip("/")
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3.1:latest")
         self.embed_model = embed_model or os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text:latest")
+        if log_file is None:
+            log_file = "/tmp/logs/session.jsonl" if os.getenv("VERCEL") else "logs/session.jsonl"
         self.log_file = log_file
         os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
         self.last_trace: List[Dict[str, Any]] = []

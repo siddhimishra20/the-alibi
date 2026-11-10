@@ -39,9 +39,11 @@ class OllamaEmbeddingFunction(EmbeddingFunction):
 class RAGStore:
     """Manages three distinct vector collections per game session with hybrid keyword reranking."""
 
-    def __init__(self, session_id: str, client: OllamaClient, persist_dir: str = "data/chroma_db"):
+    def __init__(self, session_id: str, client: OllamaClient, persist_dir: Optional[str] = None):
         self.session_id = session_id.replace("-", "_")
         self.client = client
+        if persist_dir is None:
+            persist_dir = "/tmp/chroma_db" if os.getenv("VERCEL") else "data/chroma_db"
         self.persist_dir = persist_dir
         os.makedirs(self.persist_dir, exist_ok=True)
         

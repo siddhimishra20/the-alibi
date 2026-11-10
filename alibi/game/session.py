@@ -17,8 +17,10 @@ from alibi.game.scoring import calculate_score, get_detective_rank
 class GameManager:
     """Orchestrates game state, token accounting, agent pipeline, and daily save persistence."""
 
-    def __init__(self, client: OllamaClient, saves_path: str = "saves/progress.json"):
+    def __init__(self, client: OllamaClient, saves_path: Optional[str] = None):
         self.client = client
+        if saves_path is None:
+            saves_path = "/tmp/saves/progress.json" if os.getenv("VERCEL") else "saves/progress.json"
         self.saves_path = saves_path
         self.audio = AudioManager.get_instance()
         os.makedirs(os.path.dirname(self.saves_path), exist_ok=True)
