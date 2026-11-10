@@ -16,3 +16,4 @@ from alibi.server import app
 # Export FastAPI app as ASGI handler for Vercel
 handler = app
 app = app
+
